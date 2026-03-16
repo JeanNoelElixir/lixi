@@ -14,27 +14,27 @@
     ═══════════════════════════════════════════════════════ */
     :root {
       --rose:        #E2529E;
-      --violet:      #7F64D6;
-      --violet-deep: #7351E2;
-      --lime:        #C8D95B;
+      --violet:      #7351E2;
+      --violet-deep: #6240D0;
+      --lime:        #7AAF00;
       --pink-light:  #F2BCBC;
-      --teal:        #62EFC5;
-      --blue-soft:   #80A4F2;
+      --teal:        #0FA87A;
+      --blue-soft:   #4A7CE8;
 
       --grad-main:   linear-gradient(135deg, #7351E2, #E2529E);
       --grad-soft:   linear-gradient(135deg, #9BF8D6, #C8D95B);
       --grad-blue:   linear-gradient(135deg, #80A4F2, #62EFC5);
 
-      --bg:          #0D0B14;
-      --surface:     #15111F;
-      --surface-2:   #1C1729;
-      --surface-3:   #241F35;
-      --border:      rgba(127,100,214,.18);
-      --border-glow: rgba(226,82,158,.35);
+      --bg:          #F4F2F9;
+      --surface:     #FFFFFF;
+      --surface-2:   #F0EDF8;
+      --surface-3:   #E8E3F5;
+      --border:      rgba(115,81,226,.14);
+      --border-glow: rgba(226,82,158,.3);
 
-      --text:        #F0EBF8;
-      --text-muted:  #8B7FA8;
-      --text-dim:    #5B5275;
+      --text:        #1A1530;
+      --text-muted:  #5E5478;
+      --text-dim:    #9E96B8;
 
       --font-display: 'Syne', sans-serif;
       --font-body:    'DM Sans', sans-serif;
@@ -44,8 +44,8 @@
       --r-lg: 26px;
       --r-xl: 36px;
 
-      --shadow-glow: 0 0 40px rgba(226,82,158,.25), 0 8px 32px rgba(0,0,0,.6);
-      --shadow-card: 0 2px 24px rgba(0,0,0,.5);
+      --shadow-glow: 0 0 32px rgba(226,82,158,.15), 0 8px 32px rgba(115,81,226,.1);
+      --shadow-card: 0 2px 16px rgba(115,81,226,.08);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,20 +55,15 @@
     body {
       font-family: var(--font-body);
       background: var(--bg);
+      background-image: radial-gradient(ellipse 80% 60% at 20% -10%, rgba(115,81,226,.07) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(226,82,158,.06) 0%, transparent 60%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ═══════════════════════════════════════════════════════
-       GRAIN OVERLAY
-    ═══════════════════════════════════════════════════════ */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 0; opacity: .5;
-    }
+    /* grain overlay supprimé (thème clair) */
 
     /* ═══════════════════════════════════════════════════════
        LAYOUT PRINCIPAL
@@ -175,6 +170,7 @@
       padding: 28px 24px;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-card);
     }
 
     .card-score::before {
@@ -217,6 +213,8 @@
       fill: none;
       stroke: var(--surface-3);
       stroke-width: 8;
+      /* sur fond clair on renforce légèrement le track */
+      opacity: 1;
     }
 
     .gauge-fill {
@@ -318,6 +316,7 @@
       border: 1px solid var(--border);
       border-radius: var(--r-lg);
       padding: 22px 20px;
+      box-shadow: var(--shadow-card);
     }
 
     .card-title {
@@ -389,6 +388,7 @@
       padding: 30px 32px;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-card);
     }
 
     .col-checkin::after {
@@ -475,7 +475,7 @@
     .free-text {
       width: 100%;
       background: var(--surface-2);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: var(--r-sm);
       padding: 12px 14px;
       color: var(--text);
@@ -483,11 +483,12 @@
       font-size: 14px;
       resize: none;
       outline: none;
-      transition: border-color .15s;
+      transition: border-color .15s, box-shadow .15s;
     }
 
     .free-text:focus {
-      border-color: rgba(226,82,158,.5);
+      border-color: var(--violet);
+      box-shadow: 0 0 0 3px rgba(115,81,226,.1);
     }
 
     .free-text::placeholder { color: var(--text-dim); }
@@ -598,6 +599,7 @@
       display: flex;
       flex-direction: column;
       gap: 0;
+      box-shadow: var(--shadow-card);
     }
 
     /* État vide */
@@ -647,11 +649,11 @@
     .loader-dot {
       width: 10px; height: 10px;
       border-radius: 50%;
-      background: var(--rose);
+      background: var(--violet);
       animation: bounce 1.2s ease-in-out infinite;
     }
 
-    .loader-dot:nth-child(2) { animation-delay: .2s; background: var(--violet); }
+    .loader-dot:nth-child(2) { animation-delay: .2s; background: var(--rose); }
     .loader-dot:nth-child(3) { animation-delay: .4s; background: var(--blue-soft); }
 
     @keyframes bounce {
@@ -849,8 +851,8 @@
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.7);
-      backdrop-filter: blur(6px);
+      background: rgba(26,21,48,.35);
+      backdrop-filter: blur(8px);
       z-index: 100;
       align-items: center;
       justify-content: center;
@@ -866,7 +868,7 @@
       padding: 36px 40px;
       max-width: 520px;
       width: 100%;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 12px 48px rgba(115,81,226,.14), 0 2px 12px rgba(0,0,0,.06);
       animation: modalIn .25s cubic-bezier(.34,1.56,.64,1);
     }
 
@@ -910,18 +912,19 @@
     .form-input, .form-select, .form-textarea {
       width: 100%;
       background: var(--surface-2);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: var(--r-sm);
       padding: 12px 14px;
       color: var(--text);
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
-      transition: border-color .15s;
+      transition: border-color .15s, box-shadow .15s;
     }
 
     .form-input:focus, .form-select:focus, .form-textarea:focus {
-      border-color: rgba(226,82,158,.5);
+      border-color: var(--violet);
+      box-shadow: 0 0 0 3px rgba(115,81,226,.1);
     }
 
     .form-textarea { resize: vertical; min-height: 80px; }
@@ -973,13 +976,13 @@
       bottom: 32px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--surface-2);
-      border: 1px solid var(--border-glow);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 999px;
       padding: 12px 24px;
       font-size: 14px;
       font-weight: 500;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 4px 24px rgba(115,81,226,.15), 0 1px 6px rgba(0,0,0,.08);
       opacity: 0;
       transition: opacity .3s, transform .3s;
       z-index: 200;
@@ -996,7 +999,7 @@
     ═══════════════════════════════════════════════════════ */
     .onboarding-overlay {
       position: fixed; inset: 0;
-      background: var(--bg);
+      background: linear-gradient(135deg, #F4F2F9 0%, #EDE8F8 100%);
       z-index: 300;
       display: flex;
       align-items: center;
@@ -1012,7 +1015,7 @@
       max-width: 480px;
       width: 100%;
       text-align: center;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 12px 48px rgba(115,81,226,.12), 0 2px 12px rgba(0,0,0,.06);
     }
 
     .onboarding-lixia {
@@ -1055,6 +1058,488 @@
     /* ═══════════════════════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════════════════════ */
+
+    /* ─── Zone chat LIXIA ─── */
+    /* .chat-section supprimé — remplacé par la bulle flottante */
+
+    .chat-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-lixia-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 6px var(--lime);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .4; }
+    }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+      padding-right: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .chat-bubble.lixia {
+      align-self: flex-start;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--grad-main);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-bubble.lixia ul {
+      margin: 6px 0 4px 0;
+      padding-left: 16px;
+      list-style: none;
+    }
+
+    .chat-bubble.lixia ul li {
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .chat-bubble.lixia ul li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--violet);
+      font-weight: 700;
+    }
+
+    .chat-bubble.lixia p {
+      margin: 0 0 6px 0;
+    }
+
+    .chat-bubble.lixia p:last-child { margin-bottom: 0; }
+
+    .chat-bubble.lixia strong { color: var(--text); font-weight: 600; }
+
+    .chat-bubble.typing {
+      align-self: flex-start;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 14px 16px;
+    }
+
+    .typing-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 11px 16px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      resize: none;
+      max-height: 100px;
+      transition: border-color .15s;
+      line-height: 1.5;
+    }
+
+    .chat-input:focus { border-color: var(--violet); }
+    .chat-input::placeholder { color: var(--text-dim); }
+
+    .chat-send {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: var(--grad-main);
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: opacity .15s, transform .15s;
+    }
+
+    .chat-send:hover { opacity: .88; transform: scale(1.05); }
+    .chat-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    /* Suggestions rapides */
+    .chat-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .chat-suggestion {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+      font-family: var(--font-body);
+    }
+
+    .chat-suggestion:hover {
+      border-color: var(--violet);
+      color: var(--violet);
+    }
+
+
+    /* ─── Bouton flottant LIXIA ─── */
+    .chat-fab {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      background: var(--grad-main);
+      box-shadow: 0 4px 20px rgba(226,82,158,.4), 0 2px 8px rgba(0,0,0,.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+      transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+    }
+
+    .chat-fab:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 28px rgba(226,82,158,.5), 0 2px 10px rgba(0,0,0,.2);
+    }
+
+    .chat-fab-icon, .chat-fab-close {
+      width: 24px; height: 24px;
+    }
+
+    .chat-fab-badge {
+      position: absolute;
+      top: 2px; right: 2px;
+      font-size: 10px;
+      color: var(--lime);
+      text-shadow: 0 0 6px var(--lime);
+      animation: pulse 2s infinite;
+    }
+
+    /* ─── Panneau chat ─── */
+    .chat-panel {
+      position: fixed;
+      bottom: 100px;
+      right: 28px;
+      width: 360px;
+      max-height: 520px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      box-shadow: 0 16px 48px rgba(115,81,226,.15), 0 4px 16px rgba(0,0,0,.08);
+      display: flex;
+      flex-direction: column;
+      z-index: 499;
+      overflow: hidden;
+      transform: scale(.92) translateY(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease;
+    }
+
+    .chat-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .chat-panel-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(115,81,226,.06), rgba(226,82,158,.04));
+      flex-shrink: 0;
+    }
+
+    .chat-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .chat-panel-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: .04em;
+    }
+
+    /* Messages dans le panneau */
+    .chat-panel .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Suggestions dans le panneau */
+    .chat-panel .chat-suggestions {
+      padding: 0 16px 10px;
+      flex-shrink: 0;
+    }
+
+    /* Input dans le panneau */
+    .chat-panel .chat-input-row {
+      padding: 10px 16px 16px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .chat-panel {
+        right: 12px;
+        left: 12px;
+        width: auto;
+        bottom: 90px;
+      }
+      .chat-fab { bottom: 20px; right: 16px; }
+    }
+
+    /* ─── Zone questionnaires ─── */
+    .shell-tab { max-width: 1200px; margin: 0 auto; padding: 0 20px 80px; }
+
+    .qz-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .qz-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .qz-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .qz-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .qz-tab {
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qz-tab.active {
+      background: var(--grad-main);
+      border-color: transparent;
+      color: white;
+    }
+
+    .qz-tab-reset {
+      margin-left: auto;
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .qz-tab-reset:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: rgba(226,82,158,.05);
+    }
+
+    .qz-count {
+      font-size: 11px;
+      opacity: .75;
+      font-weight: 500;
+    }
+
+    /* Grille de questions */
+    .qz-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .qz-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      transition: border-color .15s;
+    }
+
+    .qz-card.answered {
+      border-color: rgba(115,81,226,.3);
+      background: rgba(115,81,226,.03);
+    }
+
+    .qz-card-num {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .qz-card-text {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .qz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .qz-opt {
+      padding: 9px 14px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+      text-align: left;
+    }
+
+    .qz-opt:hover {
+      border-color: var(--violet);
+      color: var(--text);
+    }
+
+    .qz-opt.selected {
+      background: rgba(115,81,226,.08);
+      border-color: var(--violet);
+      color: var(--violet);
+      font-weight: 600;
+    }
+
+    .qz-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .qz-pagination {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Barre de progression */
+    .qz-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 220px;
+    }
+
+    .qz-prog-item { display: flex; flex-direction: column; gap: 4px; }
+    .qz-prog-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+    .qz-prog-track { height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden; }
+    .qz-prog-fill { height: 100%; border-radius: 999px; background: var(--grad-main); transition: width .6s ease; }
+
+    @media (max-width: 860px) {
+      .qz-grid { grid-template-columns: 1fr; }
+      .qz-header { flex-direction: column; }
+      .qz-progress-wrap { min-width: auto; width: 100%; }
+    }
+
     @media (max-width: 860px) {
       .grid-main {
         grid-template-columns: 1fr;
@@ -1065,9 +1550,81 @@
       .mood-btn { min-width: calc(50% - 5px); }
     }
 
+    /* ─── Onglets onboarding ─── */
+    .ob-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--surface-2);
+      border-radius: var(--r-sm);
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .ob-tab {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      border-radius: calc(var(--r-sm) - 2px);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .ob-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(115,81,226,.12);
+    }
+
     /* ═══════════════════════════════════════════════════════
        CONNEXION API STATUS
     ═══════════════════════════════════════════════════════ */
+    .btn-refresh {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--violet);
+      background: transparent;
+      color: var(--violet);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-refresh:hover {
+      background: var(--violet);
+      color: white;
+    }
+
+    .btn-refresh:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .btn-nav {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .04em;
+      transition: all .15s;
+    }
+
+    .btn-nav:hover {
+      border-color: var(--violet);
+      color: var(--violet);
+    }
+
     .api-status {
       display: flex;
       align-items: center;
@@ -1128,11 +1685,17 @@
 
       <div class="onboarding-title">Bonjour, je suis Lixi 👋</div>
       <div class="onboarding-sub">
-        Je suis là pour t'accompagner sur ta santé et ton bien-être au travail.<br>
-        Dis-moi qui tu es pour commencer.
+        Je suis là pour t'accompagner sur ta santé et ton bien-être au travail.
       </div>
 
-      <div class="onboarding-form">
+      <!-- Onglets Nouveau / Déjà inscrit -->
+      <div class="ob-tabs">
+        <button class="ob-tab active" onclick="switchObTab('new')">Nouveau compte</button>
+        <button class="ob-tab" onclick="switchObTab('login')">Déjà inscrit(e)</button>
+      </div>
+
+      <!-- Panneau création -->
+      <div id="ob-panel-new" class="onboarding-form">
         <div class="form-row">
           <div>
             <label class="form-label">Prénom</label>
@@ -1166,6 +1729,23 @@
           Commencer avec Lixi →
         </button>
       </div>
+
+      <!-- Panneau login -->
+      <div id="ob-panel-login" class="onboarding-form" style="display:none">
+        <div>
+          <label class="form-label">Ton adresse email</label>
+          <input class="form-input" id="ob-login-email" type="email"
+            placeholder="marie@example.com" />
+        </div>
+        <button class="btn-send" id="ob-login-submit" style="margin-top:8px"
+          onclick="seConnecter()">
+          Me reconnecter →
+        </button>
+        <div id="ob-login-error" style="color:var(--rose);font-size:13px;text-align:center;margin-top:8px;display:none">
+          Aucun compte trouvé pour cet email.
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1200,6 +1780,8 @@
         </div>
       </div>
       <div class="header-user">
+        <button class="btn-nav" id="btn-nav-checkin" onclick="showTab('checkin')" style="border-color:var(--violet);color:var(--violet)">Check-in</button>
+        <button class="btn-nav" id="btn-nav-questionnaires" onclick="showTab('questionnaires')">Questionnaires</button>
         <div class="api-status" id="api-status">
           <div class="api-dot" id="api-dot"></div>
           <span id="api-status-text">API…</span>
@@ -1249,8 +1831,11 @@
               <div class="meta-chip-value violet" id="chip-confidence">—</div>
             </div>
           </div>
-          <div style="margin-top:12px">
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <span class="mode-badge prevention" id="mode-badge">En attente</span>
+            <button class="btn-refresh" id="btn-refresh" onclick="actualiserScore()" style="display:none">
+              ↻ Actualiser
+            </button>
           </div>
         </div>
 
@@ -1361,8 +1946,49 @@
           <!-- Injecté dynamiquement par JS -->
         </div>
 
+
       </div>
 
+    </div>
+  </div>
+
+  <!-- ══ ZONE QUESTIONNAIRES ══ -->
+  <div id="tab-questionnaires" class="shell-tab" style="display:none">
+    <div class="qz-header">
+      <div>
+        <h2 class="qz-title">Questionnaires</h2>
+        <p class="qz-sub">Ces questionnaires enrichissent ton analyse LIXIA sur la durée. Réponds à ton rythme.</p>
+      </div>
+      <div class="qz-progress-wrap" id="qz-progress-wrap">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <div class="qz-tabs">
+      <button class="qz-tab active" id="qztab-copsoq" onclick="switchQz('copsoq')">
+        COPSOQ <span class="qz-count" id="qz-count-copsoq">46 q.</span>
+      </button>
+      <button class="qz-tab" id="qztab-whocol" onclick="switchQz('whocol')">
+        WHOCOL <span class="qz-count" id="qz-count-whocol">21 q.</span>
+      </button>
+      <button class="qz-tab qz-tab-reset" id="btn-qz-reset" onclick="resetQuestionnaire()"
+        title="Recommencer ce questionnaire depuis le début">
+        ↺ Recommencer
+      </button>
+    </div>
+
+    <div id="qz-questions-list">
+      <!-- Questions injectées par JS -->
+      <div style="color:var(--text-dim);padding:32px;text-align:center;font-size:14px">
+        Chargement des questions…
+      </div>
+    </div>
+
+    <div class="qz-footer" id="qz-footer" style="display:none">
+      <div class="qz-pagination" id="qz-pagination"></div>
+      <button class="btn-send" id="btn-qz-valider" onclick="validerQuestionnaire()" style="max-width:260px">
+        Valider ce lot →
+      </button>
     </div>
   </div>
 
@@ -1411,26 +2037,35 @@
        CONFIG
     ═══════════════════════════════════════════════════════ */
 
-    // URL de l'API backend LIXI
-    // En démo locale : http://localhost:8000
-    // Avec Cloudflare Tunnel : remplacer par l'URL tunnel
-    const API = 'http://localhost:8000';
+    // URL de l'API — VERSION PRODUCTION (GitHub Pages → Render)
+    window.LIXI_API_URL = 'https://lixi-backend-847j.onrender.com';
 
-    // État de l'application (toutes les données en mémoire)
+    // URL de l'API — modifie cette ligne pour pointer vers Render en production
+    // Local     : 'http://localhost:8000'
+    // Production: 'https://lixi-backend.onrender.com'  (ton URL Render)
+    const API = window.LIXI_API_URL || 'http://localhost:8000';
+
+    // État global de l'application
     const state = {
       userId:          null,
       userName:        '',
       selectedMood:    null,
-      microQuestions:  [],   // Questions chargées depuis l'API
-      microAnswers:    {},   // {question_code: score}
-      lastAnalysis:    null, // Dernière analyse reçue
+      microQuestions:  [],
+      microAnswers:    {},
+      lastAnalysis:    null,
+      // Questionnaires
+      qzSource:        'copsoq',
+      qzQuestions:     [],   // questions du lot actuel
+      qzAnswers:       {},   // {question_code: score}
+      qzOffset:        0,    // position dans le questionnaire
+      qzTotal:         0,
+      qzBatchSize:     5,
     };
 
     /* ═══════════════════════════════════════════════════════
        UTILITAIRES
     ═══════════════════════════════════════════════════════ */
 
-    // Afficher un toast temporaire (message de confirmation)
     function toast(msg, duration = 3000) {
       const el = document.getElementById('toast');
       el.textContent = msg;
@@ -1438,12 +2073,8 @@
       setTimeout(() => el.classList.remove('visible'), duration);
     }
 
-    // Appel API générique avec gestion d'erreur
     async function api(method, path, body = null) {
-      const opts = {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-      };
+      const opts = { method, headers: { 'Content-Type': 'application/json' } };
       if (body) opts.body = JSON.stringify(body);
       const res = await fetch(API + path, opts);
       if (!res.ok) {
@@ -1453,14 +2084,12 @@
       return res.json();
     }
 
-    // Formater un score en couleur
     function scoreColor(score) {
       if (score < 35) return 'var(--rose)';
       if (score < 55) return '#F5A623';
       return 'var(--lime)';
     }
 
-    // Renderer Markdown minimal (## H2, **bold**, \n\n)
     function renderMarkdown(text) {
       if (!text) return '';
       return text
@@ -1471,8 +2100,40 @@
     }
 
     /* ═══════════════════════════════════════════════════════
+       NAVIGATION ONGLETS PRINCIPAUX
+    ═══════════════════════════════════════════════════════ */
+
+    // Basculer entre l'onglet check-in et l'onglet questionnaires
+    function showTab(tab) {
+      const shell      = document.querySelector('.shell');
+      const tabQz      = document.getElementById('tab-questionnaires');
+      const btnCheckin = document.getElementById('btn-nav-checkin');
+      const btnQz      = document.getElementById('btn-nav-questionnaires');
+
+      if (tab === 'checkin') {
+        shell.style.display  = 'block';
+        tabQz.style.display  = 'none';
+        btnCheckin.style.borderColor = 'var(--violet)';
+        btnCheckin.style.color       = 'var(--violet)';
+        btnQz.style.borderColor      = '';
+        btnQz.style.color            = '';
+      } else {
+        shell.style.display  = 'none';
+        tabQz.style.display  = 'block';
+        btnCheckin.style.borderColor = '';
+        btnCheckin.style.color       = '';
+        btnQz.style.borderColor      = 'var(--violet)';
+        btnQz.style.color            = 'var(--violet)';
+        // Charger les questions si pas encore fait
+        if (state.qzQuestions.length === 0) chargerQuestionnaire('copsoq');
+        chargerProgressionQz();
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
        VÉRIFICATION API
     ═══════════════════════════════════════════════════════ */
+
     async function checkApi() {
       try {
         await fetch(API + '/');
@@ -1485,8 +2146,111 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       ONBOARDING — Création de l'utilisateur
+       PERSISTANCE — localStorage
+       On sauvegarde seulement l'userId et le nom.
+       Toutes les données sensibles restent en base.
     ═══════════════════════════════════════════════════════ */
+
+    function sauvegarderSession(userId, userName) {
+      // localStorage = mémoire persistante du navigateur
+      // Elle survit aux rechargements et aux fermetures d'onglets
+      localStorage.setItem('lixi_user_id',   String(userId));
+      localStorage.setItem('lixi_user_name', userName);
+    }
+
+    function effacerSession() {
+      localStorage.removeItem('lixi_user_id');
+      localStorage.removeItem('lixi_user_name');
+    }
+
+    // Au chargement de la page, vérifier si une session existe
+    async function verifierSessionExistante() {
+      const savedId   = localStorage.getItem('lixi_user_id');
+      const savedName = localStorage.getItem('lixi_user_name');
+
+      if (!savedId) return false;  // Pas de session → afficher l'onboarding
+
+      try {
+        // Vérifier que l'utilisateur existe toujours en base
+        const user = await api('GET', `/api/user?user_id=${savedId}`);
+        // Session valide → connecter directement
+        connecterUtilisateur(user);
+        return true;
+      } catch {
+        // Utilisateur introuvable (base réinitialisée ?) → effacer la session
+        effacerSession();
+        return false;
+      }
+    }
+
+    // Connecter l'utilisateur dans l'interface (commun à toutes les méthodes)
+    function connecterUtilisateur(user) {
+      state.userId   = user.id;
+      state.userName = user.first_name;
+
+      const initiales = (user.first_name[0] + user.last_name[0]).toUpperCase();
+      document.getElementById('user-name').textContent     = user.first_name;
+      document.getElementById('user-initials').textContent = initiales;
+      document.getElementById('checkin-sub').textContent   =
+        `Bonjour ${user.first_name} ! Comment tu vas aujourd'hui ?`;
+
+      // Cacher l'onboarding
+      document.getElementById('onboarding').style.display = 'none';
+
+      // Sauvegarder la session pour les prochaines visites
+      sauvegarderSession(user.id, user.first_name);
+
+      // Charger le dernier score en arrière-plan (silencieux si pas de données)
+      chargerDernierScore(user.id);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ONBOARDING — Onglets Nouveau / Login
+    ═══════════════════════════════════════════════════════ */
+
+    function switchObTab(tab) {
+      const panelNew   = document.getElementById('ob-panel-new');
+      const panelLogin = document.getElementById('ob-panel-login');
+      const tabs       = document.querySelectorAll('.ob-tab');
+
+      if (tab === 'new') {
+        panelNew.style.display   = 'flex';
+        panelLogin.style.display = 'none';
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+      } else {
+        panelNew.style.display   = 'none';
+        panelLogin.style.display = 'flex';
+        tabs[0].classList.remove('active');
+        tabs[1].classList.add('active');
+      }
+    }
+
+    // Connexion par email
+    async function seConnecter() {
+      const email = document.getElementById('ob-login-email').value.trim();
+      const errEl = document.getElementById('ob-login-error');
+      const btn   = document.getElementById('ob-login-submit');
+
+      if (!email) { toast('⚠️ Saisis ton email'); return; }
+
+      btn.disabled    = true;
+      btn.textContent = 'Recherche…';
+      errEl.style.display = 'none';
+
+      try {
+        // GET /api/user/by-email?email=... → route ajoutée au back
+        const user = await api('GET', `/api/user/by-email?email=${encodeURIComponent(email)}`);
+        connecterUtilisateur(user);
+        toast(`Bon retour, ${user.first_name} ! 👋`);
+      } catch (e) {
+        errEl.style.display = 'block';
+        btn.disabled    = false;
+        btn.textContent = 'Me reconnecter →';
+      }
+    }
+
+    // Création d'un nouveau compte
     document.getElementById('ob-submit').addEventListener('click', async () => {
       const fn  = document.getElementById('ob-firstname').value.trim();
       const ln  = document.getElementById('ob-lastname').value.trim();
@@ -1500,199 +2264,147 @@
       }
 
       const btn = document.getElementById('ob-submit');
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = 'Création…';
 
       try {
-        // POST /api/user — créer l'utilisateur en base
         const user = await api('POST', '/api/user', {
-          first_name: fn,
-          last_name:  ln,
-          age,
-          email:      em,
+          first_name: fn, last_name: ln, age, email: em,
           professional_situation: sit,
         });
-
-        // Stocker l'ID utilisateur dans l'état
-        state.userId   = user.id;
-        state.userName = fn;
-
-        // Mettre à jour l'interface
-        document.getElementById('user-name').textContent    = fn;
-        document.getElementById('user-initials').textContent = (fn[0] + ln[0]).toUpperCase();
-        document.getElementById('checkin-sub').textContent  =
-          `Bonjour ${fn} ! Comment tu vas aujourd'hui ?`;
-
-        // Cacher l'onboarding
-        document.getElementById('onboarding').style.display = 'none';
+        connecterUtilisateur(user);
         toast(`Bienvenue, ${fn} 👋`);
-
       } catch (e) {
-        // Si l'email existe déjà, on tente de récupérer l'utilisateur
         if (e.message.includes('existe déjà') || e.message.includes('409')) {
-          toast('Email déjà utilisé — tentative de connexion…');
-          // Pas de GET /api/user par email dans l'API actuelle → message d'info
-          btn.textContent = 'Email déjà enregistré';
+          toast('Ce compte existe déjà → utilise "Déjà inscrit(e)"');
+          switchObTab('login');
+          document.getElementById('ob-login-email').value = em;
         } else {
           toast(`Erreur : ${e.message}`);
-          btn.disabled = false;
-          btn.textContent = 'Commencer avec Lixi →';
         }
+        btn.disabled    = false;
+        btn.textContent = 'Commencer avec Lixi →';
       }
     });
 
     /* ═══════════════════════════════════════════════════════
-       SÉLECTION D'HUMEUR
+       CHECK-IN — Sélection d'humeur
     ═══════════════════════════════════════════════════════ */
+
     function selectMood(btn) {
-      // Retirer la sélection précédente
       document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      // Stocker l'humeur choisie
       state.selectedMood = btn.dataset.code;
-
-      // Activer le bouton envoyer
       document.getElementById('btn-send').disabled = false;
     }
 
     /* ═══════════════════════════════════════════════════════
        ÉTAPE 1 — Envoyer l'humeur
     ═══════════════════════════════════════════════════════ */
+
     async function envoyerCheckin() {
       if (!state.selectedMood || !state.userId) return;
 
       const btn = document.getElementById('btn-send');
-      btn.disabled  = true;
+      btn.disabled    = true;
       btn.textContent = 'Envoi…';
 
       try {
-        // 1. Enregistrer l'humeur
         await api('POST', `/api/moods?user_id=${state.userId}`, {
           mood_code: state.selectedMood,
           free_text: document.getElementById('free-text').value.trim(),
         });
 
-        // 2. Charger les micro-questions adaptées
         const questions = await api('GET',
           `/api/micro-questions/next?user_id=${state.userId}`);
 
         if (questions.length > 0) {
-          // Afficher les micro-questions
           state.microQuestions = questions;
           afficherMicroQuestions(questions);
           btn.textContent = 'Humeur envoyée ✓';
-          toast('Humeur enregistrée ! Réponds aux questions pour affiner l\'analyse.');
+          toast(`Humeur enregistrée ! Réponds aux questions pour affiner l'analyse`);
         } else {
-          // Pas de micro-questions → analyse directe
           btn.textContent = 'Analyse en cours…';
           await lancerAnalyse();
           btn.textContent = 'Envoyer →';
-          btn.disabled = false;
+          btn.disabled    = false;
         }
-
       } catch (e) {
         toast(`Erreur : ${e.message}`);
-        btn.disabled  = false;
+        btn.disabled    = false;
         btn.textContent = 'Envoyer →';
       }
     }
 
     /* ═══════════════════════════════════════════════════════
-       MICRO-QUESTIONS — Affichage
+       MICRO-QUESTIONS
     ═══════════════════════════════════════════════════════ */
 
-    // Chaque micro-question a 5 options (label court + index)
-    // Les scores sont stockés côté back — ici on envoie l'index de réponse
-    // Note : on mappe les index 0-4 aux labels courts des réponses
     function afficherMicroQuestions(questions) {
       const section  = document.getElementById('micro-section');
       const list     = document.getElementById('micro-questions-list');
       const btnMicro = document.getElementById('btn-micro');
 
       list.innerHTML = '';
+      state.microAnswers = {};
 
       questions.forEach(q => {
-        // Générer des libellés courts si absent
         const labels = q.reponses || ['Pas du tout','Un peu','Moyennement','Beaucoup','Tout à fait'];
-
         const card = document.createElement('div');
         card.className = 'micro-q';
         card.innerHTML = `
           <div class="micro-q-text">${q.text}</div>
           <div class="micro-options">
             ${labels.map((lbl, i) => `
-              <div class="micro-opt"
-                data-code="${q.code}"
-                data-index="${i}"
-                onclick="selectMicroOpt(this)">
-                ${lbl}
-              </div>
+              <div class="micro-opt" data-code="${q.code}" data-index="${i}"
+                onclick="selectMicroOpt(this)">${lbl}</div>
             `).join('')}
-          </div>
-        `;
+          </div>`;
         list.appendChild(card);
       });
 
       section.classList.add('visible');
 
-      // Surveiller quand toutes les questions ont une réponse
       function checkAllAnswered() {
-        const answered = Object.keys(state.microAnswers).length;
-        btnMicro.disabled = answered < questions.length;
+        btnMicro.disabled = Object.keys(state.microAnswers).length < questions.length;
       }
-      // On re-check à chaque clic (géré dans selectMicroOpt)
       window._checkMicro = checkAllAnswered;
     }
 
     function selectMicroOpt(el) {
       const code  = el.dataset.code;
       const index = parseInt(el.dataset.index);
-
-      // Désélectionner les autres options de la même question
       document.querySelectorAll(`.micro-opt[data-code="${code}"]`)
         .forEach(o => o.classList.remove('selected'));
-
       el.classList.add('selected');
-
-      // Stocker la réponse : on garde l'index pour l'envoyer au back
       state.microAnswers[code] = index;
-
-      // Vérifier si tout est répondu
       if (window._checkMicro) window._checkMicro();
     }
 
     /* ═══════════════════════════════════════════════════════
        ÉTAPE 2 — Envoyer les micro-réponses
     ═══════════════════════════════════════════════════════ */
+
     async function envoyerMicro() {
       const btn = document.getElementById('btn-micro');
-      btn.disabled  = true;
+      btn.disabled    = true;
       btn.textContent = 'Envoi…';
 
       try {
-        // Envoyer chaque réponse au back
-        // Le back calcule le score depuis l'index et le catalogue
         for (const [code, index] of Object.entries(state.microAnswers)) {
-          // On calcule le score côté front depuis les réponses disponibles
-          // en attendant une vraie route /api/micro-answers qui prend un index
           const question = state.microQuestions.find(q => q.code === code);
           const scores   = question?.scores || [100, 75, 50, 25, 0];
           const score    = scores[index] ?? 50;
-
           await api('POST', `/api/micro-answers?user_id=${state.userId}`, {
-            question_code: code,
-            score,
+            question_code: code, score,
           });
         }
-
         btn.textContent = 'Réponses envoyées ✓';
         toast('Lixi analyse ton profil…');
         await lancerAnalyse();
-
       } catch (e) {
         toast(`Erreur : ${e.message}`);
-        btn.disabled  = false;
+        btn.disabled    = false;
         btn.textContent = 'Valider les réponses →';
       }
     }
@@ -1700,14 +2412,13 @@
     /* ═══════════════════════════════════════════════════════
        ANALYSE LIXIA
     ═══════════════════════════════════════════════════════ */
+
     async function lancerAnalyse() {
-      // Afficher le loader
       document.getElementById('analysis-empty').style.display   = 'none';
       document.getElementById('analysis-result').classList.remove('visible');
       document.getElementById('analysis-loading').classList.add('visible');
 
       try {
-        // Appel au moteur LIXIA
         const data = await api('GET', `/api/profile-analysis?user_id=${state.userId}`);
         state.lastAnalysis = data;
         afficherAnalyse(data);
@@ -1718,43 +2429,32 @@
       }
     }
 
-    /* ═══════════════════════════════════════════════════════
-       AFFICHAGE DE L'ANALYSE
-    ═══════════════════════════════════════════════════════ */
     function afficherAnalyse(data) {
-      // Cacher le loader
       document.getElementById('analysis-loading').classList.remove('visible');
 
-      /* ── Colonne gauche : score + jauge ── */
       const score    = data.main_score;
       const priority = data.priority;
       const conf     = data.confidence;
 
-      // Jauge circulaire (circumférence = 2π×54 ≈ 339.3)
       const offset = 339.3 - (score / 100) * 339.3;
       document.getElementById('gauge-arc').style.strokeDashoffset = offset;
       document.getElementById('gauge-val').textContent = Math.round(score);
-
       document.getElementById('chip-priority').textContent   = Math.round(priority);
       document.getElementById('chip-confidence').textContent = Math.round(conf) + '%';
 
-      // Badge mode
       const badge = document.getElementById('mode-badge');
       if (data.mode === 'alert') {
-        badge.className    = 'mode-badge alert';
-        badge.textContent  = '⚠ Alerte';
+        badge.className   = 'mode-badge alert';
+        badge.textContent = '⚠ Alerte';
       } else {
-        badge.className    = 'mode-badge prevention';
-        badge.textContent  = '✓ Prévention';
+        badge.className   = 'mode-badge prevention';
+        badge.textContent = '✓ Prévention';
       }
 
-      /* ── Familles ── */
       renderFamilies(data.family_scores || []);
 
-      /* ── Zone restitution ── */
       const result = document.getElementById('analysis-result');
 
-      // Construire le HTML du contenu recommandé
       let contentHTML = '';
       if (data.content) {
         const c = data.content;
@@ -1776,11 +2476,9 @@
               <div class="content-short">${c.short_text || ''}</div>
               ${longHTML}
             </div>
-          </div>
-        `;
+          </div>`;
       }
 
-      // Coaching
       let coachHTML = '';
       if (data.coach_proposed) {
         coachHTML = `
@@ -1790,11 +2488,8 @@
               <strong>Un accompagnement pourrait t'aider</strong>
               <span>Lixi propose un échange avec un coach selon ton profil actuel.</span>
             </div>
-            <button class="btn-coaching" onclick="ouvrirCoaching()">
-              Je suis intéressé(e)
-            </button>
-          </div>
-        `;
+            <button class="btn-coaching" onclick="ouvrirCoaching()">Je suis intéressé(e)</button>
+          </div>`;
       }
 
       result.innerHTML = `
@@ -1806,21 +2501,23 @@
             </span>
           </div>
         </div>
-
         <div class="result-explication">${data.explanation || ''}</div>
-
         ${coachHTML}
-        ${contentHTML}
-      `;
+        ${contentHTML}`;
 
       result.classList.add('visible');
+
+      // Afficher le bouton "Actualiser" maintenant qu'une analyse existe
+      const btnRefresh = document.getElementById('btn-refresh');
+      if (btnRefresh) btnRefresh.style.display = 'inline-flex';
+
+      // Ouvrir la zone chat
+      ouvrirChat();
     }
 
-    /* ── Rendu des familles dans la colonne gauche ── */
     function renderFamilies(families) {
       const list = document.getElementById('family-list');
       if (!families.length) return;
-
       list.innerHTML = families.map(f => {
         const color = scoreColor(f.score);
         return `
@@ -1830,31 +2527,409 @@
               <div class="family-score-val" style="color:${color}">${Math.round(f.score)}</div>
             </div>
             <div class="family-bar-track">
-              <div class="family-bar-fill"
-                style="width:${f.score}%; background:${color}">
-              </div>
+              <div class="family-bar-fill" style="width:${f.score}%;background:${color}"></div>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('');
     }
 
-    /* ═══════════════════════════════════════════════════════
-       TOGGLE CONTENU
-    ═══════════════════════════════════════════════════════ */
     function toggleContent() {
       const card = document.getElementById('content-card');
       if (card) card.classList.toggle('open');
     }
 
     /* ═══════════════════════════════════════════════════════
+       QUESTIONNAIRES
+    ═══════════════════════════════════════════════════════ */
+
+    // Changer de questionnaire (COPSOQ / WHOCOL)
+    function switchQz(source) {
+      state.qzSource  = source;
+      state.qzOffset  = 0;
+      state.qzAnswers = {};
+      document.getElementById('qztab-copsoq').classList.toggle('active', source === 'copsoq');
+      document.getElementById('qztab-whocol').classList.toggle('active', source === 'whocol');
+      chargerQuestionnaire(source);
+    }
+
+    // Charger un lot de questions depuis l'API
+    async function chargerQuestionnaire(source) {
+      const list = document.getElementById('qz-questions-list');
+      list.innerHTML = '<div style="color:var(--text-dim);padding:32px;text-align:center;font-size:14px">Chargement…</div>';
+
+      try {
+        // GET /api/questionnaire/{source}/next?user_id=...&batch_size=5
+        // Retourne les prochaines questions sans réponse
+        const questions = await api('GET',
+          `/api/questionnaire/${source}/next?user_id=${state.userId}&batch_size=${state.qzBatchSize}`);
+
+        state.qzQuestions = questions;
+        state.qzAnswers   = {};
+
+        if (questions.length === 0) {
+          list.innerHTML = `
+            <div style="text-align:center;padding:48px;color:var(--text-muted)">
+              <div style="font-size:36px;margin-bottom:12px">✅</div>
+              <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:var(--text)">Questionnaire terminé !</div>
+              <div style="font-size:13px;margin-bottom:20px">Toutes les questions ont été répondues.</div>
+              <button onclick="resetQuestionnaire()" style="
+                padding:10px 22px;border-radius:999px;border:1.5px solid var(--rose);
+                background:transparent;color:var(--rose);font-family:var(--font-display);
+                font-size:13px;font-weight:700;cursor:pointer;">
+                ↺ Recommencer ce questionnaire
+              </button>
+            </div>`;
+          document.getElementById('qz-footer').style.display = 'none';
+          // Rediriger vers le check-in après 4 secondes (sauf si l'utilisateur clique sur recommencer)
+          setTimeout(() => {
+            if (document.getElementById('tab-questionnaires').style.display !== 'none') {
+              showTab('checkin');
+            }
+          }, 4000);
+          return;
+        }
+
+        afficherQuestionsQz(questions);
+        document.getElementById('qz-footer').style.display = 'flex';
+        document.getElementById('btn-qz-valider').disabled = true;
+
+        // Mettre à jour la pagination
+        chargerProgressionQz();
+
+      } catch (e) {
+        list.innerHTML = `<div style="color:var(--rose);padding:24px">${e.message}</div>`;
+      }
+    }
+
+    // Afficher les questions du lot courant
+    function afficherQuestionsQz(questions) {
+      const list = document.getElementById('qz-questions-list');
+      list.innerHTML = `<div class="qz-grid">
+        ${questions.map((q, i) => `
+          <div class="qz-card" id="qzcard-${q.code}">
+            <div class="qz-card-num">${state.qzSource.toUpperCase()} — Q${i + 1 + state.qzOffset}</div>
+            <div class="qz-card-text">${q.item || q.text || q.label}</div>
+            <div class="qz-options">
+              ${(q.reponses || ['Jamais','Rarement','Parfois','Souvent','Toujours']).map((lbl, idx) => `
+                <div class="qz-opt"
+                  data-code="${q.code}"
+                  data-index="${idx}"
+                  onclick="selectQzOpt(this)">
+                  ${lbl}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    function selectQzOpt(el) {
+      const code  = el.dataset.code;
+      const index = parseInt(el.dataset.index);
+
+      document.querySelectorAll(`.qz-opt[data-code="${code}"]`)
+        .forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('qzcard-' + code)?.classList.add('answered');
+
+      state.qzAnswers[code] = index;
+
+      // Activer "Valider" quand toutes les questions du lot sont répondues
+      const btn = document.getElementById('btn-qz-valider');
+      btn.disabled = Object.keys(state.qzAnswers).length < state.qzQuestions.length;
+    }
+
+    // Valider le lot et passer au suivant
+    async function validerQuestionnaire() {
+      const btn = document.getElementById('btn-qz-valider');
+      btn.disabled    = true;
+      btn.textContent = 'Envoi…';
+
+      try {
+        // Envoyer chaque réponse au back
+        for (const [code, reponse_index] of Object.entries(state.qzAnswers)) {
+          await api('POST', `/api/questionnaire-answers?user_id=${state.userId}`, {
+            source:        state.qzSource,
+            question_code: code,
+            reponse_index,
+          });
+        }
+
+        state.qzOffset += state.qzQuestions.length;
+        toast(`✅ ${state.qzQuestions.length} réponses enregistrées`);
+
+        // Charger le lot suivant
+        btn.textContent = 'Valider ce lot →';
+        await chargerQuestionnaire(state.qzSource);
+
+      } catch (e) {
+        toast(`Erreur : ${e.message}`);
+        btn.disabled    = false;
+        btn.textContent = 'Valider ce lot →';
+      }
+    }
+
+    // Réinitialiser toutes les réponses d'un questionnaire
+    async function resetQuestionnaire() {
+      const source = state.qzSource;
+
+      // Demander confirmation avant de supprimer
+      if (!confirm(`Recommencer le questionnaire ${source.toUpperCase()} ?\nTon historique de réponses est conservé — seul le cycle en cours est réinitialisé.`)) {
+        return;
+      }
+
+      try {
+        // DELETE /api/questionnaire-answers/{source}?user_id=...
+        await api('DELETE', `/api/questionnaire-answers/${source}?user_id=${state.userId}`);
+
+        state.qzOffset  = 0;
+        state.qzAnswers = {};
+
+        toast(`↺ Nouveau cycle ${source.toUpperCase()} — historique conservé`);
+
+        // Recharger le questionnaire depuis le début
+        await chargerQuestionnaire(source);
+        await chargerProgressionQz();
+
+      } catch (e) {
+        toast(`Erreur : ${e.message}`);
+      }
+    }
+
+    // Charger et afficher la progression des questionnaires
+    async function chargerProgressionQz() {
+      try {
+        const prog = await api('GET',
+          `/api/questionnaire/progress?user_id=${state.userId}`);
+
+        const wrap = document.getElementById('qz-progress-wrap');
+        wrap.innerHTML = prog.map(p => `
+          <div class="qz-prog-item">
+            <div class="qz-prog-header">
+              <span>${p.source.toUpperCase()}</span>
+              <span>${p.answered} / ${p.total_questions}</span>
+            </div>
+            <div class="qz-prog-track">
+              <div class="qz-prog-fill" style="width:${p.completion_percent}%"></div>
+            </div>
+          </div>`).join('');
+
+        // Mettre à jour les compteurs sur les onglets
+        prog.forEach(p => {
+          const countEl = document.getElementById(`qz-count-${p.source}`);
+          if (countEl) countEl.textContent = `${p.answered}/${p.total_questions}`;
+        });
+
+      } catch { /* silencieux */ }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       CHARGEMENT DU DERNIER SCORE AU LOGIN
+    ═══════════════════════════════════════════════════════ */
+
+    async function chargerDernierScore(userId) {
+      // Tente de charger la dernière analyse disponible.
+      // Silencieux si l'utilisateur n'a pas encore de données.
+      try {
+        const data = await api('GET', `/api/profile-analysis?user_id=${userId}`);
+        if (data && data.main_score !== undefined) {
+          state.lastAnalysis = data;
+          afficherAnalyse(data);
+        }
+      } catch {
+        // Pas de données encore — on laisse l'écran vide, c'est normal
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACTUALISER LE SCORE
+    ═══════════════════════════════════════════════════════ */
+
+    async function actualiserScore() {
+      if (!state.userId) return;
+      const btn = document.getElementById('btn-refresh');
+      btn.disabled    = true;
+      btn.textContent = '↻ Calcul…';
+      await lancerAnalyse();
+      btn.disabled    = false;
+      btn.textContent = '↻ Actualiser';
+    }
+
+
+    /* ═══════════════════════════════════════════════════════
+       CHAT LIXIA
+    ═══════════════════════════════════════════════════════ */
+
+    // Historique de la conversation (gardé en mémoire côté front)
+    // Format : [{role: "user"|"assistant", content: "..."}]
+    let chatHistorique = [];
+    let chatOuvert = false;
+
+    // Afficher le bouton FAB après la première analyse
+    function ouvrirChat() {
+      const fab = document.getElementById('chat-fab');
+      if (fab) {
+        fab.style.display = 'flex';
+        // Petit badge pour attirer l'attention la première fois
+        const badge = document.getElementById('chat-fab-badge');
+        if (badge && !chatOuvert) badge.style.display = 'block';
+      }
+    }
+
+    // Ouvrir / fermer le panneau chat
+    function toggleChat() {
+      const panel  = document.getElementById('chat-panel');
+      const icon   = document.getElementById('chat-fab-icon');
+      const close  = document.getElementById('chat-fab-close');
+      const badge  = document.getElementById('chat-fab-badge');
+
+      const isOpen = panel.classList.contains('open');
+
+      if (isOpen) {
+        panel.classList.remove('open');
+        icon.style.display  = 'block';
+        close.style.display = 'none';
+      } else {
+        panel.classList.add('open');
+        icon.style.display  = 'none';
+        close.style.display = 'block';
+        if (badge) badge.style.display = 'none';
+        chatOuvert = true;
+        // Message de bienvenue au premier ouverture
+        const messages = document.getElementById('chat-messages');
+        if (messages && messages.children.length === 0) {
+          ajouterMessage('assistant',
+            'Bonjour. Je suis LIXIA, votre coach bien-être.\n\nJe connais votre profil de la semaine. Comment puis-je vous accompagner ?');
+        }
+        // Focus sur l'input
+        setTimeout(() => document.getElementById('chat-input')?.focus(), 300);
+      }
+    }
+
+    // Convertir Markdown léger en HTML pour les bulles LIXIA
+    function markdownToHtml(texte) {
+      return texte
+        // Gras **texte**
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        // Bullet points • ou - ou *
+        .replace(/^[•\-\*] (.+)$/gm, '<li>$1</li>')
+        // Entourer les blocs <li> dans un <ul>
+        .replace(/(<li>.*<\/li>\n?)+/gs, s => `<ul>${s}</ul>`)
+        // Sauts de ligne doubles → paragraphes
+        .replace(/\n\n/g, '</p><p>')
+        // Sauts de ligne simples → <br>
+        .replace(/\n/g, '<br>');
+    }
+
+    // Ajouter un message dans la zone chat
+    function ajouterMessage(role, texte) {
+      const messages = document.getElementById('chat-messages');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${role === 'user' ? 'user' : 'lixia'}`;
+      if (role === 'user') {
+        bubble.textContent = texte;
+      } else {
+        // Rendu Markdown pour les réponses LIXIA
+        bubble.innerHTML = `<p>${markdownToHtml(texte)}</p>`;
+      }
+      messages.appendChild(bubble);
+      // Auto-scroll vers le bas
+      messages.scrollTop = messages.scrollHeight;
+      return bubble;
+    }
+
+    // Afficher l'indicateur "en train d'écrire..."
+    function afficherTyping() {
+      const messages = document.getElementById('chat-messages');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble typing';
+      bubble.id = 'typing-indicator';
+      bubble.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      messages.appendChild(bubble);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function masquerTyping() {
+      const el = document.getElementById('typing-indicator');
+      if (el) el.remove();
+    }
+
+    // Envoyer un message via une suggestion rapide
+    function envoyerSuggestion(btn) {
+      document.getElementById('chat-input').value = btn.textContent.trim();
+      // Cacher les suggestions après le premier usage
+      document.getElementById('chat-suggestions').style.display = 'none';
+      envoyerChat();
+    }
+
+    // Envoyer avec Entrée (Shift+Entrée = saut de ligne)
+    function chatKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        envoyerChat();
+      }
+    }
+
+    // Envoyer le message à l'API
+    async function envoyerChat() {
+      const input   = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('chat-send-btn');
+      const message = input.value.trim();
+
+      if (!message || !state.userId) return;
+
+      // Réinitialiser l'input
+      input.value = '';
+      sendBtn.disabled = true;
+
+      // Afficher le message de l'utilisateur
+      ajouterMessage('user', message);
+
+      // Indicateur de frappe
+      afficherTyping();
+
+      try {
+        // POST /api/chat?user_id=...
+        const data = await api('POST', `/api/chat?user_id=${state.userId}`, {
+          message,
+          historique: chatHistorique,
+        });
+
+        masquerTyping();
+
+        // Afficher la réponse de LIXIA
+        ajouterMessage('assistant', data.reponse);
+
+        // Mettre à jour l'historique
+        chatHistorique.push({ role: 'user',      content: message });
+        chatHistorique.push({ role: 'assistant',  content: data.reponse });
+
+        // Garder l'historique à 20 messages max (10 échanges)
+        if (chatHistorique.length > 20) {
+          chatHistorique = chatHistorique.slice(-20);
+        }
+
+      } catch (e) {
+        masquerTyping();
+        // Message d'erreur si API non configurée
+        const errMsg = e.message.includes('503')
+          ? `LIXIA n'est pas encore configurée. Ajoute ta clé ANTHROPIC_API_KEY dans le fichier .env`
+          : `Erreur : ${e.message}`;
+        ajouterMessage('assistant', errMsg);
+      }
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
+    /* ═══════════════════════════════════════════════════════
        COACHING
     ═══════════════════════════════════════════════════════ */
+
     function ouvrirCoaching() {
-      // Pré-remplir le sujet depuis l'analyse
       if (state.lastAnalysis) {
-        document.getElementById('coach-topic').value =
-          state.lastAnalysis.main_theme || '';
+        document.getElementById('coach-topic').value = state.lastAnalysis.main_theme || '';
       }
       document.getElementById('modal-coaching').classList.add('open');
     }
@@ -1872,48 +2947,108 @@
       if (!topic) { toast('⚠️ Indique le sujet principal'); return; }
 
       const btn = document.querySelector('.btn-submit');
-      btn.disabled  = true;
+      btn.disabled    = true;
       btn.textContent = 'Envoi…';
 
       try {
         await api('POST', `/api/coach-requests?user_id=${state.userId}`, {
-          topic,
-          urgency,
-          context_text: context,
-          goal_text:    goal,
+          topic, urgency, context_text: context, goal_text: goal,
         });
-
         fermerCoaching();
         toast('✅ Demande de coaching envoyée !');
-        btn.disabled  = false;
-        btn.textContent = 'Envoyer la demande →';
-
       } catch (e) {
-        // Cooldown : déjà une demande récente
         if (e.message.includes('429') || e.message.includes('cooldown')) {
           toast('⏳ Tu as déjà envoyé une demande cette semaine.');
         } else {
           toast(`Erreur : ${e.message}`);
         }
-        btn.disabled  = false;
-        btn.textContent = 'Envoyer la demande →';
       }
+      btn.disabled    = false;
+      btn.textContent = 'Envoyer la demande →';
     }
 
-    // Fermer le modal coaching en cliquant en dehors
     document.getElementById('modal-coaching').addEventListener('click', function(e) {
       if (e.target === this) fermerCoaching();
     });
 
     /* ═══════════════════════════════════════════════════════
-       INIT
+       INIT — Point d'entrée au chargement de la page
     ═══════════════════════════════════════════════════════ */
-    checkApi();
 
-    // Vérifier si un userId est déjà en session
-    // (simple mémoire courante — pas de localStorage)
-    // Si l'API est hors ligne, on affiche quand même l'onboarding
+    async function init() {
+      // 1. Vérifier que l'API répond
+      await checkApi();
+
+      // 2. Chercher une session sauvegardée
+      //    Si trouvée → connecter directement sans passer par l'onboarding
+      const sessionOk = await verifierSessionExistante();
+
+      if (!sessionOk) {
+        // Pas de session → afficher l'onboarding normalement
+        document.getElementById('onboarding').style.display = 'flex';
+      }
+    }
+
+    // Lancer l'initialisation dès que la page est prête
+    init();
   </script>
+
+
+  <!-- ══ CHAT BULLE FLOTTANTE ══ -->
+
+  <!-- Bouton flottant — visible après la première analyse -->
+  <button class="chat-fab" id="chat-fab" onclick="toggleChat()" style="display:none"
+    title="Parler avec LIXIA">
+    <svg class="chat-fab-icon" id="chat-fab-icon" viewBox="0 0 24 24" fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg class="chat-fab-close" id="chat-fab-close" viewBox="0 0 24 24" fill="none"
+      xmlns="http://www.w3.org/2000/svg" style="display:none">
+      <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5"
+        stroke-linecap="round"/>
+    </svg>
+    <span class="chat-fab-badge" id="chat-fab-badge" style="display:none">●</span>
+  </button>
+
+  <!-- Panneau chat -->
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-panel-header">
+      <div class="chat-panel-title">
+        <div class="chat-lixia-dot"></div>
+        <span>LIXIA</span>
+      </div>
+      <div class="chat-panel-sub">Coach bien-être · En ligne</div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <!-- Suggestions rapides -->
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button class="chat-suggestion" onclick="envoyerSuggestion(this)">
+        Que puis-je faire concrètement ?
+      </button>
+      <button class="chat-suggestion" onclick="envoyerSuggestion(this)">
+        Explique-moi mon score
+      </button>
+      <button class="chat-suggestion" onclick="envoyerSuggestion(this)">
+        Comment préparer mon coaching ?
+      </button>
+      <button class="chat-suggestion" onclick="envoyerSuggestion(this)">
+        Un exercice rapide pour aujourd'hui ?
+      </button>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chat-input" rows="1"
+        placeholder="Posez votre question…"
+        onkeydown="chatKeyDown(event)"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="envoyerChat()">↑</button>
+    </div>
+  </div>
 
 </body>
 </html>
