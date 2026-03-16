@@ -1,0 +1,32 @@
+# ============================================================
+# render.yaml — Configuration du déploiement Render
+# ============================================================
+# Ce fichier dit à Render comment lancer l'application.
+# Il est lu automatiquement quand tu connectes le repo GitHub.
+
+services:
+  - type: web
+    name: lixi-backend
+    env: python
+    region: frankfurt       # Serveur en Europe (plus proche)
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lixi-db
+          property: connectionString
+      - key: ANTHROPIC_API_KEY
+        sync: false         # À renseigner manuellement dans le dashboard Render
+      - key: SECRET_KEY
+        generateValue: true # Render génère automatiquement une clé sécurisée
+      - key: APP_ENV
+        value: production
+
+databases:
+  - name: lixi-db
+    databaseName: lixi
+    user: lixi_user
+    plan: free
+    region: frankfurt
