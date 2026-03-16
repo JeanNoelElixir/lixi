@@ -1,0 +1,23 @@
+# ============================================================
+# Fichier .gitignore — Dit à Git quoi NE PAS sauvegarder
+# ============================================================
+
+# Le .env contient des mots de passe → jamais sur Git !
+.env
+
+# La base de données SQLite → c'est un fichier local
+*.db
+
+# Dossiers générés automatiquement par Python (pas utile à partager)
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel Python (chaque dev crée le sien)
+venv/
+.venv/
+
+# Fichiers temporaires de l'éditeur de code
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LIXI — Démonstrateur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       TOKENS & RESET
+    ═══════════════════════════════════════════════════════ */
+    :root {
+      --rose:        #E2529E;
+      --violet:      #7F64D6;
+      --violet-deep: #7351E2;
+      --lime:        #C8D95B;
+      --pink-light:  #F2BCBC;
+      --teal:        #62EFC5;
+      --blue-soft:   #80A4F2;
+
+      --grad-main:   linear-gradient(135deg, #7351E2, #E2529E);
+      --grad-soft:   linear-gradient(135deg, #9BF8D6, #C8D95B);
+      --grad-blue:   linear-gradient(135deg, #80A4F2, #62EFC5);
+
+      --bg:          #0D0B14;
+      --surface:     #15111F;
+      --surface-2:   #1C1729;
+      --surface-3:   #241F35;
+      --border:      rgba(127,100,214,.18);
+      --border-glow: rgba(226,82,158,.35);
+
+      --text:        #F0EBF8;
+      --text-muted:  #8B7FA8;
+      --text-dim:    #5B5275;
+
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --r-sm: 12px;
+      --r-md: 18px;
+      --r-lg: 26px;
+      --r-xl: 36px;
+
+      --shadow-glow: 0 0 40px rgba(226,82,158,.25), 0 8px 32px rgba(0,0,0,.6);
+      --shadow-card: 0 2px 24px rgba(0,0,0,.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 15px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       GRAIN OVERLAY
+    ═══════════════════════════════════════════════════════ */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: .5;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       LAYOUT PRINCIPAL
+    ═══════════════════════════════════════════════════════ */
+    .shell {
+      position: relative; z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════════════════════ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .header-brand {
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    /* Logo LIXI — boule poilue SVG simplifiée */
+    .lixi-logo {
+      width: 46px; height: 46px;
+      position: relative;
+      filter: drop-shadow(0 0 14px rgba(226,82,158,.6));
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 800;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -.5px;
+    }
+
+    .brand-tag {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .header-user {
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .user-pill {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 16px 7px 10px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500;
+    }
+
+    .user-avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+    }
+
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 8px var(--lime);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       GRILLE PRINCIPALE
+    ═══════════════════════════════════════════════════════ */
+    .grid-main {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COLONNE GAUCHE — PROFIL
+    ═══════════════════════════════════════════════════════ */
+    .col-profile {
+      grid-row: 1 / 3;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    /* ─── Carte score principal ─── */
+    .card-score {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-score::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 140px; height: 140px;
+      background: var(--grad-main);
+      border-radius: 50%;
+      opacity: .08;
+      filter: blur(30px);
+    }
+
+    .score-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    /* Jauge circulaire */
+    .gauge-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .gauge {
+      position: relative;
+      width: 140px; height: 140px;
+    }
+
+    .gauge svg {
+      width: 140px; height: 140px;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: var(--surface-3);
+      stroke-width: 8;
+    }
+
+    .gauge-fill {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke: url(#gaugeGrad);
+      stroke-dasharray: 339.3;
+      stroke-dashoffset: 339.3;
+      transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-value {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gauge-unit {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .score-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .meta-chip {
+      background: var(--surface-2);
+      border-radius: var(--r-sm);
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+
+    .meta-chip-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+
+    .meta-chip-value {
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-display);
+    }
+
+    .meta-chip-value.alert    { color: var(--rose); }
+    .meta-chip-value.warn     { color: #F5A623; }
+    .meta-chip-value.ok       { color: var(--lime); }
+    .meta-chip-value.violet   { color: var(--violet); }
+
+    /* ─── Badge mode ─── */
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .mode-badge.alert {
+      background: rgba(226,82,158,.12);
+      border: 1px solid rgba(226,82,158,.3);
+      color: var(--rose);
+    }
+
+    .mode-badge.prevention {
+      background: rgba(200,217,91,.1);
+      border: 1px solid rgba(200,217,91,.25);
+      color: var(--lime);
+    }
+
+    /* ─── Familles radar ─── */
+    .card-families {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 22px 20px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 16px;
+    }
+
+    .family-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .family-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .family-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .family-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .family-score-val {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .family-bar-track {
+      height: 4px;
+      background: var(--surface-3);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .family-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 1s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COLONNE DROITE HAUT — CHECK-IN
+    ═══════════════════════════════════════════════════════ */
+    .col-checkin {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 30px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .col-checkin::after {
+      content: '';
+      position: absolute; bottom: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: var(--grad-main);
+      border-radius: 50%;
+      opacity: .05;
+      filter: blur(50px);
+    }
+
+    .checkin-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .checkin-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* Humeurs */
+    .moods-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .mood-btn {
+      flex: 1;
+      background: var(--surface-2);
+      border: 2px solid transparent;
+      border-radius: var(--r-md);
+      padding: 14px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all .18s ease;
+    }
+
+    .mood-btn:hover {
+      background: var(--surface-3);
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+
+    .mood-btn.active {
+      border-color: var(--rose);
+      background: rgba(226,82,158,.08);
+      box-shadow: 0 0 20px rgba(226,82,158,.15);
+    }
+
+    .mood-emoji {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .mood-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Texte libre */
+    .free-text-wrap {
+      margin-bottom: 20px;
+    }
+
+    .free-text-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .free-text {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .free-text:focus {
+      border-color: rgba(226,82,158,.5);
+    }
+
+    .free-text::placeholder { color: var(--text-dim); }
+
+    /* Bouton envoyer */
+    .btn-send {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--r-md);
+      background: var(--grad-main);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: opacity .15s, transform .15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-send::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background .15s;
+    }
+
+    .btn-send:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-send:active { transform: translateY(0); }
+    .btn-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    /* ═══════════════════════════════════════════════════════
+       MICRO-QUESTIONS
+    ═══════════════════════════════════════════════════════ */
+    .micro-section {
+      display: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .micro-section.visible { display: block; }
+
+    .micro-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+
+    .micro-q {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .micro-q-text {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .micro-options {
+      display: flex;
+      gap: 6px;
+    }
+
+    .micro-opt {
+      flex: 1;
+      padding: 8px 4px;
+      background: var(--surface-3);
+      border: 1px solid transparent;
+      border-radius: var(--r-sm);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .micro-opt:hover {
+      border-color: var(--border-glow);
+      color: var(--text);
+    }
+
+    .micro-opt.selected {
+      background: rgba(226,82,158,.1);
+      border-color: var(--rose);
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COLONNE DROITE BAS — RESTITUTION
+    ═══════════════════════════════════════════════════════ */
+    .col-analysis {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 30px 32px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* État vide */
+    .analysis-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: var(--text-dim);
+    }
+
+    .lixia-idle {
+      width: 72px; height: 72px;
+      opacity: .4;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .analysis-empty-text {
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* État chargement */
+    .analysis-loading {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .analysis-loading.visible { display: flex; }
+
+    .loader-dots {
+      display: flex; gap: 8px;
+    }
+
+    .loader-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rose);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+
+    .loader-dot:nth-child(2) { animation-delay: .2s; background: var(--violet); }
+    .loader-dot:nth-child(3) { animation-delay: .4s; background: var(--blue-soft); }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(.7); opacity: .4; }
+      40%           { transform: scale(1);  opacity: 1; }
+    }
+
+    .loader-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* État résultat */
+    .analysis-result { display: none; }
+    .analysis-result.visible { display: block; }
+
+    .result-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-theme {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .result-explication {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 24px;
+      padding: 16px 18px;
+      background: var(--surface-2);
+      border-radius: var(--r-sm);
+      border-left: 3px solid var(--rose);
+    }
+
+    /* Contenu recommandé */
+    .content-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .content-card-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .content-card-header:hover { background: var(--surface-3); }
+
+    .content-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--r-sm);
+      background: var(--grad-main);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .content-meta { flex: 1; }
+
+    .content-tag {
+      font-size: 10px;
+      color: var(--rose);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .content-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .content-accroche {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .content-chevron {
+      color: var(--text-dim);
+      font-size: 18px;
+      transition: transform .2s;
+    }
+
+    .content-card.open .content-chevron { transform: rotate(180deg); }
+
+    .content-body {
+      display: none;
+      padding: 0 20px 20px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .content-card.open .content-body { display: block; }
+
+    .content-short {
+      padding: 16px 0 12px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .content-long {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .content-long h2 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 16px 0 8px;
+    }
+
+    .content-long p {
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .content-long strong { color: var(--text); font-weight: 600; }
+
+    /* Badge coaching */
+    .coaching-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(115,81,226,.15), rgba(226,82,158,.1));
+      border: 1px solid rgba(226,82,158,.2);
+      border-radius: var(--r-md);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+
+    .coaching-icon {
+      font-size: 28px;
+    }
+
+    .coaching-text { flex: 1; }
+
+    .coaching-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .coaching-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-coaching {
+      padding: 10px 18px;
+      background: var(--grad-main);
+      border: none;
+      border-radius: var(--r-sm);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s, transform .15s;
+    }
+
+    .btn-coaching:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ═══════════════════════════════════════════════════════
+       MODAL COACHING
+    ═══════════════════════════════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 36px 40px;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: var(--shadow-glow);
+      animation: modalIn .25s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(.9) translateY(16px); opacity: 0; }
+      to   { transform: scale(1)  translateY(0);    opacity: 1; }
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .modal-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: rgba(226,82,158,.5);
+    }
+
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-select option { background: var(--surface-2); }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    .btn-cancel:hover { background: var(--surface-2); color: var(--text); }
+
+    .btn-submit {
+      flex: 2;
+      padding: 12px;
+      border: none;
+      border-radius: var(--r-sm);
+      background: var(--grad-main);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+
+    .btn-submit:hover { opacity: .88; }
+
+    /* ═══════════════════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface-2);
+      border: 1px solid var(--border-glow);
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-glow);
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ONBOARDING OVERLAY
+    ═══════════════════════════════════════════════════════ */
+    .onboarding-overlay {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .onboarding-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 48px 44px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .onboarding-lixia {
+      width: 100px; height: 100px;
+      margin: 0 auto 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .onboarding-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .onboarding-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .onboarding-form {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .grid-main {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      .col-profile { grid-row: auto; }
+      .moods-row { flex-wrap: wrap; }
+      .mood-btn { min-width: calc(50% - 5px); }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       CONNEXION API STATUS
+    ═══════════════════════════════════════════════════════ */
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    .api-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+    }
+
+    .api-dot.connected { background: var(--lime); box-shadow: 0 0 6px var(--lime); }
+    .api-dot.error     { background: var(--rose); box-shadow: 0 0 6px var(--rose); }
+  </style>
+</head>
+<body>
+
+  <!-- ══ ONBOARDING ══ -->
+  <div class="onboarding-overlay" id="onboarding">
+    <div class="onboarding-box">
+      <!-- LIXIA SVG (boule poilue) -->
+      <svg class="onboarding-lixia" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="furGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#F072C0"/>
+            <stop offset="50%"  stop-color="#E2529E"/>
+            <stop offset="100%" stop-color="#A8206A"/>
+          </radialGradient>
+          <filter id="furBlur">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <!-- Corps -->
+        <circle cx="100" cy="105" r="78" fill="url(#furGrad)" filter="url(#furBlur)"/>
+        <circle cx="100" cy="105" r="72" fill="url(#furGrad)" opacity=".8"/>
+        <!-- Yeux blancs -->
+        <circle cx="78"  cy="92" r="18" fill="white"/>
+        <circle cx="122" cy="92" r="18" fill="white"/>
+        <!-- Iris -->
+        <circle cx="80"  cy="93" r="11" fill="#5ECFB0"/>
+        <circle cx="124" cy="93" r="11" fill="#5ECFB0"/>
+        <!-- Pupilles -->
+        <circle cx="81"  cy="94" r="7"  fill="#1A1025"/>
+        <circle cx="125" cy="94" r="7"  fill="#1A1025"/>
+        <!-- Reflets -->
+        <circle cx="84"  cy="90" r="3"  fill="white" opacity=".9"/>
+        <circle cx="128" cy="90" r="3"  fill="white" opacity=".9"/>
+        <!-- Sourire -->
+        <path d="M 84 118 Q 100 132 116 118" stroke="#1A1025" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="onboarding-title">Bonjour, je suis Lixi 👋</div>
+      <div class="onboarding-sub">
+        Je suis là pour t'accompagner sur ta santé et ton bien-être au travail.<br>
+        Dis-moi qui tu es pour commencer.
+      </div>
+
+      <div class="onboarding-form">
+        <div class="form-row">
+          <div>
+            <label class="form-label">Prénom</label>
+            <input class="form-input" id="ob-firstname" type="text" placeholder="Marie" />
+          </div>
+          <div>
+            <label class="form-label">Nom</label>
+            <input class="form-input" id="ob-lastname" type="text" placeholder="Dupont" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Âge</label>
+            <input class="form-input" id="ob-age" type="number" placeholder="35" min="18" max="80" />
+          </div>
+          <div>
+            <label class="form-label">Situation</label>
+            <select class="form-select" id="ob-situation">
+              <option value="Salarié">Salarié(e)</option>
+              <option value="Manager">Manager</option>
+              <option value="Indépendant">Indépendant(e)</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Email</label>
+          <input class="form-input" id="ob-email" type="email" placeholder="marie@example.com" />
+        </div>
+        <button class="btn-send" id="ob-submit" style="margin-top:8px">
+          Commencer avec Lixi →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ APP PRINCIPALE ══ -->
+  <div class="shell">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-brand">
+        <svg class="lixi-logo" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="hGrad" cx="40%" cy="35%" r="60%">
+              <stop offset="0%"  stop-color="#F072C0"/>
+              <stop offset="100%" stop-color="#A8206A"/>
+            </radialGradient>
+            <filter id="hFur">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          </defs>
+          <circle cx="40" cy="42" r="30" fill="url(#hGrad)" filter="url(#hFur)"/>
+          <circle cx="40" cy="42" r="27" fill="url(#hGrad)" opacity=".7"/>
+          <circle cx="30" cy="37" r="7" fill="white"/><circle cx="50" cy="37" r="7" fill="white"/>
+          <circle cx="31" cy="38" r="4" fill="#5ECFB0"/><circle cx="51" cy="38" r="4" fill="#5ECFB0"/>
+          <circle cx="32" cy="39" r="2.5" fill="#1A1025"/><circle cx="52" cy="39" r="2.5" fill="#1A1025"/>
+          <circle cx="33" cy="37" r="1.2" fill="white" opacity=".9"/><circle cx="53" cy="37" r="1.2" fill="white" opacity=".9"/>
+          <path d="M 33 49 Q 40 55 47 49" stroke="#1A1025" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="brand-name">Lixi</div>
+          <div class="brand-tag">Bien-être &amp; santé</div>
+        </div>
+      </div>
+      <div class="header-user">
+        <div class="api-status" id="api-status">
+          <div class="api-dot" id="api-dot"></div>
+          <span id="api-status-text">API…</span>
+        </div>
+        <div class="user-pill" id="user-pill">
+          <div class="user-avatar" id="user-initials">?</div>
+          <span id="user-name">—</span>
+          <div class="status-dot"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- GRILLE PRINCIPALE -->
+    <div class="grid-main">
+
+      <!-- ── COLONNE PROFIL ── -->
+      <aside class="col-profile">
+
+        <!-- Score principal -->
+        <div class="card-score">
+          <div class="score-label">Score global</div>
+          <div class="gauge-wrap">
+            <div class="gauge">
+              <svg viewBox="0 0 120 120">
+                <defs>
+                  <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stop-color="#7351E2"/>
+                    <stop offset="100%" stop-color="#E2529E"/>
+                  </linearGradient>
+                </defs>
+                <circle class="gauge-bg"   cx="60" cy="60" r="54"/>
+                <circle class="gauge-fill" cx="60" cy="60" r="54" id="gauge-arc"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-value" id="gauge-val">—</div>
+                <div class="gauge-unit">/ 100</div>
+              </div>
+            </div>
+          </div>
+          <div class="score-meta">
+            <div class="meta-chip">
+              <div class="meta-chip-label">Priorité</div>
+              <div class="meta-chip-value alert" id="chip-priority">—</div>
+            </div>
+            <div class="meta-chip">
+              <div class="meta-chip-label">Confiance</div>
+              <div class="meta-chip-value violet" id="chip-confidence">—</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <span class="mode-badge prevention" id="mode-badge">En attente</span>
+          </div>
+        </div>
+
+        <!-- Familles -->
+        <div class="card-families">
+          <div class="card-title">10 familles</div>
+          <div class="family-list" id="family-list">
+            <!-- Rempli par JS -->
+            <div style="color:var(--text-dim);font-size:13px;padding:8px 0">
+              Lance un check-in pour voir tes scores.
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ── CHECK-IN ── -->
+      <div class="col-checkin">
+        <div class="checkin-title">Comment tu vas aujourd'hui ?</div>
+        <div class="checkin-sub" id="checkin-sub">
+          Choisis l'humeur qui te correspond le mieux en ce moment.
+        </div>
+
+        <div class="moods-row">
+          <button class="mood-btn" data-code="HAPPY"   onclick="selectMood(this)">
+            <span class="mood-emoji">😊</span>
+            <span class="mood-label">Bien</span>
+          </button>
+          <button class="mood-btn" data-code="NEUTRAL"  onclick="selectMood(this)">
+            <span class="mood-emoji">😐</span>
+            <span class="mood-label">Neutre</span>
+          </button>
+          <button class="mood-btn" data-code="TIRED"   onclick="selectMood(this)">
+            <span class="mood-emoji">😴</span>
+            <span class="mood-label">Fatigué(e)</span>
+          </button>
+          <button class="mood-btn" data-code="ANXIOUS" onclick="selectMood(this)">
+            <span class="mood-emoji">😟</span>
+            <span class="mood-label">Anxieux/se</span>
+          </button>
+          <button class="mood-btn" data-code="SAD"     onclick="selectMood(this)">
+            <span class="mood-emoji">😢</span>
+            <span class="mood-label">Triste</span>
+          </button>
+        </div>
+
+        <div class="free-text-wrap">
+          <div class="free-text-label">Un mot (optionnel)</div>
+          <textarea class="free-text" id="free-text" rows="2"
+            placeholder="Ce qui me pèse en ce moment…"></textarea>
+        </div>
+
+        <button class="btn-send" id="btn-send" disabled onclick="envoyerCheckin()">
+          Envoyer →
+        </button>
+
+        <!-- Micro-questions (injectées dynamiquement) -->
+        <div class="micro-section" id="micro-section">
+          <div class="micro-label">Une ou deux questions pour affiner l'analyse :</div>
+          <div id="micro-questions-list"></div>
+          <button class="btn-send" id="btn-micro" onclick="envoyerMicro()" disabled>
+            Valider les réponses →
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ── RESTITUTION ── -->
+      <div class="col-analysis">
+
+        <div class="analysis-empty" id="analysis-empty">
+          <svg class="lixia-idle" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="idleGrad" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#F072C0" stop-opacity=".5"/>
+                <stop offset="100%" stop-color="#A8206A" stop-opacity=".5"/>
+              </radialGradient>
+              <filter id="idleFur">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="n"/>
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+              </filter>
+            </defs>
+            <circle cx="100" cy="105" r="78" fill="url(#idleGrad)" filter="url(#idleFur)"/>
+            <circle cx="100" cy="105" r="72" fill="url(#idleGrad)" opacity=".6"/>
+            <circle cx="78"  cy="92" r="18" fill="white" opacity=".5"/>
+            <circle cx="122" cy="92" r="18" fill="white" opacity=".5"/>
+            <circle cx="80"  cy="93" r="7"  fill="#5ECFB0" opacity=".5"/>
+            <circle cx="124" cy="93" r="7"  fill="#5ECFB0" opacity=".5"/>
+            <circle cx="82"  cy="95" r="4"  fill="#1A1025" opacity=".3"/>
+            <circle cx="126" cy="95" r="4"  fill="#1A1025" opacity=".3"/>
+            <path d="M 84 120 Q 100 128 116 120" stroke="#1A1025" stroke-width="3" fill="none" stroke-linecap="round" opacity=".3"/>
+          </svg>
+          <div class="analysis-empty-text">
+            Lixi attend ton check-in pour<br>analyser ton profil de la semaine.
+          </div>
+        </div>
+
+        <div class="analysis-loading" id="analysis-loading">
+          <div class="loader-dots">
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+          </div>
+          <div class="loader-text">Lixi analyse ton profil…</div>
+        </div>
+
+        <div class="analysis-result" id="analysis-result">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MODAL COACHING ══ -->
+  <div class="modal-overlay" id="modal-coaching">
+    <div class="modal">
+      <div class="modal-title">Demande de coaching</div>
+      <div class="modal-sub">
+        Un coach va recevoir ta demande. Quelques mots pour l'aider à préparer votre échange.
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sujet principal</label>
+        <input class="form-input" id="coach-topic" type="text"
+          placeholder="Ex : Surcharge / pression au travail" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Urgence</label>
+        <select class="form-select" id="coach-urgency">
+          <option value="low">Pas urgent — je veux juste en parler</option>
+          <option value="medium" selected>Modéré — ça dure depuis quelques semaines</option>
+          <option value="high">Urgent — j'ai besoin d'aide maintenant</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contexte (optionnel)</label>
+        <textarea class="form-textarea" id="coach-context"
+          placeholder="Décris brièvement la situation…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ce que j'espère de cet échange</label>
+        <textarea class="form-textarea" id="coach-goal"
+          placeholder="Ex : Clarifier mes priorités, reprendre confiance…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="fermerCoaching()">Annuler</button>
+        <button class="btn-submit" onclick="envoyerCoaching()">Envoyer la demande →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════
+       CONFIG
+    ═══════════════════════════════════════════════════════ */
+
+    // URL de l'API backend LIXI
+    // En démo locale : http://localhost:8000
+    // Avec Cloudflare Tunnel : remplacer par l'URL tunnel
+    const API = 'http://localhost:8000';
+
+    // État de l'application (toutes les données en mémoire)
+    const state = {
+      userId:          null,
+      userName:        '',
+      selectedMood:    null,
+      microQuestions:  [],   // Questions chargées depuis l'API
+      microAnswers:    {},   // {question_code: score}
+      lastAnalysis:    null, // Dernière analyse reçue
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       UTILITAIRES
+    ═══════════════════════════════════════════════════════ */
+
+    // Afficher un toast temporaire (message de confirmation)
+    function toast(msg, duration = 3000) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), duration);
+    }
+
+    // Appel API générique avec gestion d'erreur
+    async function api(method, path, body = null) {
+      const opts = {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+      };
+      if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(API + path, opts);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `Erreur ${res.status}`);
+      }
+      return res.json();
+    }
+
+    // Formater un score en couleur
+    function scoreColor(score) {
+      if (score < 35) return 'var(--rose)';
+      if (score < 55) return '#F5A623';
+      return 'var(--lime)';
+    }
+
+    // Renderer Markdown minimal (## H2, **bold**, \n\n)
+    function renderMarkdown(text) {
+      if (!text) return '';
+      return text
+        .replace(/## (.+)/g, '<h2>$1</h2>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       VÉRIFICATION API
+    ═══════════════════════════════════════════════════════ */
+    async function checkApi() {
+      try {
+        await fetch(API + '/');
+        document.getElementById('api-dot').className = 'api-dot connected';
+        document.getElementById('api-status-text').textContent = 'API connectée';
+      } catch {
+        document.getElementById('api-dot').className = 'api-dot error';
+        document.getElementById('api-status-text').textContent = 'API hors ligne';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ONBOARDING — Création de l'utilisateur
+    ═══════════════════════════════════════════════════════ */
+    document.getElementById('ob-submit').addEventListener('click', async () => {
+      const fn  = document.getElementById('ob-firstname').value.trim();
+      const ln  = document.getElementById('ob-lastname').value.trim();
+      const age = parseInt(document.getElementById('ob-age').value);
+      const sit = document.getElementById('ob-situation').value;
+      const em  = document.getElementById('ob-email').value.trim();
+
+      if (!fn || !ln || !em || !age) {
+        toast('⚠️ Remplis tous les champs obligatoires');
+        return;
+      }
+
+      const btn = document.getElementById('ob-submit');
+      btn.disabled = true;
+      btn.textContent = 'Création…';
+
+      try {
+        // POST /api/user — créer l'utilisateur en base
+        const user = await api('POST', '/api/user', {
+          first_name: fn,
+          last_name:  ln,
+          age,
+          email:      em,
+          professional_situation: sit,
+        });
+
+        // Stocker l'ID utilisateur dans l'état
+        state.userId   = user.id;
+        state.userName = fn;
+
+        // Mettre à jour l'interface
+        document.getElementById('user-name').textContent    = fn;
+        document.getElementById('user-initials').textContent = (fn[0] + ln[0]).toUpperCase();
+        document.getElementById('checkin-sub').textContent  =
+          `Bonjour ${fn} ! Comment tu vas aujourd'hui ?`;
+
+        // Cacher l'onboarding
+        document.getElementById('onboarding').style.display = 'none';
+        toast(`Bienvenue, ${fn} 👋`);
+
+      } catch (e) {
+        // Si l'email existe déjà, on tente de récupérer l'utilisateur
+        if (e.message.includes('existe déjà') || e.message.includes('409')) {
+          toast('Email déjà utilisé — tentative de connexion…');
+          // Pas de GET /api/user par email dans l'API actuelle → message d'info
+          btn.textContent = 'Email déjà enregistré';
+        } else {
+          toast(`Erreur : ${e.message}`);
+          btn.disabled = false;
+          btn.textContent = 'Commencer avec Lixi →';
+        }
+      }
+    });
+
+    /* ═══════════════════════════════════════════════════════
+       SÉLECTION D'HUMEUR
+    ═══════════════════════════════════════════════════════ */
+    function selectMood(btn) {
+      // Retirer la sélection précédente
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Stocker l'humeur choisie
+      state.selectedMood = btn.dataset.code;
+
+      // Activer le bouton envoyer
+      document.getElementById('btn-send').disabled = false;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ÉTAPE 1 — Envoyer l'humeur
+    ═══════════════════════════════════════════════════════ */
+    async function envoyerCheckin() {
+      if (!state.selectedMood || !state.userId) return;
+
+      const btn = document.getElementById('btn-send');
+      btn.disabled  = true;
+      btn.textContent = 'Envoi…';
+
+      try {
+        // 1. Enregistrer l'humeur
+        await api('POST', `/api/moods?user_id=${state.userId}`, {
+          mood_code: state.selectedMood,
+          free_text: document.getElementById('free-text').value.trim(),
+        });
+
+        // 2. Charger les micro-questions adaptées
+        const questions = await api('GET',
+          `/api/micro-questions/next?user_id=${state.userId}`);
+
+        if (questions.length > 0) {
+          // Afficher les micro-questions
+          state.microQuestions = questions;
+          afficherMicroQuestions(questions);
+          btn.textContent = 'Humeur envoyée ✓';
+          toast('Humeur enregistrée ! Réponds aux questions pour affiner l\'analyse.');
+        } else {
+          // Pas de micro-questions → analyse directe
+          btn.textContent = 'Analyse en cours…';
+          await lancerAnalyse();
+          btn.textContent = 'Envoyer →';
+          btn.disabled = false;
+        }
+
+      } catch (e) {
+        toast(`Erreur : ${e.message}`);
+        btn.disabled  = false;
+        btn.textContent = 'Envoyer →';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       MICRO-QUESTIONS — Affichage
+    ═══════════════════════════════════════════════════════ */
+
+    // Chaque micro-question a 5 options (label court + index)
+    // Les scores sont stockés côté back — ici on envoie l'index de réponse
+    // Note : on mappe les index 0-4 aux labels courts des réponses
+    function afficherMicroQuestions(questions) {
+      const section  = document.getElementById('micro-section');
+      const list     = document.getElementById('micro-questions-list');
+      const btnMicro = document.getElementById('btn-micro');
+
+      list.innerHTML = '';
+
+      questions.forEach(q => {
+        // Générer des libellés courts si absent
+        const labels = q.reponses || ['Pas du tout','Un peu','Moyennement','Beaucoup','Tout à fait'];
+
+        const card = document.createElement('div');
+        card.className = 'micro-q';
+        card.innerHTML = `
+          <div class="micro-q-text">${q.text}</div>
+          <div class="micro-options">
+            ${labels.map((lbl, i) => `
+              <div class="micro-opt"
+                data-code="${q.code}"
+                data-index="${i}"
+                onclick="selectMicroOpt(this)">
+                ${lbl}
+              </div>
+            `).join('')}
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      section.classList.add('visible');
+
+      // Surveiller quand toutes les questions ont une réponse
+      function checkAllAnswered() {
+        const answered = Object.keys(state.microAnswers).length;
+        btnMicro.disabled = answered < questions.length;
+      }
+      // On re-check à chaque clic (géré dans selectMicroOpt)
+      window._checkMicro = checkAllAnswered;
+    }
+
+    function selectMicroOpt(el) {
+      const code  = el.dataset.code;
+      const index = parseInt(el.dataset.index);
+
+      // Désélectionner les autres options de la même question
+      document.querySelectorAll(`.micro-opt[data-code="${code}"]`)
+        .forEach(o => o.classList.remove('selected'));
+
+      el.classList.add('selected');
+
+      // Stocker la réponse : on garde l'index pour l'envoyer au back
+      state.microAnswers[code] = index;
+
+      // Vérifier si tout est répondu
+      if (window._checkMicro) window._checkMicro();
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ÉTAPE 2 — Envoyer les micro-réponses
+    ═══════════════════════════════════════════════════════ */
+    async function envoyerMicro() {
+      const btn = document.getElementById('btn-micro');
+      btn.disabled  = true;
+      btn.textContent = 'Envoi…';
+
+      try {
+        // Envoyer chaque réponse au back
+        // Le back calcule le score depuis l'index et le catalogue
+        for (const [code, index] of Object.entries(state.microAnswers)) {
+          // On calcule le score côté front depuis les réponses disponibles
+          // en attendant une vraie route /api/micro-answers qui prend un index
+          const question = state.microQuestions.find(q => q.code === code);
+          const scores   = question?.scores || [100, 75, 50, 25, 0];
+          const score    = scores[index] ?? 50;
+
+          await api('POST', `/api/micro-answers?user_id=${state.userId}`, {
+            question_code: code,
+            score,
+          });
+        }
+
+        btn.textContent = 'Réponses envoyées ✓';
+        toast('Lixi analyse ton profil…');
+        await lancerAnalyse();
+
+      } catch (e) {
+        toast(`Erreur : ${e.message}`);
+        btn.disabled  = false;
+        btn.textContent = 'Valider les réponses →';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ANALYSE LIXIA
+    ═══════════════════════════════════════════════════════ */
+    async function lancerAnalyse() {
+      // Afficher le loader
+      document.getElementById('analysis-empty').style.display   = 'none';
+      document.getElementById('analysis-result').classList.remove('visible');
+      document.getElementById('analysis-loading').classList.add('visible');
+
+      try {
+        // Appel au moteur LIXIA
+        const data = await api('GET', `/api/profile-analysis?user_id=${state.userId}`);
+        state.lastAnalysis = data;
+        afficherAnalyse(data);
+      } catch (e) {
+        document.getElementById('analysis-loading').classList.remove('visible');
+        document.getElementById('analysis-empty').style.display = 'flex';
+        toast(`Erreur analyse : ${e.message}`);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       AFFICHAGE DE L'ANALYSE
+    ═══════════════════════════════════════════════════════ */
+    function afficherAnalyse(data) {
+      // Cacher le loader
+      document.getElementById('analysis-loading').classList.remove('visible');
+
+      /* ── Colonne gauche : score + jauge ── */
+      const score    = data.main_score;
+      const priority = data.priority;
+      const conf     = data.confidence;
+
+      // Jauge circulaire (circumférence = 2π×54 ≈ 339.3)
+      const offset = 339.3 - (score / 100) * 339.3;
+      document.getElementById('gauge-arc').style.strokeDashoffset = offset;
+      document.getElementById('gauge-val').textContent = Math.round(score);
+
+      document.getElementById('chip-priority').textContent   = Math.round(priority);
+      document.getElementById('chip-confidence').textContent = Math.round(conf) + '%';
+
+      // Badge mode
+      const badge = document.getElementById('mode-badge');
+      if (data.mode === 'alert') {
+        badge.className    = 'mode-badge alert';
+        badge.textContent  = '⚠ Alerte';
+      } else {
+        badge.className    = 'mode-badge prevention';
+        badge.textContent  = '✓ Prévention';
+      }
+
+      /* ── Familles ── */
+      renderFamilies(data.family_scores || []);
+
+      /* ── Zone restitution ── */
+      const result = document.getElementById('analysis-result');
+
+      // Construire le HTML du contenu recommandé
+      let contentHTML = '';
+      if (data.content) {
+        const c = data.content;
+        const longHTML = c.long_text
+          ? `<div class="content-long"><p>${renderMarkdown(c.long_text)}</p></div>`
+          : '';
+        contentHTML = `
+          <div class="content-card" id="content-card">
+            <div class="content-card-header" onclick="toggleContent()">
+              <div class="content-icon">📖</div>
+              <div class="content-meta">
+                <div class="content-tag">Lecture recommandée</div>
+                <div class="content-title">${c.title}</div>
+                <div class="content-accroche">${c.ultra_short_text || ''}</div>
+              </div>
+              <div class="content-chevron">▾</div>
+            </div>
+            <div class="content-body">
+              <div class="content-short">${c.short_text || ''}</div>
+              ${longHTML}
+            </div>
+          </div>
+        `;
+      }
+
+      // Coaching
+      let coachHTML = '';
+      if (data.coach_proposed) {
+        coachHTML = `
+          <div class="coaching-banner">
+            <div class="coaching-icon">🤝</div>
+            <div class="coaching-text">
+              <strong>Un accompagnement pourrait t'aider</strong>
+              <span>Lixi propose un échange avec un coach selon ton profil actuel.</span>
+            </div>
+            <button class="btn-coaching" onclick="ouvrirCoaching()">
+              Je suis intéressé(e)
+            </button>
+          </div>
+        `;
+      }
+
+      result.innerHTML = `
+        <div class="result-header">
+          <div class="result-theme">${data.main_theme}</div>
+          <div>
+            <span class="mode-badge ${data.mode === 'alert' ? 'alert' : 'prevention'}">
+              ${data.mode === 'alert' ? '⚠ Alerte' : '✓ Prévention'}
+            </span>
+          </div>
+        </div>
+
+        <div class="result-explication">${data.explanation || ''}</div>
+
+        ${coachHTML}
+        ${contentHTML}
+      `;
+
+      result.classList.add('visible');
+    }
+
+    /* ── Rendu des familles dans la colonne gauche ── */
+    function renderFamilies(families) {
+      const list = document.getElementById('family-list');
+      if (!families.length) return;
+
+      list.innerHTML = families.map(f => {
+        const color = scoreColor(f.score);
+        return `
+          <div class="family-item">
+            <div class="family-header">
+              <div class="family-name" title="${f.family_name}">${f.family_name}</div>
+              <div class="family-score-val" style="color:${color}">${Math.round(f.score)}</div>
+            </div>
+            <div class="family-bar-track">
+              <div class="family-bar-fill"
+                style="width:${f.score}%; background:${color}">
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       TOGGLE CONTENU
+    ═══════════════════════════════════════════════════════ */
+    function toggleContent() {
+      const card = document.getElementById('content-card');
+      if (card) card.classList.toggle('open');
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COACHING
+    ═══════════════════════════════════════════════════════ */
+    function ouvrirCoaching() {
+      // Pré-remplir le sujet depuis l'analyse
+      if (state.lastAnalysis) {
+        document.getElementById('coach-topic').value =
+          state.lastAnalysis.main_theme || '';
+      }
+      document.getElementById('modal-coaching').classList.add('open');
+    }
+
+    function fermerCoaching() {
+      document.getElementById('modal-coaching').classList.remove('open');
+    }
+
+    async function envoyerCoaching() {
+      const topic   = document.getElementById('coach-topic').value.trim();
+      const urgency = document.getElementById('coach-urgency').value;
+      const context = document.getElementById('coach-context').value.trim();
+      const goal    = document.getElementById('coach-goal').value.trim();
+
+      if (!topic) { toast('⚠️ Indique le sujet principal'); return; }
+
+      const btn = document.querySelector('.btn-submit');
+      btn.disabled  = true;
+      btn.textContent = 'Envoi…';
+
+      try {
+        await api('POST', `/api/coach-requests?user_id=${state.userId}`, {
+          topic,
+          urgency,
+          context_text: context,
+          goal_text:    goal,
+        });
+
+        fermerCoaching();
+        toast('✅ Demande de coaching envoyée !');
+        btn.disabled  = false;
+        btn.textContent = 'Envoyer la demande →';
+
+      } catch (e) {
+        // Cooldown : déjà une demande récente
+        if (e.message.includes('429') || e.message.includes('cooldown')) {
+          toast('⏳ Tu as déjà envoyé une demande cette semaine.');
+        } else {
+          toast(`Erreur : ${e.message}`);
+        }
+        btn.disabled  = false;
+        btn.textContent = 'Envoyer la demande →';
+      }
+    }
+
+    // Fermer le modal coaching en cliquant en dehors
+    document.getElementById('modal-coaching').addEventListener('click', function(e) {
+      if (e.target === this) fermerCoaching();
+    });
+
+    /* ═══════════════════════════════════════════════════════
+       INIT
+    ═══════════════════════════════════════════════════════ */
+    checkApi();
+
+    // Vérifier si un userId est déjà en session
+    // (simple mémoire courante — pas de localStorage)
+    // Si l'API est hors ligne, on affiche quand même l'onboarding
+  </script>
+
+</body>
+</html>
