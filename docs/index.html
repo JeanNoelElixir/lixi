@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#E2529E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>LIXI — Démonstrateur</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -318,6 +320,24 @@
       padding: 22px 20px;
       box-shadow: var(--shadow-card);
     }
+
+    .card-title-toggle {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .card-title-toggle:hover { opacity: .75; }
+
+    .toggle-chevron {
+      font-size: 14px;
+      color: var(--text-dim);
+      transition: transform .25s ease;
+    }
+
+    .toggle-chevron.open { transform: rotate(180deg); }
 
     .card-title {
       font-family: var(--font-display);
@@ -1644,6 +1664,213 @@
 
     .api-dot.connected { background: var(--lime); box-shadow: 0 0 6px var(--lime); }
     .api-dot.error     { background: var(--rose); box-shadow: 0 0 6px var(--rose); }
+
+    /* ═══════════════════════════════════════════════════════
+       MOBILE — Pixel 8 et smartphones (≤ 600px)
+    ═══════════════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+
+      /* ── Layout principal ── */
+      .shell { padding: 0 12px 100px; }
+
+      /* Réordonner les blocs : check-in en premier, profil en second */
+      .grid-main    { display: flex; flex-direction: column; }
+      .col-checkin  { order: 1; }
+      .col-analysis { order: 2; }
+      .col-profile  { order: 3; }
+
+      .header {
+        padding: 14px 0 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .brand-name { font-size: 20px; }
+      .brand-tag  { font-size: 10px; }
+
+      .lixi-logo  { width: 36px; height: 36px; }
+
+      .header-user { gap: 8px; }
+
+      .user-pill {
+        padding: 5px 10px 5px 6px;
+        font-size: 12px;
+      }
+
+      .api-status { display: none; } /* Caché sur mobile — gain de place */
+
+      /* ── Grille → colonne unique ── */
+      .grid-main {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      /* ── Score : compact ── */
+      .card-score { padding: 18px 16px; }
+
+      .gauge { width: 110px; height: 110px; }
+      .gauge svg { width: 110px; height: 110px; }
+      .gauge-value { font-size: 28px; }
+
+      .score-meta { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .meta-chip  { padding: 8px 10px; }
+      .meta-chip-value { font-size: 13px; }
+
+      /* ── Familles : masquer les barres, juste les valeurs ── */
+      .card-families { padding: 16px 14px; }
+
+      .family-bar-track { height: 3px; }
+
+      .family-name { font-size: 11px; max-width: 170px; }
+      .family-score-val { font-size: 11px; }
+
+      /* ── Check-in ── */
+      .col-checkin { padding: 20px 16px; }
+
+      .checkin-title { font-size: 17px; }
+      .checkin-sub   { font-size: 12px; margin-bottom: 18px; }
+
+      /* Humeurs : 5 boutons en ligne, plus compacts */
+      .moods-row { gap: 6px; flex-wrap: nowrap; }
+
+      .mood-btn {
+        flex: 1;
+        padding: 10px 4px;
+        border-radius: 12px;
+        min-width: 0;
+      }
+
+      .mood-emoji  { font-size: 22px; }
+      .mood-label  { font-size: 10px; }
+
+      .free-text { font-size: 14px; padding: 10px 12px; }
+
+      .btn-send { padding: 13px; font-size: 13px; }
+
+      /* ── Micro-questions ── */
+      .micro-q  { padding: 14px 14px; }
+      .micro-q-text { font-size: 13px; }
+
+      .micro-options { flex-wrap: wrap; gap: 5px; }
+
+      .micro-opt {
+        flex: none;
+        width: calc(50% - 3px);
+        padding: 7px 6px;
+        font-size: 11px;
+        border-radius: 8px;
+      }
+
+      /* ── Restitution ── */
+      .col-analysis { padding: 20px 16px; }
+
+      .result-theme { font-size: 17px; }
+
+      .result-explication {
+        font-size: 13px;
+        padding: 12px 14px;
+      }
+
+      .content-card-header { padding: 14px 14px; }
+      .content-icon { width: 34px; height: 34px; font-size: 16px; }
+      .content-title { font-size: 13px; }
+      .content-accroche { font-size: 11px; }
+
+      .coaching-banner {
+        flex-wrap: wrap;
+        padding: 14px 14px;
+        gap: 10px;
+      }
+      .btn-coaching { width: 100%; text-align: center; }
+
+      /* ── Questionnaires ── */
+      .qz-header { flex-direction: column; gap: 14px; }
+      .qz-title  { font-size: 20px; }
+      .qz-sub    { font-size: 12px; }
+
+      .qz-tabs { flex-wrap: wrap; gap: 6px; }
+      .qz-tab  { padding: 8px 14px; font-size: 12px; }
+
+      .qz-grid { grid-template-columns: 1fr; gap: 10px; }
+
+      .qz-card { padding: 14px; }
+      .qz-card-text { font-size: 13px; margin-bottom: 10px; }
+
+      .qz-opt {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .qz-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      #btn-qz-valider { max-width: 100% !important; }
+
+      /* ── Modale coaching ── */
+      .modal { padding: 24px 20px; border-radius: 24px; }
+      .modal-title { font-size: 18px; }
+      .modal-actions { flex-direction: column; }
+      .btn-cancel { flex: none; }
+      .btn-submit { flex: none; }
+
+      /* ── Onboarding ── */
+      .onboarding-box { padding: 32px 20px; border-radius: 24px; }
+      .onboarding-title { font-size: 24px; }
+      .onboarding-lixia { width: 80px; height: 80px; }
+
+      .form-row { grid-template-columns: 1fr; gap: 10px; }
+
+      /* ── Chat bulle ── */
+      .chat-fab { bottom: 16px; right: 16px; width: 52px; height: 52px; }
+
+      .chat-panel {
+        right: 12px;
+        left: 12px;
+        width: auto;
+        bottom: 80px;
+        max-height: 70vh;
+        border-radius: 20px;
+      }
+
+      .chat-panel-header { padding: 12px 16px 10px; }
+      .chat-panel-title  { font-size: 14px; }
+
+      .chat-bubble { font-size: 13px; padding: 10px 13px; max-width: 90%; }
+
+      .chat-input  { font-size: 14px; padding: 10px 13px; }
+      .chat-send   { width: 38px; height: 38px; font-size: 16px; }
+
+      .chat-suggestion { font-size: 11px; padding: 5px 10px; }
+
+      /* ── Toast ── */
+      .toast {
+        bottom: 80px;
+        font-size: 13px;
+        padding: 10px 18px;
+        max-width: calc(100vw - 32px);
+        text-align: center;
+      }
+
+      /* ── Navigation ── */
+      .btn-nav { padding: 6px 12px; font-size: 11px; }
+    }
+
+    /* ── Très petits écrans (< 380px) ── */
+    @media (max-width: 380px) {
+      .mood-label { display: none; } /* Juste les emojis sur très petit écran */
+      .mood-btn   { padding: 8px 2px; }
+    }
+
+    /* ── Tablette (601–860px) ── */
+    @media (min-width: 601px) and (max-width: 860px) {
+      .grid-main { grid-template-columns: 240px 1fr; gap: 14px; }
+      .shell { padding: 0 16px 80px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1841,8 +2068,11 @@
 
         <!-- Familles -->
         <div class="card-families">
-          <div class="card-title">10 familles</div>
-          <div class="family-list" id="family-list">
+          <div class="card-title card-title-toggle" onclick="toggleFamilles()" id="familles-toggle">
+            <span>10 familles</span>
+            <span class="toggle-chevron" id="familles-chevron">▾</span>
+          </div>
+          <div class="family-list" id="family-list" style="display:none">
             <!-- Rempli par JS -->
             <div style="color:var(--text-dim);font-size:13px;padding:8px 0">
               Lance un check-in pour voir tes scores.
@@ -2037,12 +2267,10 @@
        CONFIG
     ═══════════════════════════════════════════════════════ */
 
-    // URL de l'API — VERSION PRODUCTION (GitHub Pages → Render)
-    window.LIXI_API_URL = 'https://lixi-backend-847j.onrender.com';
-
     // URL de l'API — modifie cette ligne pour pointer vers Render en production
     // Local     : 'http://localhost:8000'
     // Production: 'https://lixi-backend.onrender.com'  (ton URL Render)
+    window.LIXI_API_URL = 'https://lixi-backend-847j.onrender.com';
     const API = window.LIXI_API_URL || 'http://localhost:8000';
 
     // État global de l'application
@@ -2507,6 +2735,15 @@
 
       result.classList.add('visible');
 
+      // Ouvrir le bloc familles après l'analyse
+      const familyList = document.getElementById('family-list');
+      const familyChevron = document.getElementById('familles-chevron');
+      if (familyList) {
+        familyList.style.display = 'flex';
+        familyList.style.flexDirection = 'column';
+      }
+      if (familyChevron) familyChevron.classList.add('open');
+
       // Afficher le bouton "Actualiser" maintenant qu'une analyse existe
       const btnRefresh = document.getElementById('btn-refresh');
       if (btnRefresh) btnRefresh.style.display = 'inline-flex';
@@ -2740,6 +2977,19 @@
       } catch {
         // Pas de données encore — on laisse l'écran vide, c'est normal
       }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       TOGGLE FAMILLES
+    ═══════════════════════════════════════════════════════ */
+
+    function toggleFamilles() {
+      const list    = document.getElementById('family-list');
+      const chevron = document.getElementById('familles-chevron');
+      const isOpen  = list.style.display !== 'none';
+      list.style.display = isOpen ? 'none' : 'flex';
+      list.style.flexDirection = 'column';
+      chevron.classList.toggle('open', !isOpen);
     }
 
     /* ═══════════════════════════════════════════════════════
