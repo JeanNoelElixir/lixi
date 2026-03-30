@@ -1871,6 +1871,80 @@
       .shell { padding: 0 16px 80px; }
     }
 
+
+    /* ─── Carte Instagram ─── */
+    .insta-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      margin-top: 20px;
+    }
+
+    .insta-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .insta-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .insta-icon { width: 36px; height: 36px; flex-shrink: 0; }
+
+    .insta-handle {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .insta-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .insta-follow-btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--violet);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all .15s;
+    }
+
+    .insta-follow-btn:hover {
+      background: var(--violet);
+      color: white;
+      border-color: var(--violet);
+    }
+
+    .insta-embed-wrap {
+      padding: 0;
+      background: #f9f9f9;
+    }
+
+    .insta-embed-wrap .instagram-media {
+      min-width: 0 !important;
+      width: 100% !important;
+    }
+
+    @media (max-width: 600px) {
+      .insta-card { margin-top: 14px; }
+      .insta-card-header { padding: 12px 14px; }
+      .insta-handle { font-size: 13px; }
+      .insta-follow-btn { font-size: 11px; padding: 6px 10px; }
+    }
+
   </style>
 </head>
 <body>
@@ -2230,6 +2304,49 @@
       </button>
     </div>
   </div>
+
+
+      <!-- ── Carte Instagram @heylixi ── -->
+      <div class="insta-card">
+        <div class="insta-card-header">
+          <div class="insta-brand">
+            <svg class="insta-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#F58529"/>
+                  <stop offset="50%"  stop-color="#E2529E"/>
+                  <stop offset="100%" stop-color="#7351E2"/>
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#igGrad)" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4" stroke="url(#igGrad)" stroke-width="2"/>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="url(#igGrad)"/>
+            </svg>
+            <div>
+              <div class="insta-handle">@heylixi</div>
+              <div class="insta-sub">Santé &amp; bien-être au travail</div>
+            </div>
+          </div>
+          <a class="insta-follow-btn" href="https://www.instagram.com/heylixi/"
+             target="_blank" rel="noopener">Voir le compte →</a>
+        </div>
+        <div class="insta-embed-wrap">
+          <blockquote
+            class="instagram-media"
+            data-instgrm-permalink="https://www.instagram.com/heylixi/reel/CjPtGT5hmb4/"
+            data-instgrm-version="14"
+            style="background:#fff;border:0;border-radius:0 0 12px 12px;margin:0;
+                   max-width:100%;width:100%;min-width:0;">
+            <div style="padding:16px;">
+              <a href="https://www.instagram.com/heylixi/reel/CjPtGT5hmb4/"
+                 target="_blank" rel="noopener"
+                 style="color:#7351E2;font-size:13px;font-weight:600;text-decoration:none;">
+                Voir ce Reel sur Instagram →
+              </a>
+            </div>
+          </blockquote>
+        </div>
+      </div>
 
   <!-- ══ MODAL COACHING ══ -->
   <div class="modal-overlay" id="modal-coaching">
@@ -3309,5 +3426,6 @@
     </div>
   </div>
 
+  <script async defer src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
