@@ -340,11 +340,8 @@ def analyser_profil(user_id: int, db: Session) -> AnalysisOut:
                 "priority":        main_priority,
                 "coach_proposed":  proposer_coaching,
                 "family_scores":   [
-                    {"family_name": FAMILY_LABELS.get(fc, fc), "score": sc}
-                    for fc, sc in zip(
-                        [f["family_code"] for f in scores_tries],
-                        [f["score"] for f in scores_tries]
-                    )
+                    {"family_name": FAMILY_LABELS.get(f["family_code"], f["family_code"]), "score": f["score"]}
+                    for f in family_results
                 ],
             }
             explication = generer_explication_claude(
