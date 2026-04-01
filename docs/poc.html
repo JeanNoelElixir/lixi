@@ -85,6 +85,70 @@
   .typing-dots span:nth-child(3){animation-delay:.4s;}
   @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
 
+  /* ── NOTIFICATION PROACTIVE ── */
+  .notif-overlay{
+    position:fixed;inset:0;z-index:200;
+    display:flex;align-items:flex-end;justify-content:flex-start;
+    padding:28px 32px;pointer-events:none;
+  }
+  .notif-card{
+    pointer-events:all;
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-left:4px solid var(--agent-color);
+    border-radius:16px;
+    padding:18px 20px;
+    max-width:360px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.14);
+    cursor:pointer;
+    transform:translateY(120px);
+    opacity:0;
+    transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+    position:relative;
+  }
+  .notif-card.show{transform:translateY(0);opacity:1;}
+  .notif-card:hover{box-shadow:0 12px 48px rgba(0,0,0,0.18);transform:translateY(-2px);}
+  .notif-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .notif-avatar{
+    width:38px;height:38px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);
+    display:flex;align-items:center;justify-content:center;font-size:18px;
+  }
+  .notif-meta{flex:1;}
+  .notif-name{font-size:13px;font-weight:600;color:var(--text);}
+  .notif-time{font-size:11px;color:var(--muted);margin-top:1px;}
+  .notif-close{
+    position:absolute;top:12px;right:12px;
+    width:22px;height:22px;border-radius:50%;
+    background:var(--border);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:var(--muted);transition:background .2s;
+    line-height:1;
+  }
+  .notif-close:hover{background:var(--pink-l);color:var(--pink-d);}
+  .notif-body{font-size:13px;line-height:1.55;color:var(--text);}
+  .notif-body strong{color:var(--agent-color);}
+  .notif-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:12px;padding:7px 14px;
+    background:var(--agent-color);color:white;
+    border-radius:999px;font-size:12px;font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    transition:filter .2s;
+  }
+  .notif-cta:hover{filter:brightness(1.1);}
+  .notif-ping{
+    position:absolute;top:-4px;right:-4px;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--agent-color);
+    box-shadow:0 0 0 3px white;
+  }
+  .notif-ping::after{
+    content:'';position:absolute;inset:0;border-radius:50%;
+    background:var(--agent-color);animation:ping 1.5s ease-out infinite;
+  }
+  @keyframes ping{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}
+
   /* ── CONFIG ── */
   .config-panel{background:var(--bg);overflow-y:auto;}
   .config-panel::-webkit-scrollbar{width:3px;}
@@ -403,6 +467,29 @@
   </div>
 </div>
 
+<!-- ── NOTIFICATION PROACTIVE ── -->
+<div class="notif-overlay" id="notif-overlay">
+  <div class="notif-card" id="notif-card" onclick="triggerNotifConversation()">
+    <div class="notif-ping"></div>
+    <button class="notif-close" onclick="dismissNotif(event)" title="Fermer">✕</button>
+    <div class="notif-header">
+      <div class="notif-avatar" id="notif-avatar">🌸</div>
+      <div class="notif-meta">
+        <div class="notif-name" id="notif-agent-name">LIXIA</div>
+        <div class="notif-time">À l'instant · Espace adhérent</div>
+      </div>
+    </div>
+    <div class="notif-body">
+      J'ai remarqué un <strong>remboursement d'hospitalisation</strong> sur votre compte ce mois-ci.<br>
+      Comment allez-vous depuis ? Je suis là si vous avez besoin d'un accompagnement.
+    </div>
+    <div class="notif-cta">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Répondre à LIXIA
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast">✅ Configuration appliquée avec succès</div>
 
 <script>
@@ -539,7 +626,10 @@ async function callClaude(userText) {
   isStreaming = true;
   document.getElementById('send-btn').disabled = true;
 
-  conversationHistory.push({ role: 'user', content: userText });
+  // Si appel depuis notification : l'historique est déjà préparé, on n'ajoute pas de doublon
+  if (userText !== '__from_notif__') {
+    conversationHistory.push({ role: 'user', content: userText });
+  }
 
   showTyping();
 
@@ -703,6 +793,50 @@ function saveConfig() {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+// ── Notification proactive ──
+function dismissNotif(e) {
+  e.stopPropagation();
+  const card = document.getElementById('notif-card');
+  card.style.transform = 'translateY(120px)';
+  card.style.opacity = '0';
+  setTimeout(() => document.getElementById('notif-overlay').remove(), 500);
+}
+
+function triggerNotifConversation() {
+  // Fermer la notification
+  dismissNotif({ stopPropagation: () => {} });
+
+  // Masquer les suggestions rapides
+  document.getElementById('suggestions').style.display = 'none';
+
+  // Injecter un message système dans l'historique qui contextualise
+  // (invisible pour l'utilisateur, mais Claude le voit)
+  const contextMsg = "CONTEXTE SYSTÈME : L'adhérent vient de cliquer sur une notification LIXIA lui signalant un remboursement d'hospitalisation détecté sur son compte. Engage la conversation de façon proactive et bienveillante : montre que tu as vu ce remboursement, demande comment il va depuis cette hospitalisation, et propose ton aide pour la suite (suivi, prévention, orientation vers des professionnels si besoin). Sois chaleureux et rassurant, sans être intrusif.";
+
+  conversationHistory.push({ role: 'user', content: contextMsg });
+
+  // Afficher un message utilisateur visible neutre
+  addUserMessage("J'ai reçu votre message concernant mon hospitalisation.");
+
+  // Déclencher la réponse LIXIA
+  callClaude('__from_notif__');
+}
+
+// Lancer la notification après 2.5s
+window.addEventListener('load', () => {
+  // Synchroniser l'avatar de la notif avec le paramétrage
+  setTimeout(() => {
+    const card = document.getElementById('notif-card');
+    if (card) {
+      card.classList.add('show');
+      // Sync avatar + nom depuis le paramétrage
+      document.getElementById('notif-avatar').textContent = currentEmoji;
+      document.getElementById('notif-agent-name').textContent =
+        document.getElementById('cfg-name')?.value || 'LIXIA';
+    }
+  }, 2500);
+});
 </script>
 </body>
 </html>
