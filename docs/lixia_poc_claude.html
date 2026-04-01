@@ -31,7 +31,7 @@
   .app{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 69px);overflow:hidden;}
 
   /* ── CHAT ── */
-  .chat-panel{display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border);overflow:hidden;height:100%;}
+  .chat-panel{display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border);}
   .chat-header{padding:18px 26px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
   .agent-identity{display:flex;align-items:center;gap:13px;}
   .agent-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 2px 14px rgba(226,82,158,.25);flex-shrink:0;transition:background .4s;}
@@ -40,7 +40,7 @@
   .agent-status{display:flex;align-items:center;gap:6px;font-size:12px;color:#2E9B6F;font-weight:500;}
   .agent-status::before{content:'';width:7px;height:7px;border-radius:50%;background:#2E9B6F;animation:pulse 2s infinite;}
 
-  .messages{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;min-height:0;}
+  .messages{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;}
   .messages::-webkit-scrollbar{width:3px;}
   .messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
@@ -143,10 +143,6 @@
   .disclaimer{font-size:10px;color:var(--muted);text-align:center;padding:0 16px;line-height:1.5;}
 
   /* Système prompt tag */
-  .quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
-  .qr-btn{background:var(--surface);border:1.5px solid var(--agent-color);color:var(--agent-color);border-radius:999px;padding:7px 15px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .qr-btn:hover{background:var(--agent-color);color:white;transform:translateY(-1px);}
-  .qr-btn:disabled{opacity:.4;cursor:default;transform:none;}
   .system-tag{display:inline-block;background:var(--violet-l);color:var(--violet-d);font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;margin-bottom:8px;letter-spacing:.04em;}
 </style>
 </head>
@@ -160,7 +156,7 @@
       <div style="font-size:10.5px;color:var(--muted);margin-top:1px;">Agent IA · Espace adhérent mutuelle</div>
     </div>
   </div>
-  <div class="header-badge">ELIXIR Conseil · HDS France · Souverain</div>
+  <div class="header-badge">Claude · Anthropic · HDS France</div>
 </header>
 
 <div class="app">
@@ -175,7 +171,7 @@
           <p id="agent-subtitle">Votre conseillère santé & bien-être personnelle</p>
         </div>
       </div>
-      <div class="agent-status">En ligne · LIXIA IA</div>
+      <div class="agent-status">En ligne · Claude IA</div>
     </div>
 
     <div class="messages" id="messages">
@@ -210,8 +206,8 @@
       <div class="input-footer">
         <span>Données confidentielles · HDS France</span>
         <div class="powered">
-          <div class="powered-dot">E</div>
-          <span>Propulsé par ELIXIR · LIXIA IA</span>
+          <div class="powered-dot">A</div>
+          <span>Propulsé par Claude · Anthropic</span>
         </div>
       </div>
     </div>
@@ -406,8 +402,7 @@
 <div class="toast" id="toast">✅ Configuration appliquée avec succès</div>
 
 <script>
-// URL du proxy — pointe vers le backend Render en production
-const PROXY_URL = 'https://lixia-proxy.onrender.com';
+// ── État global ──
 let currentEmoji = '🌸';
 let currentTone = 'professionnel et bienveillant';
 let isStreaming = false;
@@ -426,7 +421,7 @@ function buildSystemPrompt() {
   if (document.getElementById('f-nav').checked) funcs.push("- Orientation dans l'extranet : tu peux guider l'utilisateur vers les rubriques de son espace adhérent (contrats, attestations, déclarations, virements).");
   if (document.getElementById('f-prev').checked) funcs.push("- Prévention santé : tu peux proposer des bilans de bien-être, poser des micro-questions sur l'humeur et le mode de vie, et donner des conseils de prévention personnalisés.");
   if (document.getElementById('f-content').checked) funcs.push("- Contenus santé certifiés : tu peux référencer des guides et articles de prévention santé validés.");
-  if (document.getElementById('f-annuaire').checked) funcs.push(`- Annuaire professionnels de santé (RPPS) : pour trouver un médecin, spécialiste ou professionnel de santé, utilise l'API publique RPPS via https://api.annuaire.sante.fr/fhir/v1/Practitioner. Tu peux rechercher par nom, spécialité et commune. Pour la démo, simule des résultats réalistes basés sur le RPPS (Dr. [Prénom Nom], spécialité, adresse réelle de la ville demandée, numéro RPPS fictif à 11 chiffres, secteur de conventionnement). Mentionne toujours que les données proviennent de l'Annuaire Santé officiel (RPPS / ANS).`);
+  if (document.getElementById('f-annuaire').checked) funcs.push("- Annuaire professionnels de santé : tu peux aider à trouver des médecins, spécialistes ou pharmacies (utilise des exemples fictifs réalistes).");
   if (document.getElementById('f-coaching').checked) funcs.push("- Coaching humain : si tu détectes une fragilité ou une détresse, propose toujours la mise en relation avec un conseiller humain.");
 
   const foncsText = funcs.length > 0 ? `\n\nFonctions activées pour cette mutuelle :\n${funcs.join('\n')}` : '';
@@ -434,7 +429,6 @@ function buildSystemPrompt() {
 
   return `Tu es ${name}, ${subtitle}.
 Tu es un agent IA spécialisé en santé et bien-être, intégré dans l'espace adhérent d'une mutuelle santé française.
-Tu as été développé par ELIXIR Conseil. Tu ne mentionnes jamais de technologie sous-jacente, de fournisseur d'IA ou de modèle de langage.
 
 Ton registre de communication est : ${currentTone}.
 Ton niveau d'empathie est de ${empathy}/100 — plus ce chiffre est élevé, plus tu dois être chaleureux et humain dans tes formulations.
@@ -446,19 +440,9 @@ Règles importantes :
 - Tu protèges toujours la confidentialité des données personnelles.
 - Tu réponds toujours en français.
 - Si une question dépasse tes capacités ou implique une urgence médicale, tu renvoies vers le 15 (SAMU) ou un médecin.
-- Tu utilises parfois des emojis pertinents pour rendre les échanges plus agréables, sans en abuser.
+- Tu utilises parfois des emojis pertinents pour rendre les échanges plus agréables, sans en abuser.${foncsText}${extraText}
 
-RÈGLE BOUTONS DE RÉPONSE RAPIDE (très important) :
-Quand tu poses une question fermée (oui/non, choix entre options, évaluation sur une échelle), tu DOIS terminer ta réponse par un bloc JSON spécial sur une ligne seule, avec ce format exact :
-[QUICK_REPLIES:option1|option2|option3]
-Exemples :
-- Question oui/non → [QUICK_REPLIES:Oui ✅|Non ❌]
-- Niveau d'énergie → [QUICK_REPLIES:Très bien 💪|Correct 🙂|Fatigué 😔|Épuisé 😴]
-- Sommeil → [QUICK_REPLIES:Réparateur 😴|Correct 😐|Difficile 😣|Très perturbé 😫]
-- Urgence → [QUICK_REPLIES:Oui, urgent|Non, c'est pour info|Je ne sais pas]
-Ce bloc sera automatiquement converti en boutons cliquables. Ne l'oublie jamais pour les questions fermées.${foncsText}${extraText}
-
-Contexte de démo : tu es dans un POC pour l'appel à projets BPI "Pionniers de l'IA". Les données adhérent sont fictives mais réalistes.`;
+Contexte de démo : tu es dans un POC de démonstration pour l'appel à projets BPI "Pionniers de l'IA". Les données adhérent sont fictives mais réalistes.`;
 }
 
 // ── Utilitaires ──
@@ -478,8 +462,7 @@ function handleKey(e) {
 
 function scrollToBottom() {
   const msgs = document.getElementById('messages');
-  // setTimeout 0 laisse le DOM se mettre à jour avant de scroller
-  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 0);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 // ── Ajout de message utilisateur ──
@@ -534,19 +517,27 @@ function removeTyping() {
   if (t) t.remove();
 }
 
-// ── Appel LIXIA IA (sans streaming pour fiabilité Render) ──
+// ── Appel Claude API avec streaming ──
 async function callClaude(userText) {
   isStreaming = true;
   document.getElementById('send-btn').disabled = true;
 
+  // Ajouter message à l'historique
   conversationHistory.push({ role: 'user', content: userText });
 
+  // Afficher indicateur
   showTyping();
+  await new Promise(r => setTimeout(r, 400));
+  removeTyping();
+
+  const bubbleId = createAgentBubble();
+  const bubble = document.getElementById(bubbleId);
+  const timeEl = document.getElementById('time-' + bubbleId);
 
   let fullText = '';
 
   try {
-    const response = await fetch(`${PROXY_URL}/v1/messages`, {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -554,88 +545,71 @@ async function callClaude(userText) {
         max_tokens: 1000,
         system: buildSystemPrompt(),
         messages: conversationHistory,
-        stream: false
+        stream: true
       })
     });
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || `Erreur ${response.status}`);
+      throw new Error(err.error?.message || 'Erreur API');
     }
 
-    const data = await response.json();
-    fullText = data.content?.[0]?.text || '';
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
 
-    removeTyping();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    // Créer la bulle de réponse
-    const bubbleId = createAgentBubble();
-    const bubble = document.getElementById(bubbleId);
-    const timeEl = document.getElementById('time-' + bubbleId);
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n');
 
-    // Parser QUICK_REPLIES
-    const qrMatch = fullText.match(/\[QUICK_REPLIES:([^\]]+)\]/);
-    const cleanText = fullText.replace(/\[QUICK_REPLIES:[^\]]+\]/g, '').trim();
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              fullText += parsed.delta.text;
+              // Rendu Markdown basique
+              bubble.innerHTML = renderMarkdown(fullText);
+              scrollToBottom();
+            }
+          } catch {}
+        }
+      }
+    }
 
+    // Fin du streaming
     bubble.classList.remove('streaming-cursor');
-    bubble.innerHTML = renderMarkdown(cleanText);
-
-    if (qrMatch) {
-      const options = qrMatch[1].split('|');
-      const qrDiv = document.createElement('div');
-      qrDiv.className = 'quick-replies';
-      options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'qr-btn';
-        btn.textContent = opt.trim();
-        btn.onclick = () => {
-          qrDiv.querySelectorAll('.qr-btn').forEach(b => b.disabled = true);
-          btn.style.background = 'var(--agent-color)';
-          btn.style.color = 'white';
-          sendSuggestion(opt.trim());
-        };
-        qrDiv.appendChild(btn);
-      });
-      bubble.parentNode.insertBefore(qrDiv, bubble.nextSibling);
-    }
-
     timeEl.textContent = getTime();
-    conversationHistory.push({ role: 'assistant', content: cleanText });
+
+    // Ajouter à l'historique
+    conversationHistory.push({ role: 'assistant', content: fullText });
 
   } catch (err) {
-    removeTyping();
-    const bubbleId = createAgentBubble();
-    const bubble = document.getElementById(bubbleId);
-    const timeEl = document.getElementById('time-' + bubbleId);
     bubble.classList.remove('streaming-cursor');
-    bubble.innerHTML = `<span style="color:#E24B4A">⚠️ ${err.message}</span>`;
+    bubble.innerHTML = `<span style="color:#E24B4A">⚠️ Une erreur est survenue : ${err.message}</span>`;
     timeEl.textContent = getTime();
-    conversationHistory.pop();
+    conversationHistory.pop(); // Retirer le message user si erreur
   }
 
   isStreaming = false;
   document.getElementById('send-btn').disabled = false;
-  scrollToBottom();
   document.getElementById('chat-input').focus();
 }
 
-// ── Markdown propre ──
+// ── Markdown basique ──
 function renderMarkdown(text) {
-  // 1. Échapper HTML
-  let t = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  // 2. Supprimer les titres ## (les afficher en gras sans le ##)
-  t = t.replace(/^#{1,3}\s+(.+)$/gm, '<strong>$1</strong>');
-  // 3. Gras et italique
-  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  // 4. Listes (- ou •)
-  t = t.replace(/^[-•]\s+(.+)$/gm, '<span style="display:block;padding-left:12px">• $1</span>');
-  // 5. Listes numérotées
-  t = t.replace(/^\d+\.\s+(.+)$/gm, '<span style="display:block;padding-left:12px">$1</span>');
-  // 6. Sauts de ligne
-  t = t.replace(/\n\n/g, '<br>');
-  t = t.replace(/\n/g, '<br>');
-  return t;
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+    .replace(/^• /gm, '&bull; ')
+    .replace(/^- /gm, '&bull; ');
 }
 
 // ── Envoi message ──
