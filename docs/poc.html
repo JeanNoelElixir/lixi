@@ -18,17 +18,29 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-  header{display:flex;align-items:center;justify-content:space-between;padding:16px 36px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
-  .logo{display:flex;align-items:center;gap:12px;}
-  .logo-bubble{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 12px rgba(226,82,158,.3);transition:transform .3s;}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-bubble{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 12px rgba(226,82,158,.3);transition:transform .3s;}
   .logo-bubble:hover{transform:scale(1.1) rotate(-5deg);}
-  .logo-name{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text);letter-spacing:-.5px;}
+  .logo-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);letter-spacing:-.5px;}
   .logo-name span{color:var(--agent-color);transition:color .4s;}
+  .header-right{display:flex;align-items:center;gap:10px;}
   .header-badge{display:flex;align-items:center;gap:8px;background:var(--violet-l);color:var(--violet-d);padding:5px 13px;border-radius:999px;font-size:12px;font-weight:500;}
   .header-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--violet);animation:pulse 2s infinite;}
+  /* Bouton paramétrage mobile */
+  .config-toggle-btn{
+    display:none;
+    align-items:center;gap:6px;
+    background:var(--agent-color-l);border:1.5px solid var(--agent-color);
+    color:var(--agent-color);border-radius:10px;
+    padding:7px 12px;font-size:12px;font-weight:600;
+    font-family:'DM Sans',sans-serif;cursor:pointer;
+    transition:all .2s;white-space:nowrap;
+  }
+  .config-toggle-btn:hover{background:var(--agent-color);color:white;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  .app{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 69px);overflow:hidden;}
+  .app{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 65px);overflow:hidden;}
 
   /* ── CHAT ── */
   .chat-panel{display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border);overflow:hidden;height:100%;}
@@ -212,6 +224,65 @@
   .qr-btn:hover{background:var(--agent-color);color:white;transform:translateY(-1px);}
   .qr-btn:disabled{opacity:.4;cursor:default;transform:none;}
   .system-tag{display:inline-block;background:var(--violet-l);color:var(--violet-d);font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;margin-bottom:8px;letter-spacing:.04em;}
+
+  /* ── DRAWER MOBILE ── */
+  .drawer-overlay{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,0.45);z-index:300;
+    opacity:0;transition:opacity .3s;
+  }
+  .drawer-overlay.open{opacity:1;}
+  .config-panel{
+    background:var(--bg);overflow-y:auto;
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .config-panel::-webkit-scrollbar{width:3px;}
+  .config-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  /* ── RESPONSIVE MOBILE ── */
+  @media (max-width: 700px) {
+    header{padding:12px 16px;}
+    .header-badge{display:none;}
+    .config-toggle-btn{display:flex;}
+
+    .app{
+      grid-template-columns:1fr;
+      height:calc(100vh - 57px);
+    }
+
+    /* Le config-panel devient un drawer */
+    .config-panel{
+      position:fixed;
+      top:0;right:0;bottom:0;
+      width:88vw;max-width:360px;
+      z-index:350;
+      transform:translateX(110%);
+      box-shadow:-8px 0 40px rgba(0,0,0,0.15);
+    }
+    .config-panel.drawer-open{
+      transform:translateX(0);
+    }
+    .drawer-overlay{display:block;}
+
+    /* Chat plein écran */
+    .chat-panel{
+      border-right:none;
+      height:100%;
+    }
+    .chat-header{padding:14px 16px 12px;}
+    .messages{padding:16px;}
+    .suggestions{padding:0 16px 12px;}
+    .chat-input-area{padding:10px 14px 14px;}
+
+    /* Notification mobile */
+    .notif-overlay{padding:16px;}
+    .notif-card{max-width:100%;}
+  }
+
+  @media (max-width: 400px) {
+    .logo-name{font-size:17px;}
+    .agent-info h2{font-size:14px;}
+  }
 </style>
 </head>
 <body>
@@ -221,11 +292,20 @@
     <div class="logo-bubble" id="header-avatar">🌸</div>
     <div>
       <span class="logo-name" id="header-name">Li<span>xi</span>a</span>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:1px;">Agent IA · Espace adhérent mutuelle</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:1px;display:none" id="header-sub">Agent IA · Espace adhérent</div>
     </div>
   </div>
-  <div class="header-badge">ELIXIR Conseil · HDS France · Souverain</div>
+  <div class="header-right">
+    <div class="header-badge">ELIXIR Conseil · HDS France · Souverain</div>
+    <button class="config-toggle-btn" onclick="openDrawer()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
+      Paramétrage
+    </button>
+  </div>
 </header>
+
+<!-- Overlay drawer mobile -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 
 <div class="app">
 
@@ -284,11 +364,16 @@
   <!-- ═══ PARAMÉTRAGE ═══ -->
   <div class="config-panel">
     <div class="config-header">
-      <h3>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
-        Paramétrage de l'agent
-      </h3>
-      <p>Configuration par mutuelle · Appliquée en temps réel</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <h3>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M20 12h2M2 12h2M12 20v2M12 2v2"/></svg>
+            Paramétrage de l'agent
+          </h3>
+          <p>Configuration par mutuelle · Appliquée en temps réel</p>
+        </div>
+        <button onclick="closeDrawer()" style="background:var(--border);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);flex-shrink:0;margin-left:12px;" title="Fermer">✕</button>
+      </div>
     </div>
 
     <div class="config-body">
@@ -786,6 +871,23 @@ function selectTone(el, tone) {
   document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   currentTone = tone;
+}
+
+// ── Drawer mobile ──
+function openDrawer() {
+  document.querySelector('.config-panel').classList.add('drawer-open');
+  const ov = document.getElementById('drawer-overlay');
+  ov.style.display = 'block';
+  requestAnimationFrame(() => ov.classList.add('open'));
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.querySelector('.config-panel').classList.remove('drawer-open');
+  const ov = document.getElementById('drawer-overlay');
+  ov.classList.remove('open');
+  setTimeout(() => { ov.style.display = 'none'; }, 300);
+  document.body.style.overflow = '';
 }
 
 function saveConfig() {
