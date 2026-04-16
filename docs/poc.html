@@ -339,8 +339,10 @@
     <div class="suggestions" id="suggestions">
       <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📊 Mes remboursements</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🌿 Bilan bien-être</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🦷 Mes garanties dentaires</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">👓 Remboursement lunettes</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🔍 Trouver un médecin</button>
-      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📋 Mon contrat</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📋 Portabilité des droits</button>
     </div>
 
     <div class="chat-input-area">
@@ -508,6 +510,14 @@
             </div>
             <label class="toggle"><input type="checkbox" id="f-coaching" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">📄 Garanties & procédures MBA</div>
+              <div class="toggle-desc">Tableau de garanties + Notice d'information chargés</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="f-mba-docs" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
         </div>
       </div>
 
@@ -586,6 +596,129 @@ let isStreaming = false;
 let conversationHistory = [];
 
 // ── Construction du system prompt dynamique ──
+// ── Base de connaissance MBA Mutuelle (injectée dans le system prompt) ──
+const MBA_GARANTIES = `
+=== TABLEAU DE GARANTIES MBA ENTREPRISE — Formule 2, Base 2 Obligatoire ===
+
+HOSPITALISATION (établissements conventionnés et non conventionnés)
+- Honoraires OPTAM : 125% BR | Non-OPTAM : 105% BR
+- Forfait journalier : 100% FR (durée illimitée)
+- Frais de séjour : 125% BR (sur demande de prise en charge préalable)
+- Chambre particulière séjour hospitalier : 40 €/jour (illimité, 180j/an en psychiatrie)
+- Chambre particulière hospitalisation ambulatoire : 25 €/jour
+- Frais accompagnement enfant <12 ans hospitalisé : 15 €/jour
+- Soins externes : 100% BR
+- Participation forfaitaire actes coûteux : Frais Réels
+
+SOINS COURANTS
+- Honoraires médicaux OPTAM : 125% BR | Non-OPTAM : 105% BR
+- Auxiliaires médicaux : 125% BR
+- Séances psychologie remboursées SS : 100% BR
+- Analyses et biologie : 125% BR
+- Pharmacie remboursée SS : 100% BR
+- Appareillage (y compris prothèses capillaires/mammaires SS) : 125% BR
+- Transport remboursé SS : 125% BR
+
+AIDES AUDITIVES
+- Prothèses Classe I (100% Santé) : 100% PLV — renouvellement tous les 4 ans. Plafond total 1 700€/aide auditive.
+- Prothèses Classe II : 150% BR — renouvellement tous les 4 ans
+- Piles et entretien remboursés SS : 150% BR
+
+DENTAIRE
+- Prothèses 100% Santé : 100% HLF (zéro reste à charge)
+- Prothèses remboursées SS (tarifs maîtrisés et libres) : 250% BR
+- Prothèses non remboursées SS : 230 €/acte. Les inter de bridges ne sont PAS remboursés.
+- Soins dentaires remboursés SS : 125% BR
+- Orthodontie remboursée SS : 250% BR
+- Maladie parodontale remboursée SS : 125% BR
+- Orthodontie non remboursée SS (y compris adulte, base TO90) : 460 €/an — seuls les orthodontistes sont remboursés
+- Maladie parodontale non remboursée SS : 230 €/acte
+- Plafond prothèses/orthodontie/parodontale non remboursées SS : 690 €/an
+
+OPTIQUE
+- Monture + verres Classe A (100% Santé) : 100% PLV — renouvellement tous les 2 ans (1 an <16 ans ou évolution de vue)
+- Monture Classe B : 70 € | 2 verres simples : 125 € | 2 verres complexes : 200 € | 2 verres très complexes : 300 €
+- Prestation d'appairage et verres avec filtre (Classe A et B) : 100% PLV
+- Lentilles (remboursées ou non SS) : 100 €/an
+
+PRÉVENTION
+- Actes de prévention remboursés SS : 100% BR
+- Aide à l'arrêt du tabac (médicaments HAS, hors cigarette électronique) : 30 €/an
+
+BIEN-ÊTRE
+- Sport jeunes (<25 ans, association sportive reconnue fédération française) : 40 €/an
+- Sport sur ordonnance (APA, formulaire médecin) : 100 €/an
+- Cure thermale (honoraires, soins, transport, hébergement SS) : 100% BR
+
+PRESTATIONS COMPLÉMENTAIRES
+- Téléconsultations remboursées SS : Incluses (mêmes conditions que présentiel)
+- Téléconsultations non remboursées SS (praticien avec n° RPPS, plateforme hébergée en France) : 30 €/téléconsultation, limité à 3/an
+- Assistance santé (aide domicile, garde enfants/malade, aide psycho-sociale) : Incluse
+- Protection juridique médicale : Incluse
+- Analyse des devis optiques, dentaires et auditifs : Incluse
+
+LEXIQUE
+- BR = Base de Remboursement Sécurité sociale
+- HLF = Honoraires Limites de Facturation
+- PLV = Prix Limites de Vente
+- OPTAM = Option Pratique Tarifaire Maîtrisée (médecins limitant leurs dépassements)
+`;
+
+const MBA_PROCEDURES = `
+=== NOTICE D'INFORMATION MBA COLLECTIF SANTÉ — Procédures clés ===
+
+ADHÉSION
+- Contrat collectif OBLIGATOIRE : affiliation automatique dès l'embauche ou la date d'effet du contrat
+- Contrat collectif FACULTATIF : adhésion individuelle volontaire, en plus du contrat de base
+- Les deux contrats sont juridiquement distincts
+
+BÉNÉFICIAIRES / AYANTS DROIT
+- Conjoint, partenaire PACS, concubin
+- Enfants jusqu'au 31 décembre de l'année de leurs 25 ans (justificatif études dès 21 ans)
+- Enfants invalides quel que soit leur âge (invalidité reconnue avant 21 ans)
+- Cotisation « Enfant » GRATUITE à partir du 3e enfant affilié (structure Adulte/Enfant)
+
+JUSTIFICATIFS À FOURNIR
+- Copie livret de famille, certificat de mariage
+- Attestation PACS ou attestation sur l'honneur de vie commune + justificatif domicile commun
+- Attestation Sécurité sociale (carte Vitale) pour chaque bénéficiaire
+- Certificat de scolarité annuel pour enfants de 21 à 25 ans
+
+CHANGEMENT DE FORMULE
+- Possible après 12 mois dans la formule précédente
+- Immédiatement en cas de modification réglementaire, de formule ou de situation familiale (délai de demande : 2 mois après l'événement)
+
+RÉSILIATION / CESSATION
+- Contrat obligatoire : fin automatique à la sortie de l'entreprise, retraite, décès, changement de catégorie
+- Contrat facultatif : résiliation possible au 31/12 (demande avant le 31/10) ou après 12 mois (loi 2019-733)
+- PORTABILITÉ (art. L.911-8 CSS) : maintien gratuit des garanties en cas de chômage, pendant la durée d'indemnisation (max 12 mois). Condition : licenciement autre que faute lourde, prise en charge Pôle Emploi
+- LOI ÉVIN : maintien possible à titre individuel (anciens salariés en incapacité/invalidité/chômage/retraite) — demande dans les 6 mois suivant la rupture du contrat
+
+TIERS PAYANT
+- Carte de tiers payant mutualiste remise à l'adhérent
+- En cas d'hospitalisation : informer la Mutuelle pour obtenir une attestation de prise en charge
+- Carte à restituer dans les 15 jours après la fin de la qualité de membre participant
+
+REMBOURSEMENTS
+- Délai de prescription : 2 ans à compter de la date des soins ou du remboursement SS
+- Soins à l'étranger : pris en charge si remboursés par la SS française ou un organisme SS européen
+
+CONTACT ET RÉCLAMATIONS
+- Espace personnel sécurisé : www.mbamutuelle.com
+- Email : contact@mbamutuelle.com
+- Courrier : MBA Mutuelle, 62 Bd Jean Mermoz CS 90739, 35207 Rennes Cedex 2
+- Médiateur : MED CONSO DEV — www.medconsodev.eu
+- Contrôle prudentiel : ACPR — 4 Place de Budapest, 75436 Paris CS 92459
+- DPO (données personnelles) : dpo@mbamutuelle.com
+
+EXCLUSIONS PRINCIPALES
+- Accidents du travail couverts intégralement par la législation AT
+- Chirurgie esthétique et soins de confort non pris en charge SS
+- Actes hors nomenclature non couverts (sauf exceptions mentionnées)
+- Établissements médico-sociaux (EHPAD, MAS)
+- Frais de blanchiment et facettes dentaires JAMAIS remboursés
+`;
+
 function buildSystemPrompt() {
   const name = document.getElementById('cfg-name').value || 'LIXIA';
   const subtitle = document.getElementById('cfg-subtitle').value;
@@ -600,6 +733,10 @@ function buildSystemPrompt() {
   if (document.getElementById('f-content').checked) funcs.push("- Contenus santé certifiés : tu peux référencer des guides et articles de prévention santé validés.");
   if (document.getElementById('f-annuaire').checked) funcs.push(`- Annuaire professionnels de santé (RPPS) : pour trouver un médecin, spécialiste ou professionnel de santé, utilise l'API publique RPPS via https://api.annuaire.sante.fr/fhir/v1/Practitioner. Tu peux rechercher par nom, spécialité et commune. Pour la démo, simule des résultats réalistes basés sur le RPPS (Dr. [Prénom Nom], spécialité, adresse réelle de la ville demandée, numéro RPPS fictif à 11 chiffres, secteur de conventionnement). Mentionne toujours que les données proviennent de l'Annuaire Santé officiel (RPPS / ANS).`);
   if (document.getElementById('f-coaching').checked) funcs.push("- Coaching humain : si tu détectes une fragilité ou une détresse, propose toujours la mise en relation avec un conseiller humain.");
+
+  // Connaissance contrat MBA
+  const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
+  const mbaContext = useMBA ? `\n\n${MBA_GARANTIES}\n\n${MBA_PROCEDURES}` : '';
 
   const foncsText = funcs.length > 0 ? `\n\nFonctions activées pour cette mutuelle :\n${funcs.join('\n')}` : '';
   const extraText = extra ? `\n\nInstructions spécifiques de la mutuelle :\n${extra}` : '';
@@ -619,6 +756,7 @@ Règles importantes :
 - Tu réponds toujours en français.
 - Si une question dépasse tes capacités ou implique une urgence médicale, tu renvoies vers le 15 (SAMU) ou un médecin.
 - Tu utilises parfois des emojis pertinents pour rendre les échanges plus agréables, sans en abuser.
+- Quand tu cites des garanties ou des montants de remboursement, tu précises toujours ta source (tableau de garanties MBA Entreprise Formule 2) et tu invites l'adhérent à vérifier sur mbamutuelle.com ou auprès de son conseiller en cas de doute.
 
 RÈGLE BOUTONS DE RÉPONSE RAPIDE (très important) :
 Quand tu poses une question fermée (oui/non, choix entre options, évaluation sur une échelle), tu DOIS terminer ta réponse par un bloc JSON spécial sur une ligne seule, avec ce format exact :
@@ -628,7 +766,7 @@ Exemples :
 - Niveau d'énergie → [QUICK_REPLIES:Très bien 💪|Correct 🙂|Fatigué 😔|Épuisé 😴]
 - Sommeil → [QUICK_REPLIES:Réparateur 😴|Correct 😐|Difficile 😣|Très perturbé 😫]
 - Urgence → [QUICK_REPLIES:Oui, urgent|Non, c'est pour info|Je ne sais pas]
-Ce bloc sera automatiquement converti en boutons cliquables. Ne l'oublie jamais pour les questions fermées.${foncsText}${extraText}
+Ce bloc sera automatiquement converti en boutons cliquables. Ne l'oublie jamais pour les questions fermées.${foncsText}${extraText}${mbaContext}
 
 Contexte de démo : tu es dans un POC pour l'appel à projets BPI "Pionniers de l'IA". Les données adhérent sont fictives mais réalistes.`;
 }
