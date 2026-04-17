@@ -907,17 +907,16 @@ function showExtranetNotif() {
     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre à ${document.getElementById('cfg-name')?.value || 'LIXIA'}`;
   card.onclick = triggerNotifConversation;
   card.classList.add('show');
+}
 
 // ── Afficher la notif de reprise QVCT (basée sur le dernier score) ──
 function showQvctReturnNotif() {
   const card = document.getElementById('notif-card');
   if (!card) return;
 
-  // Simuler le dernier score connu
   const prevLabel = 'Besoin de souffler';
   const prevEmoji = '🤯';
 
-  // Configurer la carte
   card.dataset.type = 'qvct';
   document.getElementById('notif-avatar').textContent = currentEmoji;
   document.getElementById('notif-agent-name').textContent =
@@ -928,8 +927,8 @@ function showQvctReturnNotif() {
   card.querySelector('.notif-cta').innerHTML =
     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre à ${document.getElementById('cfg-name')?.value || 'LIXIA'}`;
   card.onclick = triggerNotifQvct;
-
   card.classList.add('show');
+}
 
 // ── Sélection humeur ──
 function selectMood(btn) {
