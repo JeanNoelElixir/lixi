@@ -218,6 +218,45 @@
   .toast.show{transform:translateX(-50%) translateY(0);}
   .disclaimer{font-size:10px;color:var(--muted);text-align:center;padding:0 16px;line-height:1.5;}
 
+  /* ── PROFIL BUTTONS ── */
+  .profile-btn{flex:1;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:11.5px;font-family:'DM Sans',sans-serif;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
+  .profile-btn.active{border-color:var(--agent-color);background:var(--agent-color-l);color:var(--agent-color);font-weight:600;}
+  .profile-btn:hover:not(.active){border-color:var(--muted);color:var(--text);}
+  .section-extranet{} .section-qvct{display:none;}
+
+  /* ── CHECK-IN HUMEUR ── */
+  .checkin-panel{padding:18px 26px 14px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--agent-color-l) 0%,var(--surface) 100%);display:none;}
+  .checkin-panel.visible{display:block;}
+  .checkin-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:13px;}
+  .mood-row{display:flex;justify-content:space-between;gap:6px;}
+  .mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:2px solid transparent;cursor:pointer;padding:6px 2px;border-radius:14px;transition:all .2s;}
+  .mood-btn:hover{background:var(--agent-color-l);border-color:var(--agent-color);}
+  .mood-btn.selected{background:var(--agent-color-l);border-color:var(--agent-color);}
+  .mood-circle{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color),var(--violet));display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 3px 10px rgba(226,82,158,.2);transition:transform .2s;}
+  .mood-btn:hover .mood-circle,.mood-btn.selected .mood-circle{transform:scale(1.1);}
+  .mood-label{font-size:10px;color:var(--muted);text-align:center;line-height:1.3;font-weight:500;}
+  .fragility-indicator{margin:10px 0 0;padding:9px 13px;border-radius:9px;background:var(--agent-color-l);border:1px solid var(--agent-color);font-size:11.5px;color:var(--agent-color);display:none;align-items:center;gap:7px;}
+  .fragility-indicator.show{display:flex;}
+
+  /* ── MODALE COACH ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.48);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal-card{background:var(--surface);border-radius:20px;padding:26px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.18);transform:translateY(24px) scale(.97);transition:transform .38s cubic-bezier(.34,1.56,.64,1);}
+  .modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
+  .modal-top{display:flex;align-items:center;gap:13px;margin-bottom:16px;}
+  .modal-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color),var(--violet));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .modal-h{font-family:'DM Serif Display',serif;font-size:17px;color:var(--text);}
+  .modal-sub{font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .modal-text{font-size:13px;line-height:1.6;color:var(--text);margin-bottom:18px;}
+  .modal-form{display:flex;flex-direction:column;gap:11px;}
+  .modal-input,.modal-select{padding:9px 13px;border-radius:9px;border:1.5px solid var(--border);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s;width:100%;box-sizing:border-box;}
+  .modal-input:focus,.modal-select:focus{border-color:var(--agent-color);}
+  .modal-row{display:flex;gap:9px;margin-top:4px;}
+  .modal-btn-ok{flex:1;padding:11px;background:linear-gradient(135deg,var(--agent-color),var(--violet));color:white;border:none;border-radius:10px;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;}
+  .modal-btn-ok:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .modal-btn-cancel{padding:11px 16px;background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;}
+  .modal-btn-cancel:hover{border-color:var(--muted);color:var(--text);}
+
   /* Système prompt tag */
   .quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
   .qr-btn{background:var(--surface);border:1.5px solid var(--agent-color);color:var(--agent-color);border-radius:999px;padding:7px 15px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;}
@@ -322,6 +361,36 @@
       <div class="agent-status">En ligne · LIXIA IA</div>
     </div>
 
+    <!-- Check-in humeur QVCT -->
+    <div class="checkin-panel" id="checkin-panel">
+      <div class="checkin-title">Comment allez-vous cette semaine ?</div>
+      <div class="mood-row">
+        <button class="mood-btn" data-mood="5" data-label="Au top" onclick="selectMood(this)">
+          <div class="mood-circle">😄</div>
+          <span class="mood-label">Au top</span>
+        </button>
+        <button class="mood-btn" data-mood="4" data-label="Ça va" onclick="selectMood(this)">
+          <div class="mood-circle">🙂</div>
+          <span class="mood-label">Ça va</span>
+        </button>
+        <button class="mood-btn" data-mood="3" data-label="Besoin de souffler" onclick="selectMood(this)">
+          <div class="mood-circle">🤯</div>
+          <span class="mood-label">Besoin de souffler</span>
+        </button>
+        <button class="mood-btn" data-mood="2" data-label="Anxieux" onclick="selectMood(this)">
+          <div class="mood-circle">😔</div>
+          <span class="mood-label">Anxieux</span>
+        </button>
+        <button class="mood-btn" data-mood="1" data-label="J'ai mal" onclick="selectMood(this)">
+          <div class="mood-circle">🤕</div>
+          <span class="mood-label">J'ai mal</span>
+        </button>
+      </div>
+      <div class="fragility-indicator" id="fragility-indicator">
+        ⚠️ <span id="fragility-text">Fragilité détectée — coaching disponible</span>
+      </div>
+    </div>
+
     <div class="messages" id="messages">
       <div class="msg agent">
         <div class="msg-avatar" id="first-avatar">🌸</div>
@@ -376,9 +445,21 @@
         </div>
         <button onclick="closeDrawer()" style="background:var(--border);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);flex-shrink:0;margin-left:12px;" title="Fermer">✕</button>
       </div>
+      <!-- Sélecteur de profil -->
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="profile-btn active" id="profile-extranet" onclick="switchProfile('extranet')">
+          🏥 Extranet Adhérent
+        </button>
+        <button class="profile-btn" id="profile-qvct" onclick="switchProfile('qvct')">
+          💼 Agent Salarié QVCT
+        </button>
+      </div>
     </div>
 
     <div class="config-body">
+
+      <!-- ═══ SECTION EXTRANET ═══ -->
+      <div class="section-extranet" id="section-extranet">
 
       <!-- Identité -->
       <div class="config-section">
@@ -552,12 +633,118 @@
         </div>
       </div>
 
+      </div><!-- /section-extranet -->
+
       <button class="save-btn" onclick="saveConfig()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Appliquer la configuration
       </button>
 
       <p class="disclaimer">Les paramètres s'appliquent à l'instance de votre mutuelle.<br>Chaque modification est tracée dans le journal d'audit.</p>
+
+      <!-- ═══ SECTION QVCT (cachée par défaut) ═══ -->
+      <div class="section-qvct" id="section-qvct">
+
+        <div class="config-section">
+          <div class="config-section-header">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Bien-être au travail (QVCT)
+          </div>
+          <div class="config-section-body" style="gap:0">
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">😊 Check-in humeur hebdomadaire</div>
+                <div class="toggle-desc">Les 5 emojis s'affichent à l'ouverture</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-checkin" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">📊 Questionnaire COPSOQ</div>
+                <div class="toggle-desc">Charge psychosociale au travail</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-copsoq" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🌍 Questionnaire WHO-5 / WHOCOL</div>
+                <div class="toggle-desc">Bien-être général et qualité de vie</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-whocol" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">⚖️ Ressources droit du travail</div>
+                <div class="toggle-desc">Références légales officielles (Code du travail)</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-droit" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🌿 Prévention santé au travail</div>
+                <div class="toggle-desc">TMS, risques psychosociaux, burn-out</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-prev" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🤝 Orientation coach LIXI</div>
+                <div class="toggle-desc">Proposition RDV si fragilité détectée</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-coach" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-header">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Coach LIXI
+          </div>
+          <div class="config-section-body">
+            <div class="param-row">
+              <span class="param-label">Nom du coach</span>
+              <input type="text" class="param-input" id="q-coach-name" value="Sophie Martin" placeholder="Prénom Nom du coach"/>
+            </div>
+            <div class="param-row">
+              <span class="param-label">Spécialité</span>
+              <input type="text" class="param-input" id="q-coach-spec" value="Coach certifiée QVCT & bien-être au travail" placeholder="Spécialité"/>
+            </div>
+            <div class="param-row">
+              <span class="param-label">Seuil de déclenchement</span>
+              <div class="tone-btns">
+                <button class="tone-btn" onclick="selectToneBtn(this,'q-threshold')">Score ≤ 1</button>
+                <button class="tone-btn active" onclick="selectToneBtn(this,'q-threshold')" data-val="2">Score ≤ 2</button>
+                <button class="tone-btn" onclick="selectToneBtn(this,'q-threshold')" data-val="3">Score ≤ 3</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-header">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Confidentialité QVCT
+          </div>
+          <div class="config-section-body" style="gap:0">
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🔒 Données anonymisées</div>
+                <div class="toggle-desc">Aucune donnée nominative transmise à l'employeur</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-anon" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🇫🇷 Hébergement HDS France</div>
+                <div class="toggle-desc">Traitement exclusif sur serveurs certifiés HDS</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-hds" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /section-qvct -->
     </div>
   </div>
 </div>
@@ -585,6 +772,40 @@
   </div>
 </div>
 
+<!-- Modale RDV Coach -->
+<div class="modal-overlay" id="coach-modal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <div class="modal-avatar">🤝</div>
+      <div>
+        <div class="modal-h">Prendre rendez-vous</div>
+        <div class="modal-sub" id="modal-coach-name">avec Sophie Martin · Coach QVCT</div>
+      </div>
+    </div>
+    <div class="modal-text" id="modal-coach-message">
+      Je pense qu'un échange avec notre coach pourrait vous être utile. Quelques minutes ensemble pour parler de votre situation dans un cadre confidentiel et bienveillant.
+    </div>
+    <div class="modal-form">
+      <input class="modal-input" id="rdv-prenom" type="text" placeholder="Votre prénom"/>
+      <input class="modal-input" id="rdv-email" type="email" placeholder="Votre email professionnel"/>
+      <select class="modal-select" id="rdv-creneau">
+        <option value="">Choisir un créneau…</option>
+        <option>Lundi 28 avril — 10h00</option>
+        <option>Lundi 28 avril — 14h30</option>
+        <option>Mardi 29 avril — 9h00</option>
+        <option>Mardi 29 avril — 16h00</option>
+        <option>Mercredi 30 avril — 11h00</option>
+        <option>Jeudi 1er mai — 9h30</option>
+      </select>
+      <input class="modal-input" id="rdv-sujet" type="text" placeholder="Sujet (optionnel — confidentiel)"/>
+      <div class="modal-row">
+        <button class="modal-btn-cancel" onclick="closeCoachModal()">Plus tard</button>
+        <button class="modal-btn-ok" onclick="confirmRdv()">✓ Confirmer le RDV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast">✅ Configuration appliquée avec succès</div>
 
 <script>
@@ -594,6 +815,153 @@ let currentEmoji = '🌸';
 let currentTone = 'professionnel et bienveillant';
 let isStreaming = false;
 let conversationHistory = [];
+
+// ── État QVCT ──
+let currentProfile = 'extranet'; // 'extranet' | 'qvct'
+let moodHistory = [];             // historique humeurs session [{score, label, ts}]
+let moodCoachThreshold = 2;       // score ≤ seuil → proposer coach
+let coachProposalCount = 0;       // nombre de fois que le coach a été proposé
+
+// ── Changement de profil ──
+function switchProfile(profile) {
+  currentProfile = profile;
+
+  // Boutons profil
+  document.getElementById('profile-extranet').classList.toggle('active', profile === 'extranet');
+  document.getElementById('profile-qvct').classList.toggle('active', profile === 'qvct');
+
+  // Sections admin
+  document.querySelectorAll('.section-extranet').forEach(el => el.style.display = profile === 'extranet' ? '' : 'none');
+  document.getElementById('section-qvct').style.display = profile === 'qvct' ? '' : 'none';
+
+  // Check-in humeur
+  const checkin = document.getElementById('checkin-panel');
+  checkin.classList.toggle('visible', profile === 'qvct');
+
+  // Suggestions
+  const sugg = document.getElementById('suggestions');
+  if (profile === 'qvct') {
+    sugg.innerHTML = `
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📋 Questionnaire bien-être</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">💼 Stress au travail</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">⚖️ Mes droits salariés</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🤝 Parler à un coach</button>`;
+  } else {
+    sugg.innerHTML = `
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📊 Mes remboursements</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🌿 Bilan bien-être</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🦷 Mes garanties dentaires</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">👓 Remboursement lunettes</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">🔍 Trouver un médecin</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this.textContent)">📋 Portabilité des droits</button>`;
+  }
+
+  // Réinitialiser la conversation
+  moodHistory = [];
+  coachProposalCount = 0;
+  conversationHistory = [];
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const welcomeText = profile === 'qvct'
+    ? `Bonjour ! Je suis <strong>LIXIA</strong>, votre agent bien-être au travail. 💼<br><br>Je suis là pour vous accompagner sur votre qualité de vie au travail, vous aider à mieux comprendre vos droits, et vous orienter si vous traversez une période difficile.<br><br>Pour commencer, dites-moi comment vous allez cette semaine — vous pouvez cliquer sur l'une des émotions ci-dessus.`
+    : `Bonjour ! Je suis <strong>LIXIA</strong>, votre conseillère bien-être. 🌿<br><br>Je suis là pour vous accompagner : prévention santé, analyse de vos remboursements, orientation dans vos démarches, ou simplement pour répondre à vos questions.<br><br>Par quoi souhaitez-vous commencer ?`;
+  msgs.innerHTML = `<div class="msg agent"><div class="msg-avatar" id="first-avatar">${currentEmoji}</div><div><div class="msg-bubble">${welcomeText}</div><div class="msg-time">maintenant</div></div></div>`;
+
+  document.getElementById('fragility-indicator').classList.remove('show');
+  document.getElementById('checkin-panel').querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  sugg.style.display = '';
+}
+
+// ── Sélection humeur ──
+function selectMood(btn) {
+  // Désélectionner les autres
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  const score = parseInt(btn.dataset.mood);
+  const label = btn.dataset.label;
+  const ts = Date.now();
+  moodHistory.push({ score, label, ts });
+
+  // Masquer suggestions, envoyer comme contexte
+  document.getElementById('suggestions').style.display = 'none';
+  addUserMessage(`Je me sens : ${label}`);
+
+  // Vérifier fragilité
+  checkFragility(score);
+
+  // Construire le message contextuel pour LIXIA
+  const ctx = `__mood_checkin__score=${score}__label=${encodeURIComponent(label)}__count=${moodHistory.length}`;
+  callClaude(ctx);
+}
+
+// ── Détection de fragilité ──
+function checkFragility(score) {
+  const threshold = moodCoachThreshold;
+  const lowCount = moodHistory.filter(m => m.score <= threshold).length;
+  const indicator = document.getElementById('fragility-indicator');
+  const text = document.getElementById('fragility-text');
+
+  if (score <= threshold) {
+    if (lowCount >= 2) {
+      text.textContent = `Signal détecté ${lowCount}x cette session — coaching recommandé`;
+    } else {
+      text.textContent = 'Fragilité possible — coach disponible si besoin';
+    }
+    indicator.classList.add('show');
+  } else {
+    if (moodHistory.filter(m => m.score <= threshold).length === 0) {
+      indicator.classList.remove('show');
+    }
+  }
+}
+
+// ── Modale coach ──
+function openCoachModal(message) {
+  const modal = document.getElementById('coach-modal');
+  const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
+  const coachSpec = document.getElementById('q-coach-spec')?.value || 'Coach QVCT';
+  document.getElementById('modal-coach-name').textContent = `avec ${coachName} · ${coachSpec}`;
+  if (message) document.getElementById('modal-coach-message').textContent = message;
+  modal.classList.add('open');
+  coachProposalCount++;
+}
+
+function closeCoachModal() {
+  document.getElementById('coach-modal').classList.remove('open');
+}
+
+function confirmRdv() {
+  const prenom = document.getElementById('rdv-prenom').value.trim();
+  const creneau = document.getElementById('rdv-creneau').value;
+  if (!prenom || !creneau) {
+    document.getElementById('rdv-prenom').style.borderColor = prenom ? 'var(--border)' : 'var(--agent-color)';
+    document.getElementById('rdv-creneau').style.borderColor = creneau ? 'var(--border)' : 'var(--agent-color)';
+    return;
+  }
+  closeCoachModal();
+  const toast = document.getElementById('toast');
+  toast.textContent = `✅ RDV confirmé pour ${prenom} — ${creneau}`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+  // Message dans le chat
+  addAgentMessage(`Super ${prenom} ! 🎉 Votre rendez-vous est confirmé :<br><strong>${creneau}</strong><br><br>Vous recevrez une invitation par email. N'hésitez pas à revenir me parler d'ici là.`);
+}
+
+function addAgentMessage(html) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg agent';
+  div.innerHTML = `<div class="msg-avatar">${currentEmoji}</div><div><div class="msg-bubble">${html}</div><div class="msg-time">${getTime()}</div></div>`;
+  msgs.appendChild(div);
+  scrollToBottom();
+}
+
+function selectToneBtn(btn, group) {
+  btn.closest('.tone-btns').querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (group === 'q-threshold') moodCoachThreshold = parseInt(btn.dataset.val || '2');
+}
 
 // ── Construction du system prompt dynamique ──
 // ── Base de connaissance MBA Mutuelle (injectée dans le system prompt) ──
@@ -738,6 +1106,58 @@ function buildSystemPrompt() {
   const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
   const mbaContext = useMBA ? `\n\n${MBA_GARANTIES}\n\n${MBA_PROCEDURES}` : '';
 
+  // ── Profil QVCT ──
+  if (currentProfile === 'qvct') {
+    const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
+    const coachSpec = document.getElementById('q-coach-spec')?.value || 'Coach QVCT';
+    const useCopsoq = document.getElementById('q-copsoq')?.checked;
+    const useWhocol = document.getElementById('q-whocol')?.checked;
+    const useDroit  = document.getElementById('q-droit')?.checked;
+    const usePrev   = document.getElementById('q-prev')?.checked;
+    const useCoach  = document.getElementById('q-coach')?.checked;
+    const threshold = moodCoachThreshold;
+    const lowCount  = moodHistory.filter(m => m.score <= threshold).length;
+
+    const qvctFuncs = [];
+    if (useCopsoq) qvctFuncs.push('- Questionnaire COPSOQ : tu peux proposer des micro-questions issues du COPSOQ (charge de travail, autonomie, soutien social, sens au travail, exigences émotionnelles). Pose les questions une par une, de façon conversationnelle.');
+    if (useWhocol) qvctFuncs.push('- Questionnaire WHO-5 / WHOCOL : tu peux évaluer le bien-être général avec les 5 questions du WHO-5 (Vous avez été de bonne humeur…, Vous vous êtes senti calme…, etc.) et interpréter le score.');
+    if (useDroit)  qvctFuncs.push('- Ressources droit du travail : tu peux répondre à des questions sur les droits des salariés (congés, arrêt maladie, harcèlement, temps de travail, rupture conventionnelle…) en te basant sur le Code du travail français. Cite toujours tes sources (article L.xxxx) et invite à consulter un juriste ou les services RH pour les situations complexes.');
+    if (usePrev)   qvctFuncs.push('- Prévention santé au travail : TMS (troubles musculo-squelettiques), risques psychosociaux (RPS), burn-out, stress chronique. Tu peux donner des conseils de prévention concrets et orienter vers la médecine du travail si nécessaire.');
+    if (useCoach)  qvctFuncs.push(`- Orientation coach : si tu détectes une fragilité (score humeur ≤ ${threshold}, signal récurrent, détresse exprimée), propose subtilement une rencontre avec ${coachName} (${coachSpec}). Termine alors ta réponse par [COACH_TRIGGER].`);
+
+    const moodCtx = moodHistory.length > 0
+      ? `\n\nHistorique humeurs de la session :\n${moodHistory.map(m => `- ${m.label} (score ${m.score}/5)`).join('\n')}\nSignaux faibles détectés : ${lowCount}/${moodHistory.length} fois.`
+      : '';
+
+    return `Tu es ${name}, agent bien-être au travail (QVCT) développé par ELIXIR Conseil.
+Tu es intégré dans l'espace salarié d'une entreprise. Tu accompagnes les salariés sur leur qualité de vie et conditions de travail.
+Tu as été développé par ELIXIR Conseil. Ne mentionne jamais de technologie sous-jacente ou de fournisseur d'IA.
+
+Ton registre : ${currentTone}. Empathie : ${empathy}/100. Longueur des réponses : ${length}.
+
+Principes fondamentaux QVCT :
+- Tu N'ES PAS un médecin, psychologue ou juriste. Tu informes, orientes et soutiens.
+- La confidentialité est ABSOLUE : rien de ce que dit le salarié ne remonte à l'employeur de façon nominative.
+- Tu ne diagnostiques pas, tu ne juges pas. Tu accueilles et tu proposes.
+- En cas de détresse sévère ou d'urgence, tu orientes vers le 15 (SAMU), le 3114 (numéro national prévention suicide), ou la médecine du travail.
+- Tu utilises le tutoiement ou le vouvoiement selon l'atmosphère instaurée par le salarié.
+
+RÈGLE BOUTONS DE RÉPONSE RAPIDE :
+Quand tu poses une question fermée, termine par [QUICK_REPLIES:option1|option2|option3].
+Exemples QVCT :
+- Niveau énergie → [QUICK_REPLIES:Très bien 💪|Correct 🙂|Fatigué 😔|Épuisé 😴]
+- Charge travail → [QUICK_REPLIES:Gérable|Un peu lourde|Très lourde|Insupportable]
+- Sommeil → [QUICK_REPLIES:Réparateur 😴|Correct 😐|Difficile 😣|Très perturbé 😫]
+- Relations équipe → [QUICK_REPLIES:Bonnes 👍|Tendues 😬|Isolé(e) 😶|Conflictuelles ⚠️]
+
+Fonctions activées :
+${qvctFuncs.join('\n')}
+${moodCtx}
+${extraText}
+
+Contexte de démo : POC pour l'appel à projets BPI "Pionniers de l'IA". Les données salarié sont fictives mais réalistes.`;
+  }
+
   const foncsText = funcs.length > 0 ? `\n\nFonctions activées pour cette mutuelle :\n${funcs.join('\n')}` : '';
   const extraText = extra ? `\n\nInstructions spécifiques de la mutuelle :\n${extra}` : '';
 
@@ -849,8 +1269,20 @@ async function callClaude(userText) {
   isStreaming = true;
   document.getElementById('send-btn').disabled = true;
 
-  // Si appel depuis notification : l'historique est déjà préparé, on n'ajoute pas de doublon
-  if (userText !== '__from_notif__') {
+  // Construire le vrai message utilisateur selon le type d'appel
+  let actualUserText = userText;
+  if (userText.startsWith('__mood_checkin__')) {
+    // Parser les paramètres du check-in
+    const scoreMatch = userText.match(/score=(\d)/);
+    const labelMatch = userText.match(/label=([^_]+)/);
+    const countMatch = userText.match(/count=(\d+)/);
+    const score = scoreMatch ? parseInt(scoreMatch[1]) : 3;
+    const label = labelMatch ? decodeURIComponent(labelMatch[1]) : '';
+    const count = countMatch ? parseInt(countMatch[1]) : 1;
+    const lowScores = moodHistory.filter(m => m.score <= moodCoachThreshold).length;
+    actualUserText = `[CHECK-IN HUMEUR] L'utilisateur a sélectionné : "${label}" (score ${score}/5). Occurrences en session : ${count}. Signaux faibles détectés ce jour : ${lowScores}. Réagis de façon empathique et adaptée au score. Si score ≤ 2 ou si c'est la 2e fois consécutive que le score est bas, propose subtilement le coaching et ajoute [COACH_TRIGGER] à la fin de ta réponse.`;
+    conversationHistory.push({ role: 'user', content: actualUserText });
+  } else if (userText !== '__from_notif__') {
     conversationHistory.push({ role: 'user', content: userText });
   }
 
@@ -886,9 +1318,13 @@ async function callClaude(userText) {
     const bubble = document.getElementById(bubbleId);
     const timeEl = document.getElementById('time-' + bubbleId);
 
-    // Parser QUICK_REPLIES
+    // Parser QUICK_REPLIES et COACH_TRIGGER
     const qrMatch = fullText.match(/\[QUICK_REPLIES:([^\]]+)\]/);
-    const cleanText = fullText.replace(/\[QUICK_REPLIES:[^\]]+\]/g, '').trim();
+    const coachTrigger = fullText.includes('[COACH_TRIGGER]');
+    const cleanText = fullText
+      .replace(/\[QUICK_REPLIES:[^\]]+\]/g, '')
+      .replace(/\[COACH_TRIGGER\]/g, '')
+      .trim();
 
     bubble.classList.remove('streaming-cursor');
     bubble.innerHTML = renderMarkdown(cleanText);
@@ -914,6 +1350,11 @@ async function callClaude(userText) {
 
     timeEl.textContent = getTime();
     conversationHistory.push({ role: 'assistant', content: cleanText });
+
+    // Déclencher la modale coach si signal détecté (profil QVCT)
+    if (coachTrigger && currentProfile === 'qvct' && document.getElementById('q-coach')?.checked) {
+      setTimeout(() => openCoachModal('Je pense qu\'un échange avec notre coach serait vraiment bénéfique pour vous en ce moment. C\'est un espace confidentiel, sans jugement.'), 800);
+    }
 
   } catch (err) {
     removeTyping();
