@@ -878,7 +878,58 @@ function switchProfile(profile) {
   document.getElementById('fragility-indicator').classList.remove('show');
   document.getElementById('checkin-panel').querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
   sugg.style.display = '';
+
+  // Afficher la notif de reprise pour le profil QVCT
+  const card = document.getElementById('notif-card');
+  if (card) {
+    card.classList.remove('show'); // masquer l'ancienne
+    if (profile === 'qvct') {
+      setTimeout(() => showQvctReturnNotif(), 800);
+    } else {
+      // Réafficher la notif extranet (hospitalisation)
+      setTimeout(() => showExtranetNotif(), 800);
+    }
+  }
 }
+
+// ── Afficher la notif extranet ──
+function showExtranetNotif() {
+  const card = document.getElementById('notif-card');
+  if (!card) return;
+  card.dataset.type = 'extranet';
+  document.getElementById('notif-avatar').textContent = currentEmoji;
+  document.getElementById('notif-agent-name').textContent =
+    document.getElementById('cfg-name')?.value || 'LIXIA';
+  document.getElementById('notif-body').innerHTML =
+    `J'ai remarqué un <strong>remboursement d'hospitalisation</strong> sur votre compte ce mois-ci.<br>Comment allez-vous depuis ? Je suis là si vous avez besoin d'un accompagnement.`;
+  card.querySelector('.notif-time').textContent = "À l'instant · Espace adhérent";
+  card.querySelector('.notif-cta').innerHTML =
+    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre à ${document.getElementById('cfg-name')?.value || 'LIXIA'}`;
+  card.onclick = triggerNotifConversation;
+  card.classList.add('show');
+
+// ── Afficher la notif de reprise QVCT (basée sur le dernier score) ──
+function showQvctReturnNotif() {
+  const card = document.getElementById('notif-card');
+  if (!card) return;
+
+  // Simuler le dernier score connu
+  const prevLabel = 'Besoin de souffler';
+  const prevEmoji = '🤯';
+
+  // Configurer la carte
+  card.dataset.type = 'qvct';
+  document.getElementById('notif-avatar').textContent = currentEmoji;
+  document.getElementById('notif-agent-name').textContent =
+    document.getElementById('cfg-name')?.value || 'LIXIA';
+  document.getElementById('notif-body').innerHTML =
+    `La dernière fois, vous me disiez ressentir <strong>${prevLabel.toLowerCase()}</strong> ${prevEmoji}<br>Est-ce que ça va mieux aujourd'hui ?`;
+  card.querySelector('.notif-time').textContent = 'Il y a 3 jours · Suivi bien-être';
+  card.querySelector('.notif-cta').innerHTML =
+    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre à ${document.getElementById('cfg-name')?.value || 'LIXIA'}`;
+  card.onclick = triggerNotifQvct;
+
+  card.classList.add('show');
 
 // ── Sélection humeur ──
 function selectMood(btn) {
@@ -941,11 +992,10 @@ function injectCoachButton(reason) {
   const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
   const btn = document.createElement('button');
   btn.className = 'coach-inline-btn';
-  btn.innerHTML = `🤝 Prendre rendez-vous avec ${coachName}`;
+  btn.innerHTML = `🤝 En savoir plus sur le coach`;
   btn.onclick = () => {
     btn.disabled = true;
-    btn.textContent = '✓ Demande envoyée';
-    openCoachModal(reason);
+    showCoachPresentation(reason);
   };
 
   wrapper.innerHTML = `<div class="msg-avatar">${currentEmoji}</div><div></div>`;
@@ -953,6 +1003,57 @@ function injectCoachButton(reason) {
   msgs.appendChild(wrapper);
   scrollToBottom();
   coachProposalCount++;
+}
+
+// ── Étape intermédiaire : présentation du coach avant le formulaire ──
+function showCoachPresentation(reason) {
+  const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
+  const coachSpec = document.getElementById('q-coach-spec')?.value || 'Coach certifiée QVCT & bien-être au travail';
+
+  // Message de LIXIA qui présente le coach
+  addAgentMessage(
+    `<strong>${coachName}</strong> est ${coachSpec.toLowerCase()}.<br><br>
+    Un échange de 30 minutes, en visio, <strong>totalement confidentiel</strong>. Rien ne remonte à votre employeur.<br><br>
+    Souhaitez-vous voir les créneaux disponibles ?`
+  );
+
+  // Deux boutons de choix explicite
+  const msgs = document.getElementById('messages');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg agent';
+  wrapper.style.alignItems = 'flex-start';
+
+  const btnOk = document.createElement('button');
+  btnOk.className = 'coach-inline-btn';
+  btnOk.innerHTML = `📅 Voir les créneaux`;
+  btnOk.onclick = () => {
+    btnOk.disabled = true;
+    btnNo.disabled = true;
+    btnOk.textContent = '✓ Ouverture du formulaire';
+    openCoachModal(reason);
+  };
+
+  const btnNo = document.createElement('button');
+  btnNo.className = 'coach-inline-btn';
+  btnNo.style.background = 'transparent';
+  btnNo.style.color = 'var(--muted)';
+  btnNo.style.border = '1.5px solid var(--border)';
+  btnNo.style.boxShadow = 'none';
+  btnNo.style.marginLeft = '8px';
+  btnNo.innerHTML = `Plus tard`;
+  btnNo.onclick = () => {
+    btnOk.disabled = true;
+    btnNo.disabled = true;
+    btnNo.textContent = '—';
+    addAgentMessage(`Pas de souci. Vous pouvez y revenir à tout moment, je suis là. 🌿`);
+  };
+
+  wrapper.innerHTML = `<div class="msg-avatar">${currentEmoji}</div><div style="display:flex;flex-wrap:wrap;gap:8px;"></div>`;
+  const btnContainer = wrapper.querySelector('div:last-child');
+  btnContainer.appendChild(btnOk);
+  btnContainer.appendChild(btnNo);
+  msgs.appendChild(wrapper);
+  scrollToBottom();
 }
 
 // ── Modale coach ──
@@ -1567,22 +1668,15 @@ window.addEventListener('load', () => {
   document.getElementById('section-qvct').style.display = 'none';
   document.getElementById('checkin-panel').classList.remove('visible');
 
-  // Synchroniser l'avatar de la notif avec le paramétrage
+  // Notif extranet (hospitalisation) au chargement initial
   setTimeout(() => {
     const card = document.getElementById('notif-card');
-    if (card) {
+    if (card && currentProfile === 'extranet') {
+      card.dataset.type = 'extranet';
       card.classList.add('show');
       document.getElementById('notif-avatar').textContent = currentEmoji;
       document.getElementById('notif-agent-name').textContent =
         document.getElementById('cfg-name')?.value || 'LIXIA';
-
-      // Adapter le message selon le profil
-      if (currentProfile === 'qvct') {
-        document.getElementById('notif-body').innerHTML =
-          `La dernière fois, tu étais <strong>fatigué·e, besoin de souffler</strong>. 😔<br>Est-ce que ça va mieux aujourd'hui ?`;
-        card.onclick = triggerNotifQvct;
-        card.querySelector('.notif-cta').innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre`;
-      }
     }
   }, 2500);
 });
