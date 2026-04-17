@@ -222,7 +222,7 @@
   .profile-btn{flex:1;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:11.5px;font-family:'DM Sans',sans-serif;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center;}
   .profile-btn.active{border-color:var(--agent-color);background:var(--agent-color-l);color:var(--agent-color);font-weight:600;}
   .profile-btn:hover:not(.active){border-color:var(--muted);color:var(--text);}
-  .section-extranet{} .section-qvct{display:none;}
+  .section-extranet{display:flex;flex-direction:column;gap:18px;} .section-qvct{display:none;flex-direction:column;gap:18px;}
 
   /* ── CHECK-IN HUMEUR ── */
   .checkin-panel{padding:18px 26px 14px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--agent-color-l) 0%,var(--surface) 100%);display:none;}
@@ -831,8 +831,8 @@ function switchProfile(profile) {
   document.getElementById('profile-qvct').classList.toggle('active', profile === 'qvct');
 
   // Sections admin
-  document.querySelectorAll('.section-extranet').forEach(el => el.style.display = profile === 'extranet' ? '' : 'none');
-  document.getElementById('section-qvct').style.display = profile === 'qvct' ? '' : 'none';
+  document.querySelectorAll('.section-extranet').forEach(el => el.style.display = profile === 'extranet' ? 'flex' : 'none');
+  document.getElementById('section-qvct').style.display = profile === 'qvct' ? 'flex' : 'none';
 
   // Check-in humeur
   const checkin = document.getElementById('checkin-panel');
@@ -1106,6 +1106,9 @@ function buildSystemPrompt() {
   const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
   const mbaContext = useMBA ? `\n\n${MBA_GARANTIES}\n\n${MBA_PROCEDURES}` : '';
 
+  // extraText déclaré ici pour être accessible dans les deux branches
+  const extraText = extra ? `\n\nInstructions spécifiques de la mutuelle :\n${extra}` : '';
+
   // ── Profil QVCT ──
   if (currentProfile === 'qvct') {
     const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
@@ -1159,7 +1162,6 @@ Contexte de démo : POC pour l'appel à projets BPI "Pionniers de l'IA". Les don
   }
 
   const foncsText = funcs.length > 0 ? `\n\nFonctions activées pour cette mutuelle :\n${funcs.join('\n')}` : '';
-  const extraText = extra ? `\n\nInstructions spécifiques de la mutuelle :\n${extra}` : '';
 
   return `Tu es ${name}, ${subtitle}.
 Tu es un agent IA spécialisé en santé et bien-être, intégré dans l'espace adhérent d'une mutuelle santé française.
@@ -1506,12 +1508,17 @@ function triggerNotifConversation() {
 
 // Lancer la notification après 2.5s
 window.addEventListener('load', () => {
+  // Initialiser le profil extranet (s'assure que tout l'état est cohérent)
+  // Sans réinitialiser la conversation (déjà dans le HTML)
+  document.getElementById('section-extranet').style.display = 'flex';
+  document.getElementById('section-qvct').style.display = 'none';
+  document.getElementById('checkin-panel').classList.remove('visible');
+
   // Synchroniser l'avatar de la notif avec le paramétrage
   setTimeout(() => {
     const card = document.getElementById('notif-card');
     if (card) {
       card.classList.add('show');
-      // Sync avatar + nom depuis le paramétrage
       document.getElementById('notif-avatar').textContent = currentEmoji;
       document.getElementById('notif-agent-name').textContent =
         document.getElementById('cfg-name')?.value || 'LIXIA';
