@@ -255,6 +255,10 @@
   .modal-btn-ok{flex:1;padding:11px;background:linear-gradient(135deg,var(--agent-color),var(--violet));color:white;border:none;border-radius:10px;font-size:13.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;}
   .modal-btn-ok:hover{filter:brightness(1.08);transform:translateY(-1px);}
   .modal-btn-cancel{padding:11px 16px;background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;}
+  /* Bouton coach inline dans la conversation */
+  .coach-inline-btn{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 18px;background:linear-gradient(135deg,var(--agent-color),var(--violet));color:white;border:none;border-radius:12px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 14px rgba(226,82,158,.3);}
+  .coach-inline-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .coach-inline-btn:disabled{opacity:.5;cursor:default;transform:none;}
   .modal-btn-cancel:hover{border-color:var(--muted);color:var(--text);}
 
   /* Système prompt tag */
@@ -761,7 +765,7 @@
         <div class="notif-time">À l'instant · Espace adhérent</div>
       </div>
     </div>
-    <div class="notif-body">
+    <div class="notif-body" id="notif-body">
       J'ai remarqué un <strong>remboursement d'hospitalisation</strong> sur votre compte ce mois-ci.<br>
       Comment allez-vous depuis ? Je suis là si vous avez besoin d'un accompagnement.
     </div>
@@ -821,6 +825,8 @@ let currentProfile = 'extranet'; // 'extranet' | 'qvct'
 let moodHistory = [];             // historique humeurs session [{score, label, ts}]
 let moodCoachThreshold = 2;       // score ≤ seuil → proposer coach
 let coachProposalCount = 0;       // nombre de fois que le coach a été proposé
+let interactionCount = 0;         // nb d'échanges QVCT depuis le check-in
+let coachAlreadyShown = false;    // bouton coach déjà injecté dans cette session
 
 // ── Changement de profil ──
 function switchProfile(profile) {
@@ -859,6 +865,8 @@ function switchProfile(profile) {
   // Réinitialiser la conversation
   moodHistory = [];
   coachProposalCount = 0;
+  interactionCount = 0;
+  coachAlreadyShown = false;
   conversationHistory = [];
   const msgs = document.getElementById('messages');
   msgs.innerHTML = '';
@@ -887,8 +895,11 @@ function selectMood(btn) {
   document.getElementById('suggestions').style.display = 'none';
   addUserMessage(`Je me sens : ${label}`);
 
-  // Vérifier fragilité
-  checkFragility(score);
+  // Vérifier fragilité — si 2 consécutifs bas, proposer coach directement
+  const twoConsecutive = checkFragility(score);
+  if (twoConsecutive) {
+    setTimeout(() => injectCoachButton('Deux signaux difficiles consécutifs… un échange avec notre coach peut vraiment aider.'), 400);
+  }
 
   // Construire le message contextuel pour LIXIA
   const ctx = `__mood_checkin__score=${score}__label=${encodeURIComponent(label)}__count=${moodHistory.length}`;
@@ -898,22 +909,50 @@ function selectMood(btn) {
 // ── Détection de fragilité ──
 function checkFragility(score) {
   const threshold = moodCoachThreshold;
-  const lowCount = moodHistory.filter(m => m.score <= threshold).length;
   const indicator = document.getElementById('fragility-indicator');
   const text = document.getElementById('fragility-text');
 
+  // Détecter 2 scores bas CONSÉCUTIFS
+  const last2 = moodHistory.slice(-2);
+  const twoConsecutiveLow = last2.length === 2 && last2.every(m => m.score <= threshold);
+
   if (score <= threshold) {
-    if (lowCount >= 2) {
-      text.textContent = `Signal détecté ${lowCount}x cette session — coaching recommandé`;
-    } else {
-      text.textContent = 'Fragilité possible — coach disponible si besoin';
-    }
+    text.textContent = twoConsecutiveLow
+      ? `2 signaux faibles consécutifs — coaching recommandé`
+      : `Fragilité possible — coach disponible si besoin`;
     indicator.classList.add('show');
-  } else {
-    if (moodHistory.filter(m => m.score <= threshold).length === 0) {
-      indicator.classList.remove('show');
-    }
+  } else if (moodHistory.every(m => m.score > threshold)) {
+    indicator.classList.remove('show');
   }
+
+  return twoConsecutiveLow;
+}
+
+// ── Injecter bouton coach inline dans la conversation ──
+function injectCoachButton(reason) {
+  if (coachAlreadyShown || !document.getElementById('q-coach')?.checked) return;
+  coachAlreadyShown = true;
+
+  const msgs = document.getElementById('messages');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg agent';
+  wrapper.style.alignItems = 'flex-start';
+
+  const coachName = document.getElementById('q-coach-name')?.value || 'Sophie Martin';
+  const btn = document.createElement('button');
+  btn.className = 'coach-inline-btn';
+  btn.innerHTML = `🤝 Prendre rendez-vous avec ${coachName}`;
+  btn.onclick = () => {
+    btn.disabled = true;
+    btn.textContent = '✓ Demande envoyée';
+    openCoachModal(reason);
+  };
+
+  wrapper.innerHTML = `<div class="msg-avatar">${currentEmoji}</div><div></div>`;
+  wrapper.querySelector('div:last-child').appendChild(btn);
+  msgs.appendChild(wrapper);
+  scrollToBottom();
+  coachProposalCount++;
 }
 
 // ── Modale coach ──
@@ -1136,7 +1175,9 @@ function buildSystemPrompt() {
 Tu es intégré dans l'espace salarié d'une entreprise. Tu accompagnes les salariés sur leur qualité de vie et conditions de travail.
 Tu as été développé par ELIXIR Conseil. Ne mentionne jamais de technologie sous-jacente ou de fournisseur d'IA.
 
-Ton registre : ${currentTone}. Empathie : ${empathy}/100. Longueur des réponses : ${length}.
+Ton registre : ${currentTone}. Empathie : ${empathy}/100.
+
+LONGUEUR DES RÉPONSES : courtes et directes. Maximum 2-3 phrases par réponse. Pas de liste à puces sauf si vraiment nécessaire. Une idée à la fois. Laisse de la place à l'échange.
 
 Principes fondamentaux QVCT :
 - Tu N'ES PAS un médecin, psychologue ou juriste. Tu informes, orientes et soutiens.
@@ -1353,9 +1394,20 @@ async function callClaude(userText) {
     timeEl.textContent = getTime();
     conversationHistory.push({ role: 'assistant', content: cleanText });
 
-    // Déclencher la modale coach si signal détecté (profil QVCT)
-    if (coachTrigger && currentProfile === 'qvct' && document.getElementById('q-coach')?.checked) {
-      setTimeout(() => openCoachModal('Je pense qu\'un échange avec notre coach serait vraiment bénéfique pour vous en ce moment. C\'est un espace confidentiel, sans jugement.'), 800);
+    // Compteur d'interactions QVCT
+    if (currentProfile === 'qvct') {
+      interactionCount++;
+      // Proposer le coach via bouton inline si :
+      // - COACH_TRIGGER dans la réponse de LIXIA
+      // - OU 2+ interactions ET fragilité détectée (score bas dans l'historique)
+      const hasFrag = moodHistory.some(m => m.score <= moodCoachThreshold);
+      const shouldProposeByCount = interactionCount >= 2 && hasFrag;
+      if ((coachTrigger || shouldProposeByCount) && !coachAlreadyShown) {
+        const reason = coachTrigger
+          ? 'Je sens que vous traversez quelque chose de difficile. Notre coach est disponible pour un échange confidentiel.'
+          : 'Après quelques échanges, je pense qu\'un rendez-vous avec notre coach pourrait vous faire du bien.';
+        setTimeout(() => injectCoachButton(reason), 600);
+      }
     }
 
   } catch (err) {
@@ -1487,22 +1539,23 @@ function dismissNotif(e) {
 }
 
 function triggerNotifConversation() {
-  // Fermer la notification
   dismissNotif({ stopPropagation: () => {} });
-
-  // Masquer les suggestions rapides
   document.getElementById('suggestions').style.display = 'none';
-
-  // Injecter un message système dans l'historique qui contextualise
-  // (invisible pour l'utilisateur, mais Claude le voit)
   const contextMsg = "CONTEXTE SYSTÈME : L'adhérent vient de cliquer sur une notification LIXIA lui signalant un remboursement d'hospitalisation détecté sur son compte. Engage la conversation de façon proactive et bienveillante : montre que tu as vu ce remboursement, demande comment il va depuis cette hospitalisation, et propose ton aide pour la suite (suivi, prévention, orientation vers des professionnels si besoin). Sois chaleureux et rassurant, sans être intrusif.";
-
   conversationHistory.push({ role: 'user', content: contextMsg });
-
-  // Afficher un message utilisateur visible neutre
   addUserMessage("J'ai reçu votre message concernant mon hospitalisation.");
+  callClaude('__from_notif__');
+}
 
-  // Déclencher la réponse LIXIA
+function triggerNotifQvct() {
+  dismissNotif({ stopPropagation: () => {} });
+  document.getElementById('suggestions').style.display = 'none';
+  // Pré-sélectionner "Besoin de souffler" visuellement comme score précédent simulé
+  const prevScore = 3;
+  const prevLabel = 'Besoin de souffler';
+  const contextMsg = `CONTEXTE SYSTÈME : Le salarié revient après une session précédente où il avait signalé se sentir "${prevLabel}" (score ${prevScore}/5). Il vient de cliquer sur la notification de suivi. Engage la conversation chaleureusement : demande si ça va mieux, montre que tu te souviens. Sois bref et humain. Pas plus de 2-3 phrases.`;
+  conversationHistory.push({ role: 'user', content: contextMsg });
+  addUserMessage('Je réponds à votre message de suivi.');
   callClaude('__from_notif__');
 }
 
@@ -1522,6 +1575,14 @@ window.addEventListener('load', () => {
       document.getElementById('notif-avatar').textContent = currentEmoji;
       document.getElementById('notif-agent-name').textContent =
         document.getElementById('cfg-name')?.value || 'LIXIA';
+
+      // Adapter le message selon le profil
+      if (currentProfile === 'qvct') {
+        document.getElementById('notif-body').innerHTML =
+          `La dernière fois, tu étais <strong>fatigué·e, besoin de souffler</strong>. 😔<br>Est-ce que ça va mieux aujourd'hui ?`;
+        card.onclick = triggerNotifQvct;
+        card.querySelector('.notif-cta').innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Répondre`;
+      }
     }
   }, 2500);
 });
