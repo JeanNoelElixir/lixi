@@ -261,6 +261,38 @@
   .coach-inline-btn:disabled{opacity:.5;cursor:default;transform:none;}
   .modal-btn-cancel:hover{border-color:var(--muted);color:var(--text);}
 
+  /* ── PANNEAU DÉTECTION DE FRAGILITÉS ── */
+  .frag-panel{display:none;background:linear-gradient(135deg,#FFF8E1 0%,#FFEFD5 100%);border-bottom:1px solid var(--border);overflow:hidden;animation:slideDownFrag .5s ease-out;}
+  .frag-panel.visible{display:block;}
+  @keyframes slideDownFrag{from{max-height:0;opacity:0}to{max-height:600px;opacity:1}}
+  .frag-header{display:flex;align-items:center;gap:14px;padding:14px 26px;cursor:pointer;user-select:none;}
+  .frag-title{flex:1;display:flex;align-items:center;gap:12px;}
+  .frag-icon{font-size:22px;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:white;box-shadow:0 2px 8px rgba(0,0,0,.06);flex-shrink:0;}
+  .frag-h{font-size:13px;font-weight:600;color:var(--text);}
+  .frag-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .frag-score-badge{padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700;color:white;background:linear-gradient(135deg,#F59E0B,#EA580C);box-shadow:0 2px 8px rgba(245,158,11,.3);min-width:54px;text-align:center;}
+  .frag-score-badge.low{background:linear-gradient(135deg,#10B981,#059669);box-shadow:0 2px 8px rgba(16,185,129,.3);}
+  .frag-score-badge.high{background:linear-gradient(135deg,#EF4444,#DC2626);box-shadow:0 2px 8px rgba(239,68,68,.3);}
+  .frag-toggle{background:none;border:none;font-size:13px;color:var(--muted);cursor:pointer;padding:4px 8px;transition:transform .25s;}
+  .frag-toggle.expanded{transform:rotate(180deg);}
+  .frag-body{padding:0 26px 18px;display:none;}
+  .frag-body.expanded{display:block;}
+  .frag-signals{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .frag-signal{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:white;border-radius:10px;border-left:3px solid var(--frag-color,#F59E0B);font-size:12px;line-height:1.45;}
+  .frag-signal.high{--frag-color:#EF4444;}
+  .frag-signal.medium{--frag-color:#F59E0B;}
+  .frag-signal.low{--frag-color:#10B981;}
+  .frag-signal-icon{font-size:16px;flex-shrink:0;}
+  .frag-signal-content{flex:1;color:var(--text);}
+  .frag-signal-label{font-weight:600;color:var(--text);}
+  .frag-signal-detail{color:var(--muted);margin-top:2px;font-size:11px;}
+  .frag-actions{display:flex;gap:10px;margin-top:8px;}
+  .frag-btn-primary{flex:1;padding:11px;background:linear-gradient(135deg,var(--agent-color),var(--violet));color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(226,82,158,.25);}
+  .frag-btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .frag-btn-secondary{padding:11px 18px;background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;}
+  .frag-btn-secondary:hover{border-color:var(--muted);color:var(--text);}
+  .frag-disclaimer{margin-top:10px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.4;}
+
   /* Système prompt tag */
   .quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
   .qr-btn{background:var(--surface);border:1.5px solid var(--agent-color);color:var(--agent-color);border-radius:999px;padding:7px 15px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;}
@@ -392,6 +424,37 @@
       </div>
       <div class="fragility-indicator" id="fragility-indicator">
         ⚠️ <span id="fragility-text">Fragilité détectée — coaching disponible</span>
+      </div>
+    </div>
+
+    <!-- Panneau Détection de fragilités (profil extranet) -->
+    <div class="frag-panel" id="frag-panel">
+      <div class="frag-header" onclick="toggleFragPanel()">
+        <div class="frag-title">
+          <span class="frag-icon">🔍</span>
+          <div>
+            <div class="frag-h">Analyse de votre parcours de soins</div>
+            <div class="frag-sub" id="frag-sub">Famille de 4 personnes · 18 mois d'historique</div>
+          </div>
+        </div>
+        <div class="frag-score-badge" id="frag-score-badge">
+          <span id="frag-score-value">—</span>/100
+        </div>
+        <button class="frag-toggle" id="frag-toggle">▼</button>
+      </div>
+      <div class="frag-body" id="frag-body">
+        <div class="frag-signals" id="frag-signals"></div>
+        <div class="frag-actions">
+          <button class="frag-btn-primary" onclick="discussFragility()">
+            💬 En parler à LIXIA
+          </button>
+          <button class="frag-btn-secondary" onclick="dismissFragPanel()">
+            Plus tard
+          </button>
+        </div>
+        <div class="frag-disclaimer">
+          🔒 Analyse réalisée localement à partir de vos remboursements. Données non transmises.
+        </div>
       </div>
     </div>
 
@@ -602,6 +665,14 @@
               <div class="toggle-desc">Tableau de garanties + Notice d'information chargés</div>
             </div>
             <label class="toggle"><input type="checkbox" id="f-mba-docs" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">🔍 Détection de fragilités</div>
+              <div class="toggle-desc">Analyse 18 mois de remboursements famille (Verrou 1)</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="f-fragility" checked onchange="onFragilityToggle(this)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
         </div>
       </div>
@@ -828,6 +899,230 @@ let coachProposalCount = 0;       // nombre de fois que le coach a été propos�
 let interactionCount = 0;         // nb d'échanges QVCT depuis le check-in
 let coachAlreadyShown = false;    // bouton coach déjà injecté dans cette session
 
+// ──────────────────────────────────────────────────────────────────────
+// DÉTECTION DE FRAGILITÉS — données simulées + scoring
+// (POC du Verrou 1 : analyse de séries temporelles de remboursement)
+// ──────────────────────────────────────────────────────────────────────
+
+// Profil familial fictif et historique de remboursements (18 mois)
+const FAMILY_PROFILE = {
+  members: [
+    { id: 'M', role: 'Adhérent principal', name: 'Marc D.', age: 47, sex: 'M' },
+    { id: 'C', role: 'Conjointe', name: 'Sophie D.', age: 44, sex: 'F' },
+    { id: 'E1', role: 'Enfant', name: 'Léa', age: 12, sex: 'F' },
+    { id: 'E2', role: 'Enfant', name: 'Tom', age: 8, sex: 'M' }
+  ],
+  // Synthèse 18 mois — ligne par catégorie de soins, par membre
+  // Format simplifié pour le POC : nb d'actes par trimestre (T1 le plus ancien, T6 le plus récent)
+  reimbursements: {
+    M: {  // Adhérent principal — signal de fragilité émergente
+      consultations_gen: [3, 2, 4, 6, 9, 11],     // ↑ forte sur 6 mois
+      consultations_spe: [0, 1, 0, 2, 4, 5],      // cardio/spécialiste apparu
+      pharmacie_psy:     [0, 0, 1, 3, 6, 8],      // anxiolytiques en hausse
+      pharmacie_antalg:  [1, 1, 2, 3, 5, 6],      // antalgiques en hausse
+      kinesitherapie:    [0, 0, 0, 4, 8, 10],     // épisode aigu récent
+      hospitalisation:   [0, 0, 0, 0, 1, 0],      // 1 séjour il y a 3 mois
+      dentaire:          [1, 0, 1, 0, 0, 0],      // soins dentaires arrêtés
+      optique:           [0, 0, 0, 0, 0, 0]       // pas de renouvellement
+    },
+    C: {  // Conjointe — utilisation stable
+      consultations_gen: [2, 2, 3, 2, 2, 3],
+      consultations_spe: [1, 1, 1, 1, 0, 1],
+      pharmacie_psy:     [0, 0, 0, 0, 0, 0],
+      pharmacie_antalg:  [0, 1, 0, 1, 0, 1],
+      kinesitherapie:    [0, 0, 0, 0, 0, 0],
+      hospitalisation:   [0, 0, 0, 0, 0, 0],
+      dentaire:          [2, 0, 1, 0, 2, 1],
+      optique:           [0, 0, 1, 0, 0, 0]
+    },
+    E1: { // Léa, 12 ans
+      consultations_gen: [1, 2, 1, 2, 1, 2],
+      consultations_spe: [0, 0, 1, 0, 0, 0],
+      pharmacie_psy: [0,0,0,0,0,0], pharmacie_antalg: [0,1,0,0,1,0],
+      kinesitherapie: [0,0,0,0,0,0], hospitalisation: [0,0,0,0,0,0],
+      dentaire: [1,0,2,0,1,0], optique: [0,1,0,0,0,0]
+    },
+    E2: { // Tom, 8 ans — augmentation atypique consultations
+      consultations_gen: [2, 1, 2, 4, 6, 5],     // ↑ allergies / asthme ?
+      consultations_spe: [0, 0, 1, 2, 3, 2],     // pédiatre / pneumo
+      pharmacie_psy: [0,0,0,0,0,0],
+      pharmacie_antalg: [0,0,1,1,2,1],
+      kinesitherapie: [0,0,0,0,0,0], hospitalisation: [0,0,0,0,0,0],
+      dentaire: [1,0,0,0,1,0], optique: [0,0,0,0,0,0]
+    }
+  }
+};
+
+// Calcul du score de fragilité familial
+function computeFragilityAnalysis() {
+  const signals = [];
+  const r = FAMILY_PROFILE.reimbursements;
+
+  // — Signal 1 : Hausse brutale des consultations généralistes (Marc)
+  const lastM = r.M.consultations_gen.slice(-3).reduce((a,b)=>a+b,0);
+  const baseM = r.M.consultations_gen.slice(0,3).reduce((a,b)=>a+b,0);
+  if (lastM >= baseM * 2 && lastM >= 15) {
+    signals.push({
+      severity: 'high',
+      icon: '📈',
+      label: `Consultations généralistes en forte hausse — Marc D.`,
+      detail: `${baseM} actes sur les 9 premiers mois → ${lastM} actes sur les 9 derniers (+${Math.round((lastM/baseM-1)*100)}%)`
+    });
+  }
+
+  // — Signal 2 : Antalgiques + psy en escalade (Marc) → souffrance possible
+  const psyM = r.M.pharmacie_psy.slice(-2).reduce((a,b)=>a+b,0);
+  const antalgM = r.M.pharmacie_antalg.slice(-2).reduce((a,b)=>a+b,0);
+  if (psyM >= 8 && antalgM >= 8) {
+    signals.push({
+      severity: 'high',
+      icon: '⚠️',
+      label: `Médicaments psy & antalgiques en hausse — Marc D.`,
+      detail: `${psyM} traitements psychotropes et ${antalgM} antalgiques sur les 6 derniers mois. Possible signal de douleur chronique ou détresse.`
+    });
+  }
+
+  // — Signal 3 : Hospitalisation récente (Marc) → risque de réhospitalisation
+  const hospitalRecent = r.M.hospitalisation.slice(-3).reduce((a,b)=>a+b,0);
+  if (hospitalRecent > 0) {
+    signals.push({
+      severity: 'medium',
+      icon: '🏥',
+      label: `Hospitalisation récente — Marc D.`,
+      detail: `1 séjour hospitalier détecté dans les 9 derniers mois. Suivi post-hospit recommandé pour éviter réhospitalisation.`
+    });
+  }
+
+  // — Signal 4 : Renoncement aux soins dentaires (Marc)
+  const dentM = r.M.dentaire.slice(-3).reduce((a,b)=>a+b,0);
+  if (dentM === 0) {
+    signals.push({
+      severity: 'low',
+      icon: '🦷',
+      label: `Soins dentaires interrompus — Marc D.`,
+      detail: `Aucun soin dentaire depuis 9 mois alors que 2 actes étaient enregistrés auparavant. Possible renoncement.`
+    });
+  }
+
+  // — Signal 5 : Pic kinésithérapie (Marc)
+  const kineM = r.M.kinesitherapie.slice(-3).reduce((a,b)=>a+b,0);
+  if (kineM >= 18) {
+    signals.push({
+      severity: 'medium',
+      icon: '🩹',
+      label: `Kinésithérapie intensive — Marc D.`,
+      detail: `${kineM} séances sur les 9 derniers mois, possiblement liée à l'hospitalisation. Récupération en cours.`
+    });
+  }
+
+  // — Signal 6 : Augmentation consultations enfant (Tom)
+  const consE2 = r.E2.consultations_gen.slice(-3).reduce((a,b)=>a+b,0);
+  const consE2base = r.E2.consultations_gen.slice(0,3).reduce((a,b)=>a+b,0);
+  if (consE2 >= consE2base * 2 && consE2 >= 10) {
+    signals.push({
+      severity: 'medium',
+      icon: '👶',
+      label: `Suivi médical en hausse — Tom (8 ans)`,
+      detail: `${consE2} consultations généralistes et ${r.E2.consultations_spe.slice(-3).reduce((a,b)=>a+b,0)} spécialistes sur 9 mois. Possible affection chronique en émergence.`
+    });
+  }
+
+  // Calcul du score global pondéré (0-100)
+  const weights = { high: 30, medium: 18, low: 8 };
+  const rawScore = signals.reduce((acc, s) => acc + (weights[s.severity] || 0), 0);
+  const score = Math.min(100, rawScore);
+
+  return { score, signals };
+}
+
+// Rendu du panneau de fragilité
+function renderFragilityPanel() {
+  const { score, signals } = computeFragilityAnalysis();
+  const badge = document.getElementById('frag-score-badge');
+  const valueEl = document.getElementById('frag-score-value');
+  valueEl.textContent = score;
+
+  // Couleur du badge selon le score
+  badge.classList.remove('low','high');
+  if (score < 30) badge.classList.add('low');
+  else if (score >= 60) badge.classList.add('high');
+
+  // Sous-titre adapté
+  const sub = document.getElementById('frag-sub');
+  if (score < 30) sub.textContent = 'Famille de 4 personnes · Parcours stable';
+  else if (score < 60) sub.textContent = 'Famille de 4 personnes · Signaux à surveiller';
+  else sub.textContent = 'Famille de 4 personnes · Plusieurs signaux faibles détectés';
+
+  // Liste des signaux
+  const list = document.getElementById('frag-signals');
+  list.innerHTML = '';
+  if (signals.length === 0) {
+    list.innerHTML = `<div class="frag-signal low"><div class="frag-signal-icon">✅</div><div class="frag-signal-content"><div class="frag-signal-label">Aucun signal de fragilité détecté</div><div class="frag-signal-detail">Votre parcours de soins est cohérent et régulier.</div></div></div>`;
+  } else {
+    signals.forEach(s => {
+      const div = document.createElement('div');
+      div.className = `frag-signal ${s.severity}`;
+      div.innerHTML = `
+        <div class="frag-signal-icon">${s.icon}</div>
+        <div class="frag-signal-content">
+          <div class="frag-signal-label">${s.label}</div>
+          <div class="frag-signal-detail">${s.detail}</div>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+}
+
+// Plier / déplier
+function toggleFragPanel() {
+  document.getElementById('frag-body').classList.toggle('expanded');
+  document.getElementById('frag-toggle').classList.toggle('expanded');
+}
+
+// Fermer / masquer
+function dismissFragPanel() {
+  document.getElementById('frag-panel').classList.remove('visible');
+}
+
+function onFragilityToggle(input) {
+  const panel = document.getElementById('frag-panel');
+  if (!panel) return;
+  if (input.checked && currentProfile === 'extranet') {
+    renderFragilityPanel();
+    panel.classList.add('visible');
+  } else {
+    panel.classList.remove('visible');
+  }
+}
+
+// "En parler à LIXIA" — injecte le contexte dans la conversation
+function discussFragility() {
+  const { score, signals } = computeFragilityAnalysis();
+  document.getElementById('suggestions').style.display = 'none';
+  dismissFragPanel();
+
+  // Message utilisateur visible (synthèse côté humain)
+  const userVisible = "Je viens de voir l'analyse de notre parcours de soins familial. Pouvez-vous m'expliquer ?";
+  addUserMessage(userVisible);
+
+  // Contexte caché injecté pour que LIXIA voie les signaux
+  const ctx = `[CONTEXTE FRAGILITÉ FAMILIALE]
+Score global : ${score}/100.
+Famille de 4 personnes : Marc D. (47 ans, adhérent principal), Sophie D. (44 ans, conjointe), Léa (12 ans), Tom (8 ans).
+Signaux détectés à partir de l'analyse de 18 mois de remboursements :
+${signals.map(s => `- [${s.severity.toUpperCase()}] ${s.label} : ${s.detail}`).join('\n')}
+
+L'adhérent (Marc) vient de cliquer sur "En parler". Tu dois :
+1. Le rassurer brièvement sur la confidentialité (les signaux restent côté mutuelle, rien n'est partagé avec son employeur ou son médecin).
+2. Lui présenter les 2-3 signaux les plus marquants en langage simple et bienveillant, en évitant tout terme alarmiste.
+3. Lui poser UNE question ouverte pour comprendre comment il vit cette période (par exemple "Comment vous sentez-vous depuis votre hospitalisation ?").
+4. Ne propose PAS encore d'action concrète — laisse la conversation s'installer d'abord.
+Réponse courte (4-5 phrases max).`;
+
+  conversationHistory.push({ role: 'user', content: ctx });
+  callClaude('__from_frag__');
+}
+
 // ── Changement de profil ──
 function switchProfile(profile) {
   currentProfile = profile;
@@ -878,6 +1173,18 @@ function switchProfile(profile) {
   document.getElementById('fragility-indicator').classList.remove('show');
   document.getElementById('checkin-panel').querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
   sugg.style.display = '';
+
+  // Panneau fragilité : visible en extranet uniquement, et si toggle activé
+  const fragPanel = document.getElementById('frag-panel');
+  if (fragPanel) {
+    const fragEnabled = document.getElementById('f-fragility')?.checked !== false;
+    if (profile === 'extranet' && fragEnabled) {
+      renderFragilityPanel();
+      fragPanel.classList.add('visible');
+    } else {
+      fragPanel.classList.remove('visible');
+    }
+  }
 
   // Afficher la notif de reprise pour le profil QVCT
   const card = document.getElementById('notif-card');
@@ -1240,6 +1547,7 @@ function buildSystemPrompt() {
   if (document.getElementById('f-content').checked) funcs.push("- Contenus santé certifiés : tu peux référencer des guides et articles de prévention santé validés.");
   if (document.getElementById('f-annuaire').checked) funcs.push(`- Annuaire professionnels de santé (RPPS) : pour trouver un médecin, spécialiste ou professionnel de santé, utilise l'API publique RPPS via https://api.annuaire.sante.fr/fhir/v1/Practitioner. Tu peux rechercher par nom, spécialité et commune. Pour la démo, simule des résultats réalistes basés sur le RPPS (Dr. [Prénom Nom], spécialité, adresse réelle de la ville demandée, numéro RPPS fictif à 11 chiffres, secteur de conventionnement). Mentionne toujours que les données proviennent de l'Annuaire Santé officiel (RPPS / ANS).`);
   if (document.getElementById('f-coaching').checked) funcs.push("- Coaching humain : si tu détectes une fragilité ou une détresse, propose toujours la mise en relation avec un conseiller humain.");
+  if (document.getElementById('f-fragility')?.checked !== false) funcs.push("- Détection de fragilités familiales : tu as accès à une analyse de 18 mois de remboursements de l'adhérent et de sa famille couverte par le contrat. Le système identifie des signaux faibles (hausse soudaine de consultations, médicaments psy/antalgiques en escalade, hospitalisation récente, renoncement aux soins, suivi enfant atypique) et calcule un score de fragilité 0-100. Quand ce contexte t'est fourni, tu présentes les signaux en langage simple, non médicalisé, sans dramatiser. Tu rappelles que ces données restent confidentielles côté mutuelle et ne sont jamais partagées avec l'employeur ou le médecin traitant.");
 
   // Connaissance contrat MBA
   const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
@@ -1425,7 +1733,7 @@ async function callClaude(userText) {
     const lowScores = moodHistory.filter(m => m.score <= moodCoachThreshold).length;
     actualUserText = `[CHECK-IN HUMEUR] L'utilisateur a sélectionné : "${label}" (score ${score}/5). Occurrences en session : ${count}. Signaux faibles détectés ce jour : ${lowScores}. Réagis de façon empathique et adaptée au score. Si score ≤ 2 ou si c'est la 2e fois consécutive que le score est bas, propose subtilement le coaching et ajoute [COACH_TRIGGER] à la fin de ta réponse.`;
     conversationHistory.push({ role: 'user', content: actualUserText });
-  } else if (userText !== '__from_notif__') {
+  } else if (userText !== '__from_notif__' && userText !== '__from_frag__') {
     conversationHistory.push({ role: 'user', content: userText });
   }
 
@@ -1666,6 +1974,10 @@ window.addEventListener('load', () => {
   document.getElementById('section-extranet').style.display = 'flex';
   document.getElementById('section-qvct').style.display = 'none';
   document.getElementById('checkin-panel').classList.remove('visible');
+
+  // Panneau de détection de fragilités (extranet)
+  renderFragilityPanel();
+  document.getElementById('frag-panel').classList.add('visible');
 
   // Notif extranet (hospitalisation) au chargement initial
   setTimeout(() => {
