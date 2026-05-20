@@ -293,6 +293,24 @@
   .frag-btn-secondary:hover{border-color:var(--muted);color:var(--text);}
   .frag-disclaimer{margin-top:10px;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.4;}
 
+  /* ── MODALE LIVI : Consulter un médecin ── */
+  .livi-card{max-width:440px;width:100%;padding:0;background:white;border-radius:18px;overflow:hidden;position:relative;}
+  .livi-close{position:absolute;top:14px;right:14px;background:#F3F4F6;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:13px;color:#6B7280;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2;}
+  .livi-close:hover{background:#E5E7EB;}
+  .livi-header{display:flex;align-items:center;gap:14px;padding:28px 28px 0;}
+  .livi-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .livi-title-block{flex:1;}
+  .livi-title{font-family:'DM Serif Display',serif;font-size:22px;color:#1F2937;line-height:1.2;}
+  .livi-badge{display:inline-block;margin-top:8px;padding:5px 12px;border:1.5px solid #7C3AED;border-radius:14px;font-size:11.5px;color:#7C3AED;font-weight:600;}
+  .livi-section{padding:18px 28px 0;}
+  .livi-q{font-size:14.5px;font-weight:600;color:#1F2937;margin-bottom:6px;}
+  .livi-a{font-size:13.5px;color:#4B5563;line-height:1.6;}
+  .livi-list{margin:8px 0 0 4px;padding-left:18px;}
+  .livi-list li{margin:4px 0;color:#4B5563;font-size:13.5px;}
+  .livi-rgpd{margin:20px 28px 0;padding:14px 16px;background:#F9FAFB;border-radius:10px;font-size:11.5px;color:#6B7280;line-height:1.55;}
+  .livi-cta{margin:18px 28px 28px;padding:14px;width:calc(100% - 56px);background:linear-gradient(135deg,#EC4899 0%,#A855F7 100%);color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(168,85,247,.35);}
+  .livi-cta:hover{filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 8px 26px rgba(168,85,247,.45);}
+
   /* Système prompt tag */
   .quick-replies{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
   .qr-btn{background:var(--surface);border:1.5px solid var(--agent-color);color:var(--agent-color);border-radius:999px;padding:7px 15px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap;}
@@ -674,6 +692,14 @@
             </div>
             <label class="toggle"><input type="checkbox" id="f-fragility" checked onchange="onFragilityToggle(this)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">🩺 Téléconsultation LIVI</div>
+              <div class="toggle-desc">Orientation vers médecin libéral · partenaire santé</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="f-livi" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
         </div>
       </div>
 
@@ -767,6 +793,13 @@
                 <div class="toggle-desc">Proposition RDV si fragilité détectée</div>
               </div>
               <label class="toggle"><input type="checkbox" id="q-coach" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🩺 Téléconsultation LIVI</div>
+                <div class="toggle-desc">Médecin libéral en ligne · partenaire santé</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="q-livi" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
             </div>
           </div>
         </div>
@@ -878,6 +911,50 @@
         <button class="modal-btn-ok" onclick="confirmRdv()">✓ Confirmer le RDV</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ───── Modale LIVI : Consulter un médecin ───── -->
+<div class="modal-overlay" id="livi-modal">
+  <div class="modal-card livi-card">
+    <button class="livi-close" onclick="closeLiviModal()" title="Fermer">✕</button>
+
+    <div class="livi-header">
+      <div class="livi-icon">🩺</div>
+      <div class="livi-title-block">
+        <div class="livi-title" id="livi-title">Consulter un médecin</div>
+        <div class="livi-badge">Utilisation illimitée</div>
+      </div>
+    </div>
+
+    <div class="livi-section">
+      <div class="livi-q">Qu'est-ce que c'est ?</div>
+      <div class="livi-a" id="livi-what">
+        Notre partenaire <strong>Livi</strong> est une plateforme regroupant des médecins libéraux.
+      </div>
+    </div>
+
+    <div class="livi-section">
+      <div class="livi-q">Comment ça marche ?</div>
+      <div class="livi-a">
+        En suivant le lien, vous créez votre compte Livi et accédez à la prise de rendez-vous en ligne avec un médecin.<br><br>
+        Vous réalisez votre consultation en ligne :
+        <ul class="livi-list">
+          <li>📞 par téléphone</li>
+          <li>📹 en visio</li>
+        </ul>
+        À la fin de la consultation, le médecin vous adresse une ordonnance si c'est nécessaire.<br><br>
+        <strong>Vous n'avez rien à payer.</strong> Le service est totalement pris en charge par votre mutuelle.
+      </div>
+    </div>
+
+    <div class="livi-rgpd">
+      En vous connectant au service de notre partenaire, vous autorisez votre mutuelle à lui transmettre vos données d'identification (nom, prénom, email et téléphone). Ces données servent uniquement à créer votre compte personnel chez le partenaire et ne sont utilisées qu'à cette seule fin.
+    </div>
+
+    <button class="livi-cta" onclick="redirectToLivi()">
+      Accéder au service →
+    </button>
   </div>
 </div>
 
@@ -1377,6 +1454,95 @@ function closeCoachModal() {
   document.getElementById('coach-modal').classList.remove('open');
 }
 
+// ──────────────────────────────────────────────────────────────────────
+// PARTENAIRE LIVI — Téléconsultation médecin libéral
+// ──────────────────────────────────────────────────────────────────────
+
+// Catalogue des parcours LIVI disponibles
+const LIVI_PARCOURS = {
+  general: {
+    title: 'Consulter un médecin',
+    what: `Notre partenaire <strong>Livi</strong> est une plateforme regroupant des médecins libéraux.`
+  },
+  obesite: {
+    title: 'Parcours surpoids & obésité',
+    what: `Notre partenaire <strong>Livi</strong> propose une prise en charge <strong>pluridisciplinaire et personnalisée</strong> du surpoids et de l'obésité : médecine générale, suivi diététique, accompagnement psychologique, orientation vers une activité physique adaptée. Le parcours commence par une première téléconsultation d'évaluation avec un médecin Livi.`
+  },
+  addiction: {
+    title: 'Aide à l\'arrêt du tabac',
+    what: `Notre partenaire <strong>Livi</strong> propose un parcours dédié aux addictions, animé par une équipe pluridisciplinaire (médecins généralistes, psychiatres, psychologues spécialisés en addictologie). Premier entretien motivationnel avec un médecin addictologue.`
+  },
+  mental: {
+    title: 'Consulter pour votre santé mentale',
+    what: `Notre partenaire <strong>Livi</strong> dispose d'une équipe pluridisciplinaire de +30 professionnels en santé mentale (médecins généralistes, psychiatres, psychologues cliniciens). Approche centrée sur les thérapies cognitivo-comportementales (TCC) et brèves.`
+  },
+  cardio: {
+    title: 'Mon Bilan Cardio',
+    what: `Notre partenaire <strong>Livi</strong> propose un parcours de prévention des risques cardio-vasculaires : questionnaire d'évaluation, téléconsultation avec un médecin formé, restitution personnalisée et orientation si besoin.`
+  },
+  femme: {
+    title: 'Santé de la femme',
+    what: `Notre partenaire <strong>Livi</strong> propose une prise en charge des dysménorrhées et troubles gynécologiques par une équipe pluridisciplinaire (médecins généralistes, gynécologues, psychologues), basée sur les recommandations HAS.`
+  }
+};
+
+let currentLiviParcours = 'general';
+
+// Ouvrir la modale LIVI (parcours = clé du catalogue)
+function openLiviModal(parcours = 'general') {
+  currentLiviParcours = LIVI_PARCOURS[parcours] ? parcours : 'general';
+  const p = LIVI_PARCOURS[currentLiviParcours];
+  document.getElementById('livi-title').textContent = p.title;
+  document.getElementById('livi-what').innerHTML = p.what;
+  document.getElementById('livi-modal').classList.add('open');
+}
+
+function closeLiviModal() {
+  document.getElementById('livi-modal').classList.remove('open');
+}
+
+// Redirection vers le partenaire après acceptation RGPD
+function redirectToLivi() {
+  closeLiviModal();
+  const toast = document.getElementById('toast');
+  toast.textContent = '✅ Redirection vers Livi…';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+  // Confirmation dans le chat
+  addAgentMessage(`Parfait ! Je vous redirige vers <strong>Livi</strong>. Vous y retrouverez votre prise en charge à 100 % par votre mutuelle. À bientôt 🌿`);
+  // Ouverture du site partenaire dans un nouvel onglet (sécurisé)
+  setTimeout(() => {
+    window.open('https://livi.fr', '_blank', 'noopener,noreferrer');
+  }, 600);
+}
+
+// Injecter un bouton "Téléconsultation LIVI" dans la conversation
+function injectLiviButton(parcours = 'general', label = null) {
+  // Respecter le toggle selon le profil
+  const enabled = currentProfile === 'qvct'
+    ? document.getElementById('q-livi')?.checked
+    : document.getElementById('f-livi')?.checked;
+  if (!enabled) return;
+
+  const p = LIVI_PARCOURS[parcours] || LIVI_PARCOURS.general;
+  const btnLabel = label || `🩺 ${p.title} — avec Livi`;
+
+  const msgs = document.getElementById('messages');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg agent';
+  wrapper.style.alignItems = 'flex-start';
+
+  const btn = document.createElement('button');
+  btn.className = 'coach-inline-btn';
+  btn.innerHTML = btnLabel;
+  btn.onclick = () => openLiviModal(parcours);
+
+  wrapper.innerHTML = `<div class="msg-avatar">${currentEmoji}</div><div></div>`;
+  wrapper.querySelector('div:last-child').appendChild(btn);
+  msgs.appendChild(wrapper);
+  scrollToBottom();
+}
+
 function confirmRdv() {
   const prenom = document.getElementById('rdv-prenom').value.trim();
   const creneau = document.getElementById('rdv-creneau').value;
@@ -1548,6 +1714,7 @@ function buildSystemPrompt() {
   if (document.getElementById('f-annuaire').checked) funcs.push(`- Annuaire professionnels de santé (RPPS) : pour trouver un médecin, spécialiste ou professionnel de santé, utilise l'API publique RPPS via https://api.annuaire.sante.fr/fhir/v1/Practitioner. Tu peux rechercher par nom, spécialité et commune. Pour la démo, simule des résultats réalistes basés sur le RPPS (Dr. [Prénom Nom], spécialité, adresse réelle de la ville demandée, numéro RPPS fictif à 11 chiffres, secteur de conventionnement). Mentionne toujours que les données proviennent de l'Annuaire Santé officiel (RPPS / ANS).`);
   if (document.getElementById('f-coaching').checked) funcs.push("- Coaching humain : si tu détectes une fragilité ou une détresse, propose toujours la mise en relation avec un conseiller humain.");
   if (document.getElementById('f-fragility')?.checked !== false) funcs.push("- Détection de fragilités familiales : tu as accès à une analyse de 18 mois de remboursements de l'adhérent et de sa famille couverte par le contrat. Le système identifie des signaux faibles (hausse soudaine de consultations, médicaments psy/antalgiques en escalade, hospitalisation récente, renoncement aux soins, suivi enfant atypique) et calcule un score de fragilité 0-100. Quand ce contexte t'est fourni, tu présentes les signaux en langage simple, non médicalisé, sans dramatiser. Tu rappelles que ces données restent confidentielles côté mutuelle et ne sont jamais partagées avec l'employeur ou le médecin traitant.");
+  if (document.getElementById('f-livi')?.checked !== false) funcs.push(`- Téléconsultation LIVI (partenaire) : tu peux orienter l'adhérent vers notre partenaire Livi (medecin libéral en ligne, prise en charge à 100% par la mutuelle) dans les cas suivants : besoin d'un avis médical général, renouvellement d'ordonnance, accès difficile à un médecin traitant, parcours spécifiques (surpoids/obésité, addictions/tabac, santé mentale, prévention cardio, santé de la femme). Pour proposer Livi, ajoute en fin de réponse le marqueur [LIVI:parcours] où parcours est l'un de : general, obesite, addiction, mental, cardio, femme. Un bouton apparaîtra automatiquement et l'utilisateur verra une page de présentation du partenaire avec les mentions RGPD avant la redirection. Ne propose Livi que si c'est pertinent, jamais de façon systématique.`);
 
   // Connaissance contrat MBA
   const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
@@ -1565,6 +1732,7 @@ function buildSystemPrompt() {
     const useDroit  = document.getElementById('q-droit')?.checked;
     const usePrev   = document.getElementById('q-prev')?.checked;
     const useCoach  = document.getElementById('q-coach')?.checked;
+    const useLivi   = document.getElementById('q-livi')?.checked;
     const threshold = moodCoachThreshold;
     const lowCount  = moodHistory.filter(m => m.score <= threshold).length;
 
@@ -1574,6 +1742,7 @@ function buildSystemPrompt() {
     if (useDroit)  qvctFuncs.push('- Ressources droit du travail : tu peux répondre à des questions sur les droits des salariés (congés, arrêt maladie, harcèlement, temps de travail, rupture conventionnelle…) en te basant sur le Code du travail français. Cite toujours tes sources (article L.xxxx) et invite à consulter un juriste ou les services RH pour les situations complexes.');
     if (usePrev)   qvctFuncs.push('- Prévention santé au travail : TMS (troubles musculo-squelettiques), risques psychosociaux (RPS), burn-out, stress chronique. Tu peux donner des conseils de prévention concrets et orienter vers la médecine du travail si nécessaire.');
     if (useCoach)  qvctFuncs.push(`- Orientation coach : si tu détectes une fragilité (score humeur ≤ ${threshold}, signal récurrent, détresse exprimée), propose subtilement une rencontre avec ${coachName} (${coachSpec}). Termine alors ta réponse par [COACH_TRIGGER].`);
+    if (useLivi)   qvctFuncs.push('- Téléconsultation LIVI (partenaire) : tu peux orienter le salarié vers notre partenaire Livi (médecin libéral en ligne, pris en charge à 100% par la mutuelle) quand un avis médical est utile : besoin de consulter rapidement, parcours spécifique (surpoids/obésité, addictions/tabac, santé mentale, prévention cardio, santé de la femme). Pour proposer Livi, ajoute en fin de réponse le marqueur [LIVI:parcours] où parcours est l\'un de : general, obesite, addiction, mental, cardio, femme. Un bouton apparaîtra automatiquement avec une page de présentation du partenaire et les mentions RGPD avant redirection. La téléconsultation Livi est COMPLÉMENTAIRE de l\'accompagnement par notre coach interne (qui reste prioritaire pour les sujets psycho-sociaux).');
 
     const moodCtx = moodHistory.length > 0
       ? `\n\nHistorique humeurs de la session :\n${moodHistory.map(m => `- ${m.label} (score ${m.score}/5)`).join('\n')}\nSignaux faibles détectés : ${lowCount}/${moodHistory.length} fois.`
@@ -1769,12 +1938,14 @@ async function callClaude(userText) {
     const bubble = document.getElementById(bubbleId);
     const timeEl = document.getElementById('time-' + bubbleId);
 
-    // Parser QUICK_REPLIES et COACH_TRIGGER
+    // Parser QUICK_REPLIES, COACH_TRIGGER, LIVI
     const qrMatch = fullText.match(/\[QUICK_REPLIES:([^\]]+)\]/);
     const coachTrigger = fullText.includes('[COACH_TRIGGER]');
+    const liviMatch = fullText.match(/\[LIVI:([a-z]+)\]/);
     const cleanText = fullText
       .replace(/\[QUICK_REPLIES:[^\]]+\]/g, '')
       .replace(/\[COACH_TRIGGER\]/g, '')
+      .replace(/\[LIVI:[a-z]+\]/g, '')
       .trim();
 
     bubble.classList.remove('streaming-cursor');
@@ -1816,6 +1987,12 @@ async function callClaude(userText) {
           : 'Après quelques échanges, je pense qu\'un rendez-vous avec notre coach pourrait vous faire du bien.';
         setTimeout(() => injectCoachButton(reason), 600);
       }
+    }
+
+    // Injection bouton LIVI si LIXIA l'a déclenché (tous profils)
+    if (liviMatch) {
+      const parcours = liviMatch[1];
+      setTimeout(() => injectLiviButton(parcours), 500);
     }
 
   } catch (err) {
