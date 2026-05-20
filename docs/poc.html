@@ -4,25 +4,53 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LIXIA — Agent IA · Démonstration</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
 <style>
   :root {
+    /* ─ LIXIA brand ─ */
     --pink:#E2529E; --pink-l:#FBEAF0; --pink-d:#99234F;
     --green:#C8D95B; --green-d:#8FA52A;
     --violet:#7F64D6; --violet-l:#EEEDFE; --violet-d:#3C2E8A;
+
+    /* ─ LIXIA neutrals ─ */
     --bg:#F7F5F2; --surface:#FFFFFF;
     --text:#1A1A2E; --muted:#6B6B80; --border:#E8E4F0;
-    --radius:16px; --shadow:0 4px 32px rgba(127,100,214,0.10);
+
+    /* ─ Host extranet (Mutuelle MBA Atlantique) ─ */
+    --ex-primary:#143C5A; --ex-primary-d:#0B2540; --ex-primary-l:#E3ECF3;
+    --ex-accent:#C4A871;
+    --ex-bg:#F2EDE5; --ex-surface:#FFFFFF;
+    --ex-text:#14253A; --ex-muted:#6E7787; --ex-border:#E4DDD0;
+    --ex-success:#1D7A56; --ex-warn:#B8852B;
+
+    /* ─ Radius / shadows ─ */
+    --r-sm:8px; --r-md:12px; --r-lg:18px; --r-xl:24px;
+    --sh-sm:0 1px 2px rgba(20,37,58,.06),0 1px 4px rgba(20,37,58,.04);
+    --sh-md:0 4px 14px rgba(20,37,58,.08),0 1px 3px rgba(20,37,58,.05);
+    --sh-lg:0 12px 40px rgba(20,37,58,.12),0 4px 12px rgba(20,37,58,.06);
+    --sh-lixia:0 12px 40px rgba(127,100,214,.18),0 4px 14px rgba(226,82,158,.14);
+
+    /* ─ Legacy aliases (compatibilité POC existant) ─ */
+    --radius:var(--r-lg); --shadow:var(--sh-lixia);
     --agent-color:#E2529E; --agent-color-l:#FBEAF0;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+  /* Quand le profil est "extranet", le shell de l'app prend l'identité de la mutuelle hôte */
+  body.profile-extranet{background:var(--ex-bg);color:var(--ex-text);}
+  body.profile-extranet header{background:var(--ex-surface);border-bottom:1px solid var(--ex-border);}
+  body.profile-extranet .header-badge{background:var(--ex-primary-l);color:var(--ex-primary);}
+  body.profile-extranet .header-badge::before{background:var(--ex-primary);}
+
+  /* Sur profil QVCT, la bulle utilisateur revient à l'identité LIXIA (sombre) */
+  body.profile-qvct .msg.user .msg-bubble{background:var(--text);}
 
   header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
   .logo{display:flex;align-items:center;gap:10px;}
   .logo-bubble{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 12px rgba(226,82,158,.3);transition:transform .3s;}
   .logo-bubble:hover{transform:scale(1.1) rotate(-5deg);}
-  .logo-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);letter-spacing:-.5px;}
+  .logo-name{font-family:'Instrument Serif',serif;font-size:24px;color:var(--text);letter-spacing:-.5px;line-height:1;}
   .logo-name span{color:var(--agent-color);transition:color .4s;}
   .header-right{display:flex;align-items:center;gap:10px;}
   .header-badge{display:flex;align-items:center;gap:8px;background:var(--violet-l);color:var(--violet-d);padding:5px 13px;border-radius:999px;font-size:12px;font-weight:500;}
@@ -62,9 +90,9 @@
   .msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;}
   .msg.agent .msg-avatar{background:linear-gradient(135deg,var(--agent-color) 0%,var(--violet) 100%);transition:background .4s;}
   .msg.user .msg-avatar{background:var(--green);}
-  .msg-bubble{max-width:76%;padding:12px 16px;border-radius:18px;font-size:13.5px;line-height:1.65;}
+  .msg-bubble{max-width:76%;padding:12px 16px;border-radius:var(--r-lg);font-size:13.5px;line-height:1.65;box-shadow:var(--sh-sm);}
   .msg.agent .msg-bubble{background:var(--agent-color-l);border-bottom-left-radius:4px;color:var(--text);transition:background .4s;}
-  .msg.user .msg-bubble{background:var(--text);color:#fff;border-bottom-right-radius:4px;}
+  .msg.user .msg-bubble{background:var(--ex-primary);color:#fff;border-bottom-right-radius:4px;}
   .msg-time{font-size:10px;color:var(--muted);margin-top:4px;}
   .msg.agent .msg-time{text-align:left;}
   .msg.user .msg-time{text-align:right;}
@@ -82,7 +110,7 @@
   .input-row:focus-within{border-color:var(--agent-color);}
   .chat-input{flex:1;border:none;background:transparent;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;resize:none;max-height:80px;min-height:20px;line-height:1.5;}
   .chat-input::placeholder{color:var(--muted);}
-  .send-btn{width:34px;height:34px;border-radius:10px;border:none;cursor:pointer;background:var(--agent-color);color:white;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+  .send-btn{width:34px;height:34px;border-radius:var(--r-sm);border:none;cursor:pointer;background:var(--agent-color);color:white;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
   .send-btn:hover{filter:brightness(1.1);transform:scale(1.05);}
   .send-btn:disabled{opacity:.4;cursor:default;transform:none;}
   .input-footer{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:10.5px;color:var(--muted);}
@@ -108,10 +136,10 @@
     background:var(--surface);
     border:1.5px solid var(--border);
     border-left:4px solid var(--agent-color);
-    border-radius:16px;
+    border-radius:var(--r-lg);
     padding:18px 20px;
     max-width:360px;
-    box-shadow:0 8px 40px rgba(0,0,0,0.14);
+    box-shadow:var(--sh-lg);
     cursor:pointer;
     transform:translateY(120px);
     opacity:0;
@@ -294,25 +322,25 @@
   .frag-disclaimer{margin-top:8px;font-size:10px;color:var(--muted);text-align:center;line-height:1.4;}
 
   /* ── MODALE LIVI : Consulter un médecin ── */
-  .livi-card{max-width:440px;width:100%;padding:0;background:white;border-radius:18px;overflow:hidden;position:relative;}
-  .livi-close{position:absolute;top:14px;right:14px;background:#F3F4F6;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:13px;color:#6B7280;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2;}
-  .livi-close:hover{background:#E5E7EB;}
+  .livi-card{max-width:440px;width:100%;padding:0;background:var(--surface);border-radius:var(--r-lg);overflow:hidden;position:relative;box-shadow:var(--sh-lg);}
+  .livi-close{position:absolute;top:14px;right:14px;background:var(--bg);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2;}
+  .livi-close:hover{background:var(--border);}
   .livi-header{display:flex;align-items:center;gap:14px;padding:28px 28px 0;}
-  .livi-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .livi-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--violet) 0%,var(--violet-d) 100%);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
   .livi-title-block{flex:1;}
-  .livi-title{font-family:'DM Serif Display',serif;font-size:22px;color:#1F2937;line-height:1.2;}
-  .livi-badge{display:inline-block;margin-top:8px;padding:5px 12px;border:1.5px solid #7C3AED;border-radius:14px;font-size:11.5px;color:#7C3AED;font-weight:600;}
+  .livi-title{font-family:'Instrument Serif',serif;font-size:24px;color:var(--text);line-height:1.2;letter-spacing:-.3px;}
+  .livi-badge{display:inline-block;margin-top:8px;padding:5px 12px;border:1.5px solid var(--violet);border-radius:14px;font-size:11.5px;color:var(--violet);font-weight:600;}
   .livi-section{padding:18px 28px 0;}
-  .livi-q{font-size:14.5px;font-weight:600;color:#1F2937;margin-bottom:6px;}
-  .livi-a{font-size:13.5px;color:#4B5563;line-height:1.6;}
+  .livi-q{font-size:14.5px;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .livi-a{font-size:13.5px;color:var(--muted);line-height:1.6;}
   .livi-list{margin:8px 0 0 4px;padding-left:18px;}
-  .livi-list li{margin:4px 0;color:#4B5563;font-size:13.5px;}
-  .livi-rgpd{margin:20px 28px 0;padding:14px 16px;background:#F9FAFB;border-radius:10px;font-size:11.5px;color:#6B7280;line-height:1.55;}
-  .livi-cta{margin:18px 28px 28px;padding:14px;width:calc(100% - 56px);background:linear-gradient(135deg,#EC4899 0%,#A855F7 100%);color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(168,85,247,.35);}
+  .livi-list li{margin:4px 0;color:var(--muted);font-size:13.5px;}
+  .livi-rgpd{margin:20px 28px 0;padding:14px 16px;background:var(--bg);border-radius:var(--r-sm);font-size:11.5px;color:var(--muted);line-height:1.55;}
+  .livi-cta{margin:18px 28px 28px;padding:14px;width:calc(100% - 56px);background:linear-gradient(135deg,var(--pink) 0%,var(--violet) 100%);color:white;border:none;border-radius:var(--r-md);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:var(--sh-lixia);}
   .livi-cta:hover{filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 8px 26px rgba(168,85,247,.45);}
 
   /* CTA LIVI à l'intérieur d'une bulle agent */
-  .livi-cta-inline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px 16px;width:100%;background:linear-gradient(135deg,#EC4899 0%,#A855F7 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(168,85,247,.28);}
+  .livi-cta-inline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px 16px;width:100%;background:linear-gradient(135deg,var(--pink) 0%,var(--violet) 100%);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(127,100,214,.28);}
   .livi-cta-inline:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 5px 16px rgba(168,85,247,.38);}
 
   /* Système prompt tag */
@@ -1205,6 +1233,10 @@ Réponse courte (4-5 phrases max).`;
 // ── Changement de profil ──
 function switchProfile(profile) {
   currentProfile = profile;
+
+  // Identité hôte (mutuelle MBA) appliquée au shell de l'app pour le profil extranet
+  document.body.classList.toggle('profile-extranet', profile === 'extranet');
+  document.body.classList.toggle('profile-qvct', profile === 'qvct');
 
   // Boutons profil
   document.getElementById('profile-extranet').classList.toggle('active', profile === 'extranet');
@@ -2154,6 +2186,9 @@ function triggerNotifQvct() {
 
 // Lancer la notification après 2.5s
 window.addEventListener('load', () => {
+  // Identité hôte par défaut (extranet)
+  document.body.classList.add('profile-extranet');
+
   // Initialiser le profil extranet (s'assure que tout l'état est cohérent)
   // Sans réinitialiser la conversation (déjà dans le HTML)
   document.getElementById('section-extranet').style.display = 'flex';
