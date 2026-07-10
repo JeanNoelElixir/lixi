@@ -730,6 +730,14 @@
             </div>
             <label class="toggle"><input type="checkbox" id="f-livi" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">🏝️ Adaptation créole antillais</div>
+              <div class="toggle-desc">Comprend le créole · réponses bilingues · pour adhérents 971/972</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="f-creole"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
         </div>
       </div>
 
@@ -1753,6 +1761,15 @@ function buildSystemPrompt() {
   if (document.getElementById('f-fragility')?.checked !== false) funcs.push("- Détection de fragilités familiales : tu as accès à une analyse de 18 mois de remboursements de l'adhérent et de sa famille couverte par le contrat. Le système identifie des signaux faibles (hausse soudaine de consultations, médicaments psy/antalgiques en escalade, hospitalisation récente, renoncement aux soins, suivi enfant atypique) et calcule un score de fragilité 0-100. Quand ce contexte t'est fourni, tu présentes les signaux en langage simple, non médicalisé, sans dramatiser. Tu rappelles que ces données restent confidentielles côté mutuelle et ne sont jamais partagées avec l'employeur ou le médecin traitant.");
   if (document.getElementById('f-livi')?.checked !== false) funcs.push(`- Téléconsultation LIVI (partenaire) : tu peux orienter l'adhérent vers notre partenaire Livi (medecin libéral en ligne, prise en charge à 100% par la mutuelle) dans les cas suivants : besoin d'un avis médical général, renouvellement d'ordonnance, accès difficile à un médecin traitant, parcours spécifiques (surpoids/obésité, addictions/tabac, santé mentale, prévention cardio, santé de la femme). Pour proposer Livi, ajoute en fin de réponse le marqueur [LIVI:parcours] où parcours est l'un de : general, obesite, addiction, mental, cardio, femme. Un bouton apparaîtra automatiquement et l'utilisateur verra une page de présentation du partenaire avec les mentions RGPD avant la redirection. Ne propose Livi que si c'est pertinent, jamais de façon systématique.`);
 
+  // Adaptation créole antillais
+  if (document.getElementById('f-creole')?.checked) funcs.push(`- ADAPTATION CRÉOLE ANTILLAIS (cas d'usage Antilles 971/972) : certains adhérents sont plus à l'aise en créole qu'en français. Tu dois :
+  1. COMPRENDRE le créole guadeloupéen ou martiniquais quand il apparaît dans le message utilisateur (y compris le code-switching français-créole, très naturel aux Antilles).
+  2. Répondre par DÉFAUT en français accessible, chaleureux, avec des phrases courtes et un ton proche. Tu peux reprendre 1 mot créole utilisé par l'adhérent pour montrer que tu l'as compris (ex : "Je vois, ou ka di sa fait longtemps que ça dure"). Pas plus, pour rester clair.
+  3. Si l'adhérent demande EXPLICITEMENT de répondre en créole ("réponds-moi en créole", "an kréyòl tanpri", etc.), bascule en créole — mais uniquement pour la conversation, JAMAIS pour les montants de remboursement, garanties, posologie, ou références juridiques qui restent toujours en français exact pour des raisons de sécurité.
+  4. Quand tu bascules en créole, demande poliment la variante préférée la première fois ("Vous préférez le gwadloupéyen ou le matniké ?") et adapte-toi. Sois transparent : "Je ferai de mon mieux, dites-moi si une formulation sonne mal et je corrige."
+  5. Ne JAMAIS supposer qu'un adhérent veut du créole juste parce qu'il vient des Antilles. Attendre un signal explicite (mot créole dans son message, demande directe).
+  6. Garder le ton respectueux : éviter le tutoiement créole avec les personnes âgées sauf si elles l'initient.`);
+
   // Connaissance contrat MBA
   const useMBA = document.getElementById('f-mba-docs')?.checked !== false;
   const mbaContext = useMBA ? `\n\n${MBA_GARANTIES}\n\n${MBA_PROCEDURES}` : '';
@@ -1952,7 +1969,7 @@ async function callClaude(userText) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         system: buildSystemPrompt(),
         messages: conversationHistory,
