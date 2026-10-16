@@ -341,6 +341,110 @@
 
   /* CTA LIVI à l'intérieur d'une bulle agent */
   .livi-cta-inline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px 16px;width:100%;background:linear-gradient(135deg,var(--pink) 0%,var(--violet) 100%);color:white;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(127,100,214,.28);}
+
+  /* ══════════ MODULE CARTES DE SAISON ══════════ */
+  :root{--card-r:16px;--brand:#143C5A;--brand-ink:#fff;--brand-accent:#C4A871;
+    --s-parcours:#2E7D6B;--s-parcours-l:#E3F2EE;--s-devis:#B35A1F;--s-devis-l:#FBEADF;--s-reperes:#3B5BA9;--s-reperes-l:#E6EBF8;--s-prevention:#C2185B;--s-prevention-l:#FBE3EC;
+    --s-collectif:#6A4FBF;--s-collectif-l:#EDE8FA;--s-organisation:#1F7A8C;--s-organisation-l:#E1F1F4;--s-mouvement:#C77B00;--s-mouvement-l:#FCEFD8;--s-rythmes:#2B6CB0;--s-rythmes-l:#E2ECF8;}
+  body.profile-qvct{--brand:#7F64D6;--brand-accent:#E2529E;}
+  .lxc-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:11.5px;font-weight:600;color:var(--text);cursor:pointer;margin-right:10px;position:relative;font-family:inherit}
+  .lxc-pill:hover{border-color:var(--agent-color)}
+  .lxc-pill .dot{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:var(--pink);border:2px solid var(--surface);display:none}
+  .lxc-pill.waiting .dot{display:block}
+  .lxc-view{display:none;flex:1;overflow-y:auto;background:var(--bg);flex-direction:column}
+  .lxc-view.open{display:flex}
+  .lxc-back{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;padding:10px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px}
+  .lxc-back button{border:none;background:none;color:var(--text);font-weight:600;cursor:pointer;font-family:inherit;font-size:13px;padding:6px 4px}
+  .lxc-back .t{color:var(--muted);margin-left:auto;font-size:12px}
+  .lxc-body{padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  /* carte */
+  .lxc-card{width:300px;height:440px;border-radius:var(--card-r);background:#fff;border:1px solid var(--border);box-shadow:var(--sh-md);display:flex;flex-direction:column;overflow:hidden;position:relative;font-family:'DM Sans',sans-serif;color:#1A1A2E;flex-shrink:0}
+  .lxc-card.rare{box-shadow:0 0 0 2px var(--brand-accent),0 0 0 4px var(--sc),var(--sh-md)}
+  .lxc-band{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--sc);color:#fff;font-size:12px;font-weight:600}
+  .lxc-card.rare .lxc-band{background-image:radial-gradient(rgba(255,255,255,.25) 1px,transparent 1px);background-size:6px 6px}
+  .lxc-band .num{margin-left:auto;font-variant-numeric:tabular-nums;opacity:.9}
+  .lxc-emb{width:18px;height:18px;flex-shrink:0}
+  .lxc-ribbon{position:absolute;top:38px;right:-28px;transform:rotate(45deg);background:var(--brand-accent);color:#1A1A2E;font-size:10px;font-weight:700;padding:3px 34px;letter-spacing:.3px;box-shadow:var(--sh-sm)}
+  .lxc-illus{margin:12px;height:220px;border-radius:12px;background:var(--scl);display:flex;align-items:center;justify-content:center}
+  .lxc-illus svg{width:96px;height:96px;opacity:.9}
+  .lxc-title{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.15;padding:0 14px}
+  .lxc-hook{font-size:15px;line-height:1.35;color:#3D4A5C;padding:6px 14px 0}
+  .lxc-foot{margin-top:auto;display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--brand);color:var(--brand-ink);font-size:11px}
+  .lxc-foot .sp{margin-left:auto;opacity:.85}
+  .lxc-rar{display:inline-flex;align-items:center;gap:3px;font-weight:600}
+  .lxc-rar i{display:inline-block;width:9px;height:9px;background:currentColor}
+  .lxc-rar.commune i{border-radius:50%}.lxc-rar.peu_commune i{transform:rotate(45deg);width:8px;height:8px}
+  .lxc-rar.rare i{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);width:11px;height:11px}
+  /* verso */
+  .lxc-card.verso .lxc-sec{padding:10px 14px 0}
+  .lxc-card.verso .lxc-sec h4{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--sc);margin-bottom:3px}
+  .lxc-card.verso .lxc-sec p{font-size:13px;line-height:1.45}
+  .lxc-src{font-size:10.5px;color:var(--muted);padding:8px 14px 0}
+  .lxc-src .warn{color:#B8852B;font-weight:600}
+  .lxc-btns{margin-top:auto;display:flex;flex-direction:column;gap:7px;padding:10px 12px 12px}
+  .lxc-btn{min-height:40px;border-radius:10px;border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;padding:0 12px}
+  .lxc-btn.p{background:linear-gradient(135deg,var(--agent-color),var(--violet));color:#fff}
+  .lxc-btn.s{background:var(--brand);color:var(--brand-ink)}
+  .lxc-btn.g{background:var(--surface);border:1.5px solid var(--border);color:var(--text)}
+  @media(max-width:600px){.lxc-btn{min-height:44px}}
+  /* mini */
+  .lxc-mini{width:80px;height:104px;border-radius:9px;border:1px solid var(--border);background:#fff;display:flex;flex-direction:column;overflow:hidden;position:relative;cursor:pointer;font-family:inherit;padding:0;text-align:left}
+  .lxc-mini .b{display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:var(--sc);color:#fff;font-size:10px;font-weight:700}
+  .lxc-mini .b svg{width:11px;height:11px}
+  .lxc-mini .z{flex:1;background:var(--scl);display:flex;align-items:center;justify-content:center}
+  .lxc-mini .z svg{width:30px;height:30px;opacity:.85}
+  .lxc-mini .r{display:flex;gap:2px;justify-content:center;padding:3px 0 4px;color:#1A1A2E}
+  .lxc-mini .r i{display:inline-block;width:7px;height:7px;background:currentColor;border-radius:50%}
+  .lxc-mini.peu_commune .r i{border-radius:0;transform:rotate(45deg);width:6px;height:6px}
+  .lxc-mini.rare .r i{border-radius:0;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);width:9px;height:9px}
+  .lxc-mini.rare{outline:2px solid var(--brand-accent);outline-offset:-2px}
+  .lxc-mini .st{position:absolute;bottom:18px;right:4px;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px}
+  .lxc-mini .st.new{background:#1A1A2E;color:#fff}
+  .lxc-mini .st.dup{background:#fff;color:#1A1A2E;border:1.5px solid #1A1A2E}
+  .lxc-mini.missing{border:2px dashed #B6B2C0;background:repeating-linear-gradient(45deg,#f3f1f6 0 6px,#fff 6px 12px);cursor:default;color:#6B6B80;align-items:center;justify-content:center;font-size:11px;font-weight:600;gap:4px}
+  .lxc-mini.missing .n{font-size:16px;color:#1A1A2E}
+  .lxc-mini.small{transform:scale(.9);transform-origin:top left}
+  .lxc-grid{display:grid;grid-template-columns:repeat(5,80px);gap:10px;justify-content:center}
+  @media(max-width:600px){.lxc-grid{grid-template-columns:repeat(4,72px)}.lxc-mini{width:72px;height:94px}}
+  .lxc-serie{width:100%;max-width:470px}
+  .lxc-serie h3{display:flex;align-items:center;gap:8px;font-size:14px;margin:10px 0 8px}
+  .lxc-serie h3 .bar{flex:1;height:5px;border-radius:3px;background:var(--border);overflow:hidden}
+  .lxc-serie h3 .bar i{display:block;height:100%;background:var(--sc)}
+  .lxc-serie h3 small{color:var(--muted);font-weight:500}
+  /* booster */
+  .lxc-pack{width:250px;height:360px;border-radius:14px;background:var(--brand);color:var(--brand-ink);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:var(--sh-lg);border:none;font-family:inherit;
+    -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);-webkit-mask-composite:destination-out;mask:radial-gradient(circle at 50% 0,transparent 0,transparent 0) }
+  .lxc-pack::before{content:"";position:absolute;top:-1px;left:0;right:0;height:14px;background:repeating-linear-gradient(135deg,var(--bg) 0 7px,transparent 7px 14px),repeating-linear-gradient(45deg,var(--bg) 0 7px,transparent 7px 14px);background-size:14px 14px}
+  .lxc-pack .big{font-family:'DM Serif Display',serif;font-size:30px;margin-top:16px}
+  .lxc-pack .ct{font-size:13px;opacity:.9}.lxc-pack .lg{position:absolute;bottom:14px;font-size:11px;opacity:.8}
+  .lxc-pack .ico{width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:34px}
+  @media(prefers-reduced-motion:no-preference){.lxc-pack.idle{animation:lxc-sway 3s ease-in-out infinite}.lxc-pack.open{animation:lxc-tear .5s ease-in forwards}.lxc-reveal-in{animation:lxc-rise .5s cubic-bezier(.2,.8,.3,1) both}}
+  @keyframes lxc-sway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+  @keyframes lxc-tear{to{transform:translateY(40px) scale(.9);opacity:0}}
+  @keyframes lxc-rise{from{transform:translateY(24px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+  .lxc-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .lxc-hint{font-size:12.5px;color:var(--muted);text-align:center;max-width:320px}
+  /* blocs dans la conversation */
+  .lxc-linked{display:flex;gap:10px;align-items:center;margin-top:10px;padding:8px;border-radius:12px;background:#fff;border:1px solid var(--border);cursor:pointer}
+  .lxc-linked .tx{font-size:12.5px;line-height:1.35}.lxc-linked .tx b{display:block;font-size:13px}.lxc-linked .tx small{color:var(--muted)}
+  .lxc-offer{display:flex;gap:12px;align-items:center;margin-top:10px;padding:10px;border-radius:12px;background:#fff;border:1px solid var(--border)}
+  .lxc-offer .mp{width:46px;height:66px;border-radius:7px;background:var(--brand);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--brand-ink);font-size:20px}
+  .lxc-offer .tx{flex:1;font-size:12.5px;line-height:1.35}
+  .lxc-offer .ac{display:flex;flex-direction:column;gap:5px}
+  .lxc-offer .ac button{font-family:inherit;font-size:12px;border-radius:8px;padding:7px 10px;cursor:pointer;border:1.5px solid var(--border);background:#fff}
+  .lxc-offer .ac button.p{border:none;background:linear-gradient(135deg,var(--agent-color),var(--violet));color:#fff;font-weight:600}
+  /* admin */
+  .lxc-admin{display:flex;flex-direction:column;gap:10px;font-size:12px}
+  .lxc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .lxc-kpis div{background:var(--bg);border-radius:8px;padding:8px;text-align:center}.lxc-kpis b{display:block;font-size:16px}.lxc-kpis span{color:var(--muted);font-size:10.5px}
+  .lxc-probs{display:flex;gap:6px;align-items:center}.lxc-probs input{width:52px;padding:5px;border:1.5px solid var(--border);border-radius:7px;font:inherit;text-align:center}
+  .lxc-probs .sum{margin-left:auto;font-weight:600}.lxc-probs .sum.bad{color:#C2185B}
+  .lxc-status{display:inline-flex;gap:6px;align-items:center;padding:5px 9px;border-radius:8px;background:#FFF4D6;color:#8A5A00;font-weight:600;font-size:11.5px}
+  .lxc-pub{width:100%;padding:9px;border-radius:9px;border:none;background:var(--text);color:#fff;font-family:inherit;font-weight:600;cursor:not-allowed;opacity:.45}
+  .lxc-brandrow{display:flex;gap:8px;align-items:center}.lxc-brandrow input[type=color]{width:34px;height:28px;border:none;background:none;padding:0;cursor:pointer}
+  .lxc-brandrow input[type=text]{flex:1;padding:5px 8px;border:1.5px solid var(--border);border-radius:7px;font:inherit}
+  .lxc-contrast{font-size:11px}.lxc-contrast.bad{color:#C2185B;font-weight:600}
+
   .livi-cta-inline:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 5px 16px rgba(168,85,247,.38);}
 
   /* Système prompt tag */
@@ -354,9 +458,9 @@
   .drawer-overlay{
     display:none;position:fixed;inset:0;
     background:rgba(0,0,0,0.45);z-index:300;
-    opacity:0;transition:opacity .3s;
+    opacity:0;transition:opacity .3s;pointer-events:none;
   }
-  .drawer-overlay.open{opacity:1;}
+  .drawer-overlay.open{opacity:1;pointer-events:auto;}
   .config-panel{
     background:var(--bg);overflow-y:auto;
     transition:transform .35s cubic-bezier(.4,0,.2,1);
@@ -444,6 +548,7 @@
           <p id="agent-subtitle">Votre conseillère santé & bien-être personnelle</p>
         </div>
       </div>
+      <button class="lxc-pill" id="lxc-pill" onclick="LXC.openCollection()" aria-label="Ma collection de cartes" style="display:none">🃏 <span id="lxc-count">0 / 40</span><span class="dot"></span></button>
       <div class="agent-status">En ligne · LIXIA IA</div>
     </div>
 
@@ -505,6 +610,8 @@
         </div>
       </div>
     </div>
+
+    <div class="lxc-view" id="lxc-view" aria-live="polite"></div>
 
     <div class="messages" id="messages">
       <div class="msg agent">
@@ -738,6 +845,13 @@
             </div>
             <label class="toggle"><input type="checkbox" id="f-creole"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">🃏 Cartes de saison</div>
+              <div class="toggle-desc">Collection Automne 2026 · pioches dans la conversation</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="f-cartes" checked onchange="LXC.onConfigChange()"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
         </div>
       </div>
 
@@ -773,6 +887,33 @@
       </div>
 
       </div><!-- /section-extranet -->
+
+      <div class="config-section" id="lxc-admin-section">
+        <div class="config-section-header">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+          Cartes de saison · <span id="lxc-admin-season">Santé / extranet</span>
+        </div>
+        <div class="config-section-body lxc-admin">
+          <div><span class="lxc-status" id="lxc-season-status">En relecture</span></div>
+          <div class="lxc-kpis" id="lxc-kpis"></div>
+          <div class="param-row"><span class="param-label">Probabilités de tirage (%)</span>
+            <div class="lxc-probs"><label>● <input type="number" id="lxc-p1" value="70" min="0" max="100" oninput="LXC.onConfigChange()"></label><label>◆ <input type="number" id="lxc-p2" value="25" min="0" max="100" oninput="LXC.onConfigChange()"></label><label>★ <input type="number" id="lxc-p3" value="5" min="0" max="100" oninput="LXC.onConfigChange()"></label><span class="sum" id="lxc-psum">= 100</span></div></div>
+          <div class="param-row"><span class="param-label">Cartes par pioche</span>
+            <div class="tone-btns"><button class="tone-btn" onclick="LXC.setPack(this,1)">1</button><button class="tone-btn active" onclick="LXC.setPack(this,3)">3</button><button class="tone-btn" onclick="LXC.setPack(this,5)">5</button></div></div>
+          <div class="param-row"><span class="param-label">Déclencheur : une pioche tous les</span>
+            <div class="tone-btns"><button class="tone-btn" onclick="LXC.setEvery(this,1)">1 échange</button><button class="tone-btn active" onclick="LXC.setEvery(this,2)">2 échanges</button><button class="tone-btn" onclick="LXC.setEvery(this,4)">4 échanges</button></div></div>
+          <div class="toggle-row" style="padding:6px 0"><div class="toggle-info"><div class="toggle-label">Au moins une carte nouvelle par pioche</div></div><label class="toggle"><input type="checkbox" id="lxc-new" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+          <div class="toggle-row" style="padding:6px 0"><div class="toggle-info"><div class="toggle-label">Inclure les cartes « à vérifier »</div><div class="toggle-desc">Bloque la publication tant qu'il en reste</div></div><label class="toggle"><input type="checkbox" id="lxc-incl" checked onchange="LXC.onConfigChange()"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+          <div class="toggle-row" style="padding:6px 0"><div class="toggle-info"><div class="toggle-label">Variante de conseil</div><div class="toggle-desc" id="lxc-var-desc">Tutoiement (défaut : vouvoiement)</div></div><label class="toggle"><input type="checkbox" id="lxc-variant"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+          <div class="toggle-row" style="padding:6px 0"><div class="toggle-info"><div class="toggle-label">Échange de doubles entre adhérents</div><div class="toggle-desc">Désactivé : mécanisme anti-abus à définir</div></div><label class="toggle"><input type="checkbox" disabled/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+          <div class="param-row"><span class="param-label">Marque blanche</span>
+            <div class="lxc-brandrow"><input type="color" id="lxc-brand" value="#143C5A" oninput="LXC.onBrand()" title="--brand"><input type="color" id="lxc-accent" value="#C4A871" oninput="LXC.onBrand()" title="--brand-accent"><input type="text" id="lxc-brandname" value="Mutuelle Démo" oninput="LXC.onBrand()" placeholder="Nom affiché"></div>
+            <div class="lxc-contrast" id="lxc-contrast"></div></div>
+          <button class="lxc-pub" id="lxc-pub" disabled title="Bloqué tant qu'il reste des cartes « à vérifier »">Publier la saison</button>
+          <button class="save-btn" style="margin-top:0" onclick="LXC.resetState()">↺ Réinitialiser la collection de démo</button>
+        </div>
+      </div>
+
 
       <button class="save-btn" onclick="saveConfig()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -839,6 +980,13 @@
               </div>
               <label class="toggle"><input type="checkbox" id="q-livi" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
             </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">🃏 Cartes de saison</div>
+              <div class="toggle-desc">Collection Automne 2026 · pioches dans la conversation</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="q-cartes" checked onchange="LXC.onConfigChange()"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
           </div>
         </div>
 
@@ -1304,6 +1452,9 @@ function switchProfile(profile) {
       fragPanel.classList.remove('visible');
     }
   }
+
+  // Cartes de saison : saison du profil, fermeture des vues
+  if (typeof LXC !== 'undefined') LXC.onProfileChange(profile);
 
   // Afficher la notif de reprise pour le profil QVCT
   const card = document.getElementById('notif-card');
@@ -2049,6 +2200,10 @@ async function callClaude(userText) {
       setTimeout(() => injectLiviButton(parcours), 500);
     }
 
+    // Cartes de saison : carte liée + éventuelle pioche offerte
+    const lastUser = [...conversationHistory].reverse().find(m => m.role === 'user')?.content || '';
+    setTimeout(() => LXC.afterAgentReply(lastUser, cleanText, bubble), 350);
+
   } catch (err) {
     removeTyping();
     const bubbleId = createAgentBubble();
@@ -2202,9 +2357,226 @@ function triggerNotifQvct() {
 }
 
 // Lancer la notification après 2.5s
+// ══════════════════════════════════════════════════════════════
+// MODULE CARTES DE SAISON (Automne 2026) — autonome, état local
+// ══════════════════════════════════════════════════════════════
+const LXC_DATA = {"extranet":[{"code":"extranet-aut26-parcours-01","serie":"parcours","n":1,"rar":"commune","titre":"Le fil du suivi","accroche":"Un interlocuteur pour relier les étapes.","fait":"Le médecin traitant coordonne le suivi médical dans le parcours de soins.","conseil":"Notez une question sur la coordination de vos soins pour votre prochain échange avec votre médecin traitant.","variante":"Note une question sur la coordination de tes soins pour ton prochain échange avec ton médecin traitant.","source":"E01","conf":"élevé","lien":null,"sujet":"Rôle du médecin traitant dans la coordination des soins"},{"code":"extranet-aut26-parcours-02","serie":"parcours","n":2,"rar":"commune","titre":"Le choix du médecin","accroche":"Un choix personnel qui se fait à deux.","fait":"Le choix du médecin traitant est libre, avec l’accord du médecin choisi.","conseil":"Vérifiez dans votre compte ameli le nom du médecin traitant enregistré.","variante":"Vérifie dans ton compte ameli le nom du médecin traitant enregistré.","source":"E02","conf":"élevé","lien":null,"sujet":"Libre choix et déclaration du médecin traitant"},{"code":"extranet-aut26-parcours-03","serie":"parcours","n":3,"rar":"commune","titre":"La déclaration en ligne","accroche":"La démarche peut passer par le cabinet.","fait":"Le médecin peut déclarer le choix du médecin traitant en ligne, avec l’accord de la personne.","conseil":"Si une déclaration est à faire, notez cette possibilité pour votre prochain échange avec le cabinet.","variante":"Si une déclaration est à faire, note cette possibilité pour ton prochain échange avec le cabinet.","source":"E02","conf":"élevé","lien":null,"sujet":"Déclaration électronique du médecin traitant"},{"code":"extranet-aut26-parcours-04","serie":"parcours","n":4,"rar":"commune","titre":"Le papier reste possible","accroche":"Le numérique n’est pas le seul chemin.","fait":"Le choix du médecin traitant peut aussi être déclaré avec un formulaire signé par le médecin et la personne.","conseil":"Repérez le formulaire officiel de déclaration sur ameli.fr si la démarche papier vous convient mieux.","variante":"Repère le formulaire officiel de déclaration sur ameli.fr si la démarche papier te convient mieux.","source":"E02","conf":"élevé","lien":null,"sujet":"Alternative papier à la déclaration du médecin traitant"},{"code":"extranet-aut26-parcours-05","serie":"parcours","n":5,"rar":"commune","titre":"Le relais du remplaçant","accroche":"Une absence ne coupe pas le parcours.","fait":"Consulter le remplaçant du médecin traitant permet de rester dans le parcours de soins coordonnés.","conseil":"Lors d’un prochain échange avec le cabinet, repérez comment le remplacement est organisé.","variante":"Lors d’un prochain échange avec le cabinet, repère comment le remplacement est organisé.","source":"E01","conf":"élevé","lien":null,"sujet":"Remplacement du médecin traitant et parcours de soins"},{"code":"extranet-aut26-parcours-06","serie":"parcours","n":6,"rar":"commune","titre":"Le parcours en déplacement","accroche":"Les exceptions ont aussi leur place.","fait":"Une consultation loin du domicile habituel peut relever d’une exception au parcours de soins.","conseil":"Si ce cas se présente, signalez votre déplacement au cabinet pour que la situation soit correctement renseignée.","variante":"Si ce cas se présente, signale ton déplacement au cabinet pour que la situation soit correctement renseignée.","source":"E03","conf":"élevé","lien":null,"sujet":"Exception au parcours de soins lors d’un éloignement du domicile"},{"code":"extranet-aut26-parcours-07","serie":"parcours","n":7,"rar":"peu_commune","titre":"L’accès direct encadré","accroche":"Certains accès ont leurs propres règles.","fait":"Certains soins de gynécologie sont en accès direct dans le parcours, avec un médecin traitant déclaré.","conseil":"Repérez sur ameli.fr les soins concernés avant un éventuel rendez-vous de gynécologie.","variante":"Repère sur ameli.fr les soins concernés avant un éventuel rendez-vous de gynécologie.","source":"E01","conf":"élevé","lien":null,"sujet":"Accès direct spécifique en gynécologie"},{"code":"extranet-aut26-parcours-08","serie":"parcours","n":8,"rar":"peu_commune","titre":"Le nouveau choix","accroche":"Un changement n’a pas à se justifier.","fait":"Il est possible de changer de médecin traitant sans avoir à justifier ce choix.","conseil":"Si vous envisagez un changement, repérez la démarche officielle de nouvelle déclaration sur ameli.fr.","variante":"Si tu envisages un changement, repère la démarche officielle de nouvelle déclaration sur ameli.fr.","source":"E02","conf":"élevé","lien":null,"sujet":"Changement de médecin traitant et nouvelle déclaration"},{"code":"extranet-aut26-parcours-09","serie":"parcours","n":9,"rar":"peu_commune","titre":"Les soins dentaires en accès libre","accroche":"Un accès qui suit ses propres règles.","fait":"Consulter un chirurgien-dentiste ne nécessite pas d’orientation par le médecin traitant.","conseil":"Notez cette règle dans vos repères de démarches pour un prochain besoin de soin.","variante":"Note cette règle dans tes repères de démarches pour un prochain besoin de soin.","source":"E03","conf":"élevé","lien":null,"sujet":"Accès au chirurgien-dentiste hors orientation du médecin traitant"},{"code":"extranet-aut26-parcours-10","serie":"parcours","n":10,"rar":"rare","titre":"Une famille, plusieurs choix","accroche":"Un même foyer ne fait pas une déclaration unique.","fait":"Chaque membre d’une famille a une déclaration individuelle de médecin traitant.","conseil":"Si vous aidez un proche dans ses démarches, rappelez-lui que sa déclaration est personnelle.","variante":"Si tu aides un proche dans ses démarches, rappelle-lui que sa déclaration est personnelle.","source":"E02","conf":"élevé","lien":null,"sujet":"Caractère individuel de la déclaration du médecin traitant"},{"code":"extranet-aut26-devis-01","serie":"devis","n":1,"rar":"commune","titre":"Le panier optique","accroche":"Une sélection encadrée pour y voir plus clair.","fait":"Avec un contrat responsable, les lunettes du panier 100 % Santé sont prises en charge sans reste à charge, dans les conditions prévues.","conseil":"Repérez la mention « contrat responsable » dans votre garantie optique.","variante":"Repère la mention « contrat responsable » dans ta garantie optique.","source":"E04, E07","conf":"à vérifier","lien":"garantie:optique","sujet":"Conditions du panier 100 % Santé optique"},{"code":"extranet-aut26-devis-02","serie":"devis","n":2,"rar":"commune","titre":"Les classes des verres","accroche":"Deux lettres pour distinguer les paniers.","fait":"En optique, la classe A correspond au panier 100 % Santé et la classe B aux prix libres.","conseil":"Repérez les lettres A et B sur un devis optique déjà disponible ou sur un exemple officiel.","variante":"Repère les lettres A et B sur un devis optique déjà disponible ou sur un exemple officiel.","source":"E04","conf":"élevé","lien":"garantie:optique","sujet":"Classes A et B des équipements optiques"},{"code":"extranet-aut26-devis-03","serie":"devis","n":3,"rar":"commune","titre":"La prescription optique","accroche":"Un document qui accompagne la prise en charge.","fait":"La prise en charge des lunettes par l’Assurance Maladie repose sur une prescription médicale.","conseil":"Si vous avez déjà une ordonnance de lunettes, repérez sa date avant de consulter les règles de renouvellement.","variante":"Si tu as déjà une ordonnance de lunettes, repère sa date avant de consulter les règles de renouvellement.","source":"E04","conf":"élevé","lien":"garantie:optique","sujet":"Prescription et remboursement des lunettes"},{"code":"extranet-aut26-devis-04","serie":"devis","n":4,"rar":"commune","titre":"Le devis dentaire écrit","accroche":"Avant le soin, une base pour comprendre.","fait":"Un traitement prothétique dentaire doit faire l’objet d’un devis écrit.","conseil":"Si vous avez un devis dentaire, repérez le plan de traitement avant de le transmettre à votre mutuelle.","variante":"Si tu as un devis dentaire, repère le plan de traitement avant de le transmettre à ta mutuelle.","source":"E05","conf":"élevé","lien":"garantie:dentaire","sujet":"Rôle du devis pour un traitement prothétique dentaire"},{"code":"extranet-aut26-devis-05","serie":"devis","n":5,"rar":"commune","titre":"Le panier sur le devis","accroche":"Une ligne utile pour chaque acte.","fait":"Le devis dentaire indique le panier auquel appartient chaque acte prothétique proposé.","conseil":"Sur un devis existant ou un exemple officiel, repérez la colonne du panier de soins.","variante":"Sur un devis existant ou un exemple officiel, repère la colonne du panier de soins.","source":"E05","conf":"élevé","lien":"garantie:dentaire","sujet":"Identification des paniers sur un devis dentaire"},{"code":"extranet-aut26-devis-06","serie":"devis","n":6,"rar":"commune","titre":"L’alternative dentaire","accroche":"Le devis peut présenter un autre chemin.","fait":"Si elle est techniquement possible, une alternative dentaire sans reste à charge, ou à défaut à tarif maîtrisé, doit figurer sur le devis.","conseil":"Repérez la rubrique des alternatives sur un devis existant, puis consultez votre garantie avant tout engagement.","variante":"Repère la rubrique des alternatives sur un devis existant, puis consulte ta garantie avant tout engagement.","source":"E05","conf":"élevé","lien":"garantie:dentaire","sujet":"Alternatives thérapeutiques dans le devis dentaire"},{"code":"extranet-aut26-devis-07","serie":"devis","n":7,"rar":"peu_commune","titre":"Le suivi dans le prix","accroche":"L’appareil ne vient pas seul.","fait":"Les prestations de suivi d’une aide auditive sont comprises dans son prix d’achat.","conseil":"Si vous avez un devis auditif, repérez les prestations de suivi et consultez votre garantie audiologie.","variante":"Si tu as un devis auditif, repère les prestations de suivi et consulte ta garantie audiologie.","source":"E06","conf":"élevé","lien":"garantie:audiologie","sujet":"Prestations de suivi des aides auditives"},{"code":"extranet-aut26-devis-08","serie":"devis","n":8,"rar":"peu_commune","titre":"L’essai avant l’accord","accroche":"Le choix peut prendre le temps d’un essai.","fait":"Un essai d’au moins 30 jours est prévu pour les aides auditives du panier 100 % Santé.","conseil":"Repérez les modalités d’essai sur un devis auditif existant ou dans l’information officielle.","variante":"Repère les modalités d’essai sur un devis auditif existant ou dans l’information officielle.","source":"E06","conf":"élevé","lien":"garantie:audiologie","sujet":"Période d’essai des aides auditives du panier 100 % Santé"},{"code":"extranet-aut26-devis-09","serie":"devis","n":9,"rar":"peu_commune","titre":"La classe auditive","accroche":"Le panier se lit aussi sur le devis auditif.","fait":"Les aides auditives de classe I relèvent du 100 % Santé, contrairement à celles de classe II.","conseil":"Repérez la classe sur un devis existant et vérifiez les conditions dans votre garantie audiologie.","variante":"Repère la classe sur un devis existant et vérifie les conditions dans ta garantie audiologie.","source":"E06, E07","conf":"à vérifier","lien":"garantie:audiologie","sujet":"Classes I et II des aides auditives"},{"code":"extranet-aut26-devis-10","serie":"devis","n":10,"rar":"rare","titre":"La carte d’identité de la prothèse","accroche":"Une prothèse dentaire a aussi sa traçabilité.","fait":"À la pose d’une prothèse dentaire, un certificat de conformité indique notamment ses matériaux et son lieu de fabrication.","conseil":"Si vous possédez déjà un tel certificat, rangez-le avec les documents de votre soin.","variante":"Si tu possèdes déjà un tel certificat, range-le avec les documents de ton soin.","source":"E05","conf":"élevé","lien":null,"sujet":"Traçabilité des prothèses dentaires"},{"code":"extranet-aut26-reperes-01","serie":"reperes","n":1,"rar":"commune","titre":"La base du calcul","accroche":"Un tarif de référence aide à lire le décompte.","fait":"La base de remboursement est le tarif de référence utilisé par l’Assurance Maladie pour calculer sa part.","conseil":"Repérez la mention « base » ou « BR » sur un décompte existant, puis comparez-la au prix facturé.","variante":"Repère la mention « base » ou « BR » sur un décompte existant, puis compare-la au prix facturé.","source":"E08","conf":"élevé","lien":null,"sujet":"Différence entre tarif facturé et base de remboursement"},{"code":"extranet-aut26-reperes-02","serie":"reperes","n":2,"rar":"commune","titre":"Le ticket modérateur","accroche":"Un nom technique pour une part du tarif de référence.","fait":"Le ticket modérateur est la part de la base de remboursement qui reste après la prise en charge de l’Assurance Maladie.","conseil":"Repérez « TM » dans votre tableau de garanties et consultez son explication.","variante":"Repère « TM » dans ton tableau de garanties et consulte son explication.","source":"E08","conf":"élevé","lien":null,"sujet":"Définition du ticket modérateur"},{"code":"extranet-aut26-reperes-03","serie":"reperes","n":3,"rar":"commune","titre":"L’avance évitée","accroche":"Un mode de paiement, avec ses propres règles.","fait":"Le tiers payant dispense d’avancer la part des soins remboursée par l’Assurance Maladie.","conseil":"Repérez dans votre espace adhérent les conditions de tiers payant de votre complémentaire.","variante":"Repère dans ton espace adhérent les conditions de tiers payant de ta complémentaire.","source":"E09","conf":"élevé","lien":null,"sujet":"Tiers payant obligatoire et complémentaire"},{"code":"extranet-aut26-reperes-04","serie":"reperes","n":4,"rar":"commune","titre":"Le dépassement distinct","accroche":"Tout n’entre pas dans le tarif de référence.","fait":"Les dépassements d’honoraires ne sont pas remboursés par l’Assurance Maladie.","conseil":"Repérez la ligne des dépassements dans votre garantie pour comprendre ses conditions.","variante":"Repère la ligne des dépassements dans ta garantie pour comprendre ses conditions.","source":"E09","conf":"élevé","lien":null,"sujet":"Dépassements d’honoraires et garanties complémentaires"},{"code":"extranet-aut26-reperes-05","serie":"reperes","n":5,"rar":"commune","titre":"La retenue après coup","accroche":"Une avance évitée n’efface pas toute retenue.","fait":"En tiers payant, des franchises médicales peuvent être récupérées sur un remboursement ultérieur.","conseil":"Sur un relevé existant, comparez la date de la retenue avec celle du soin indiqué.","variante":"Sur un relevé existant, compare la date de la retenue avec celle du soin indiqué.","source":"E10","conf":"élevé","lien":null,"sujet":"Récupération différée des franchises médicales"},{"code":"extranet-aut26-reperes-06","serie":"reperes","n":6,"rar":"commune","titre":"La chambre et la garantie","accroche":"Le confort suit des règles distinctes des soins.","fait":"Une chambre individuelle peut entraîner un supplément de confort lors d’une hospitalisation.","conseil":"Repérez les conditions liées à la chambre individuelle dans votre garantie hospitalisation.","variante":"Repère les conditions liées à la chambre individuelle dans ta garantie hospitalisation.","source":"E12","conf":"élevé","lien":"garantie:hospitalisation","sujet":"Frais de confort personnel lors d’une hospitalisation"},{"code":"extranet-aut26-reperes-07","serie":"reperes","n":7,"rar":"peu_commune","titre":"Le forfait du séjour","accroche":"L’hébergement a sa propre ligne.","fait":"Le forfait hospitalier correspond à une participation aux frais d’hébergement et d’entretien du séjour.","conseil":"Repérez cette ligne dans votre garantie hospitalisation, distincte des honoraires médicaux.","variante":"Repère cette ligne dans ta garantie hospitalisation, distincte des honoraires médicaux.","source":"E13","conf":"élevé","lien":"garantie:hospitalisation","sujet":"Rôle du forfait journalier hospitalier"},{"code":"extranet-aut26-reperes-08","serie":"reperes","n":8,"rar":"peu_commune","titre":"La participation à part","accroche":"Certaines lignes ne passent pas par la mutuelle.","fait":"La participation forfaitaire sur les consultations médicales n’est pas remboursée par un contrat responsable.","conseil":"Repérez cette participation sur un relevé existant et consultez l’information sur les exonérations.","variante":"Repère cette participation sur un relevé existant et consulte l’information sur les exonérations.","source":"E11","conf":"élevé","lien":null,"sujet":"Participation forfaitaire et contrat responsable"},{"code":"extranet-aut26-reperes-09","serie":"reperes","n":9,"rar":"peu_commune","titre":"Le périmètre des franchises","accroche":"Des frais précis, pas tous les soins.","fait":"La franchise médicale concerne les médicaments remboursés, certains actes paramédicaux et les transports sanitaires, sous conditions.","conseil":"Consultez la liste officielle des situations d’exonération avant de lire un relevé de franchises.","variante":"Consulte la liste officielle des situations d’exonération avant de lire un relevé de franchises.","source":"E10","conf":"élevé","lien":null,"sujet":"Périmètre des franchises et exonérations"},{"code":"extranet-aut26-reperes-10","serie":"reperes","n":10,"rar":"rare","titre":"Le sens du cent pour cent","accroche":"Un pourcentage peut cacher une base de calcul.","fait":"Une prise en charge hospitalière à 100 % par l’Assurance Maladie ne couvre pas automatiquement les frais de confort personnel.","conseil":"Repérez séparément les frais de confort dans votre garantie hospitalisation.","variante":"Repère séparément les frais de confort dans ta garantie hospitalisation.","source":"E12","conf":"élevé","lien":"garantie:hospitalisation","sujet":"Portée du 100 % Assurance Maladie à l’hôpital"},{"code":"extranet-aut26-prevention-01","serie":"prevention","n":1,"rar":"commune","titre":"Le repère du dépistage du sein","accroche":"Un cadre commun, une situation à vérifier.","fait":"Le dépistage organisé du sein concerne les femmes de 50 à 74 ans, sans symptôme ni risque particulier autre que l’âge.","conseil":"Consultez les critères officiels pour préparer, si besoin, une question à votre médecin.","variante":"Consulte les critères officiels pour préparer, si besoin, une question à ton médecin.","source":"E14","conf":"élevé","lien":"service:prevention","sujet":"Population concernée par le dépistage organisé du cancer du sein"},{"code":"extranet-aut26-prevention-02","serie":"prevention","n":2,"rar":"commune","titre":"Le rythme des invitations","accroche":"Le calendrier dépend du programme.","fait":"Dans le dépistage organisé du sein, les femmes éligibles sont invitées tous les deux ans.","conseil":"Si vous êtes concernée, repérez la date de votre dernier dépistage pour préparer un échange avec votre médecin.","variante":"Si tu es concernée, repère la date de ton dernier dépistage pour préparer un échange avec ton médecin.","source":"E14","conf":"élevé","lien":null,"sujet":"Périodicité du dépistage organisé du cancer du sein"},{"code":"extranet-aut26-prevention-03","serie":"prevention","n":3,"rar":"commune","titre":"Le repère colorectal","accroche":"Un programme pour les personnes à risque moyen.","fait":"Le dépistage organisé colorectal est proposé tous les deux ans entre 50 et 74 ans aux personnes sans symptôme à risque moyen.","conseil":"Consultez les critères officiels et notez une question sur votre éligibilité pour votre prochain échange médical.","variante":"Consulte les critères officiels et note une question sur ton éligibilité pour ton prochain échange médical.","source":"E15","conf":"élevé","lien":"service:prevention","sujet":"Éligibilité au programme de dépistage organisé colorectal"},{"code":"extranet-aut26-prevention-04","serie":"prevention","n":4,"rar":"commune","titre":"Le kit et l’analyse","accroche":"Le programme prévoit aussi les frais du test.","fait":"Pour les personnes éligibles, le kit colorectal et son analyse sont pris en charge sans avance de frais dans le programme organisé.","conseil":"Lisez les conditions du programme avant de vous renseigner sur l’accès au kit, si vous êtes concerné.","variante":"Lis les conditions du programme avant de te renseigner sur l’accès au kit, si tu es concerné.","source":"E15","conf":"élevé","lien":null,"sujet":"Prise en charge du kit et de l’analyse du dépistage colorectal"},{"code":"extranet-aut26-prevention-05","serie":"prevention","n":5,"rar":"commune","titre":"Le repère du col de l’utérus","accroche":"Un calendrier à préciser avec un professionnel.","fait":"Le dépistage du col de l’utérus est proposé de 25 à 65 ans, sauf indication médicale particulière.","conseil":"Retrouvez la date du dernier dépistage, si cela vous concerne, pour préparer une question au médecin ou à la sage-femme.","variante":"Retrouve la date du dernier dépistage, si cela te concerne, pour préparer une question au médecin ou à la sage-femme.","source":"E16","conf":"élevé","lien":"service:prevention","sujet":"Âges du dépistage du col de l’utérus"},{"code":"extranet-aut26-prevention-06","serie":"prevention","n":6,"rar":"commune","titre":"Le rendez-vous prévention","accroche":"Certains âges ouvrent un temps d’échange dédié.","fait":"Mon bilan prévention s’adresse aux personnes de 18-25 ans, 45-50 ans, 60-65 ans et 70-75 ans.","conseil":"Repérez sur la page officielle si une de ces tranches d’âge vous concerne.","variante":"Repère sur la page officielle si une de ces tranches d’âge te concerne.","source":"E17","conf":"élevé","lien":"service:prevention","sujet":"Âges d’accès à Mon bilan prévention"},{"code":"extranet-aut26-prevention-07","serie":"prevention","n":7,"rar":"peu_commune","titre":"Le plan à son rythme","accroche":"Le bilan peut se prolonger par des priorités choisies.","fait":"Mon bilan prévention peut aboutir à un plan personnalisé de prévention construit avec le professionnel.","conseil":"Notez un sujet que vous aimeriez aborder si vous bénéficiez d’un prochain bilan prévention.","variante":"Note un sujet que tu aimerais aborder si tu bénéficies d’un prochain bilan prévention.","source":"E17","conf":"élevé","lien":null,"sujet":"Plan personnalisé après Mon bilan prévention"},{"code":"extranet-aut26-prevention-08","serie":"prevention","n":8,"rar":"peu_commune","titre":"Vaccination et dépistage","accroche":"Deux outils qui se complètent.","fait":"La vaccination contre les papillomavirus ne remplace pas le dépistage recommandé du col de l’utérus.","conseil":"Gardez cette règle pour préparer une question à votre médecin ou à votre sage-femme, si elle vous concerne.","variante":"Garde cette règle pour préparer une question à ton médecin ou à ta sage-femme, si elle te concerne.","source":"E18","conf":"élevé","lien":null,"sujet":"Complémentarité de la vaccination HPV et du dépistage"},{"code":"extranet-aut26-prevention-09","serie":"prevention","n":9,"rar":"peu_commune","titre":"L’analyse et la consultation","accroche":"Deux étapes, deux règles de prise en charge.","fait":"La prise en charge intégrale sur invitation du dépistage organisé du col de l’utérus porte sur l’analyse, pas automatiquement sur la consultation.","conseil":"Repérez la différence entre analyse et consultation dans l’information officielle avant un éventuel rendez-vous.","variante":"Repère la différence entre analyse et consultation dans l’information officielle avant un éventuel rendez-vous.","source":"E16, E19","conf":"élevé","lien":null,"sujet":"Périmètre de la prise en charge du dépistage organisé du col de l’utérus"},{"code":"extranet-aut26-prevention-10","serie":"prevention","n":10,"rar":"rare","titre":"Le deuxième regard","accroche":"Un autre regard fait partie du programme.","fait":"Les mammographies jugées normales dans le dépistage organisé du sein font l’objet d’une seconde lecture par un autre radiologue.","conseil":"Retrouvez cette étape dans la brochure officielle du dépistage, sans programmer d’examen supplémentaire.","variante":"Retrouve cette étape dans la brochure officielle du dépistage, sans programmer d’examen supplémentaire.","source":"E14","conf":"élevé","lien":null,"sujet":"Seconde lecture des mammographies dans le dépistage organisé"}],"qvct":[{"code":"qvct-aut26-collectif-01","serie":"collectif","n":1,"rar":"commune","titre":"La boussole des priorités","accroche":"Quand tout est urgent, un repère aide.","fait":"Des objectifs flous font partie des facteurs de risques psychosociaux au travail.","conseil":"Propose de clarifier avec ton responsable la priorité du jour.","variante":"Proposez de clarifier avec votre responsable la priorité du jour.","source":"Q01","conf":"élevé","lien":null,"sujet":"Clarifier les priorités et la charge de travail"},{"code":"qvct-aut26-collectif-02","serie":"collectif","n":2,"rar":"commune","titre":"Deux consignes, un cap","accroche":"Un petit désaccord de consignes mérite un échange.","fait":"Des instructions contradictoires sont un facteur de risques psychosociaux.","conseil":"Signale deux consignes incompatibles pour obtenir un arbitrage cette semaine.","variante":"Signalez deux consignes incompatibles pour obtenir un arbitrage cette semaine.","source":"Q01","conf":"élevé","lien":null,"sujet":"Arbitrer des consignes contradictoires"},{"code":"qvct-aut26-collectif-03","serie":"collectif","n":3,"rar":"commune","titre":"Le relais après l’accueil","accroche":"Derrière un sourire, il y a aussi du travail.","fait":"Devoir cacher ses émotions face au public est une exigence émotionnelle du travail.","conseil":"Propose un temps d’échange en équipe sur les situations d’accueil difficiles, sans citer de client.","variante":"Proposez un temps d’échange en équipe sur les situations d’accueil difficiles, sans citer de client.","source":"Q01","conf":"élevé","lien":null,"sujet":"Soutien collectif dans les métiers en contact avec le public"},{"code":"qvct-aut26-collectif-04","serie":"collectif","n":4,"rar":"commune","titre":"Le coup de main","accroche":"Le travail gagne à se faire à plusieurs.","fait":"Le manque de soutien des collègues ou de la hiérarchie est un facteur de risques psychosociaux.","conseil":"Propose à un collègue un coup de main sur une tâche précise, dans le cadre de ton rôle.","variante":"Proposez à un collègue un coup de main sur une tâche précise, dans le cadre de votre rôle.","source":"Q01","conf":"élevé","lien":null,"sujet":"Entraide et soutien au travail"},{"code":"qvct-aut26-collectif-05","serie":"collectif","n":5,"rar":"commune","titre":"Le travail reconnu","accroche":"Un merci peut nommer un effort très concret.","fait":"Un déséquilibre entre les efforts fournis et la reconnaissance reçue peut affecter la santé.","conseil":"Nomme à un collègue une contribution utile que tu as remarquée cette semaine.","variante":"Nommez à un collègue une contribution utile que vous avez remarquée cette semaine.","source":"Q01","conf":"élevé","lien":null,"sujet":"Reconnaissance des contributions au collectif"},{"code":"qvct-aut26-collectif-06","serie":"collectif","n":6,"rar":"commune","titre":"La marge de manœuvre","accroche":"Une petite latitude peut faire la différence.","fait":"Le manque de liberté pour organiser son travail est un facteur de risques psychosociaux.","conseil":"Repère une étape de travail sur laquelle proposer plus de souplesse à ton responsable.","variante":"Repérez une étape de travail sur laquelle proposer plus de souplesse à votre responsable.","source":"Q01","conf":"élevé","lien":null,"sujet":"Autonomie dans l’organisation des tâches"},{"code":"qvct-aut26-collectif-07","serie":"collectif","n":7,"rar":"peu_commune","titre":"La qualité empêchée","accroche":"Le travail bien fait a besoin de conditions.","fait":"Ne pas pouvoir faire un travail de qualité peut créer un conflit de valeurs au travail.","conseil":"Décris un obstacle au travail bien fait lors de ton prochain échange d’équipe.","variante":"Décrivez un obstacle au travail bien fait lors de votre prochain échange d’équipe.","source":"Q01","conf":"élevé","lien":null,"sujet":"Discuter des critères de qualité et des moyens disponibles"},{"code":"qvct-aut26-collectif-08","serie":"collectif","n":8,"rar":"peu_commune","titre":"Le changement expliqué","accroche":"Un nouvel outil mérite aussi de nouveaux repères.","fait":"Un changement de tâche mal maîtrisé est un facteur de risques psychosociaux.","conseil":"Note un besoin de formation lié à un nouvel outil et partage-le avec ton responsable.","variante":"Notez un besoin de formation lié à un nouvel outil et partagez-le avec votre responsable.","source":"Q01","conf":"élevé","lien":null,"sujet":"Accompagner les changements d’outils, y compris l’IA"},{"code":"qvct-aut26-collectif-09","serie":"collectif","n":9,"rar":"peu_commune","titre":"Le planning lisible","accroche":"Prévoir sa semaine commence par des horaires clairs.","fait":"Des horaires de travail imprévisibles font partie des facteurs de risques psychosociaux.","conseil":"Propose un point sur les changements de planning et leur délai d’annonce.","variante":"Proposez un point sur les changements de planning et leur délai d’annonce.","source":"Q01","conf":"élevé","lien":null,"sujet":"Prévisibilité des horaires et articulation des temps de vie"},{"code":"qvct-aut26-collectif-10","serie":"collectif","n":10,"rar":"rare","titre":"L’effet de combinaison","accroche":"Les contraintes ne s’additionnent pas toujours simplement.","fait":"Des facteurs de risques psychosociaux peuvent se renforcer lorsqu’ils sont présents ensemble.","conseil":"Repère avec l’équipe deux contraintes qui se renforcent, puis propose un sujet de discussion.","variante":"Repérez avec l’équipe deux contraintes qui se renforcent, puis proposez un sujet de discussion.","source":"Q01","conf":"élevé","lien":null,"sujet":"Comprendre la combinaison des facteurs de risques psychosociaux"},{"code":"qvct-aut26-organisation-01","serie":"organisation","n":1,"rar":"commune","titre":"Le terrain d’abord","accroche":"Une situation précise vaut mieux qu’une étiquette.","fait":"La prévention des risques psychosociaux privilégie l’analyse du travail et de son organisation.","conseil":"Décris une situation de travail concrète à améliorer, sans juger les personnes.","variante":"Décrivez une situation de travail concrète à améliorer, sans juger les personnes.","source":"Q02","conf":"élevé","lien":null,"sujet":"Analyser une situation de travail pour agir collectivement"},{"code":"qvct-aut26-organisation-02","serie":"organisation","n":2,"rar":"commune","titre":"Une place dans la décision","accroche":"Les personnes concernées ont des choses à apporter.","fait":"Associer les salariés aux décisions concernant leur travail fait partie de la prévention des risques psychosociaux.","conseil":"Propose de recueillir l’avis des collègues concernés avant un changement d’organisation.","variante":"Proposez de recueillir l’avis des collègues concernés avant un changement d’organisation.","source":"Q02","conf":"élevé","lien":null,"sujet":"Participation aux décisions sur les conditions de travail"},{"code":"qvct-aut26-organisation-03","serie":"organisation","n":3,"rar":"commune","titre":"Le retour sur l’action","accroche":"Une idée utile mérite un rendez-vous de suivi.","fait":"Une démarche de prévention des risques psychosociaux comprend le suivi des actions engagées.","conseil":"Propose une date pour revoir en équipe l’effet d’une action déjà lancée.","variante":"Proposez une date pour revoir en équipe l’effet d’une action déjà lancée.","source":"Q02","conf":"élevé","lien":null,"sujet":"Suivre et évaluer une action de prévention"},{"code":"qvct-aut26-organisation-04","serie":"organisation","n":4,"rar":"commune","titre":"Les relais de prévention","accroche":"Une difficulté de travail peut se partager.","fait":"Les représentants du personnel peuvent donner l’alerte sur des risques psychosociaux.","conseil":"Repère cette semaine comment joindre tes représentants du personnel, s’il y en a.","variante":"Repérez cette semaine comment joindre vos représentants du personnel, s’il y en a.","source":"Q02","conf":"élevé","lien":null,"sujet":"Identifier les interlocuteurs de prévention"},{"code":"qvct-aut26-organisation-05","serie":"organisation","n":5,"rar":"commune","titre":"La relève qui relie","accroche":"Une bonne transmission fait aussi partie du travail.","fait":"L’INRS recommande de prévoir du temps de transmission entre équipes lors des rotations de postes.","conseil":"Propose de réserver un moment de relève pour transmettre une information utile à l’équipe suivante.","variante":"Proposez de réserver un moment de relève pour transmettre une information utile à l’équipe suivante.","source":"Q04","conf":"élevé","lien":null,"sujet":"Organiser la transmission entre équipes successives"},{"code":"qvct-aut26-organisation-06","serie":"organisation","n":6,"rar":"commune","titre":"Le risque à la source","accroche":"Le poste aussi peut changer.","fait":"Supprimer une manutention évitable fait partie de la prévention des risques liés à l’activité physique.","conseil":"Repère un transport de charge évitable et propose d’en discuter avec le responsable.","variante":"Repérez un transport de charge évitable et proposez d’en discuter avec le responsable.","source":"Q09","conf":"élevé","lien":null,"sujet":"Réduire les manutentions par l’organisation du travail"},{"code":"qvct-aut26-organisation-07","serie":"organisation","n":7,"rar":"peu_commune","titre":"La visite à la demande","accroche":"Un rendez-vous existe aussi en dehors du calendrier.","fait":"Un salarié peut demander une visite auprès du service de prévention et de santé au travail.","conseil":"Repère les coordonnées de ton service de santé au travail auprès des RH ou des représentants du personnel.","variante":"Repérez les coordonnées de votre service de santé au travail auprès des RH ou des représentants du personnel.","source":"Q05","conf":"à vérifier","lien":null,"sujet":"Accès à une visite à la demande en santé au travail"},{"code":"qvct-aut26-organisation-08","serie":"organisation","n":8,"rar":"peu_commune","titre":"La protection partagée","accroche":"Une solution commune peut protéger toute une équipe.","fait":"Le Code du travail donne la priorité aux protections collectives sur les protections individuelles.","conseil":"Demande aux RH ou aux représentants du personnel quelle protection collective répond à un risque de ton poste.","variante":"Demandez aux RH ou aux représentants du personnel quelle protection collective répond à un risque de votre poste.","source":"Q06","conf":"à vérifier","lien":null,"sujet":"Priorité aux protections collectives"},{"code":"qvct-aut26-organisation-09","serie":"organisation","n":9,"rar":"peu_commune","titre":"Le petit essai collectif","accroche":"Tester, observer, puis ajuster.","fait":"L’expérimentation fait partie de la démarche QVCT proposée par l’Anact.","conseil":"Propose à l’équipe un petit changement à tester, avec une date de bilan et l’accord du responsable.","variante":"Proposez à l’équipe un petit changement à tester, avec une date de bilan et l’accord du responsable.","source":"Q07","conf":"à vérifier","lien":null,"sujet":"Expérimenter une amélioration des conditions de travail"},{"code":"qvct-aut26-organisation-10","serie":"organisation","n":10,"rar":"rare","titre":"Le travail entre les lignes","accroche":"La fiche de poste ne raconte pas toute la journée.","fait":"Le travail réel comprend les ajustements et les imprévus absents des consignes écrites.","conseil":"Partage en équipe un ajustement utile que la procédure ne décrit pas, sans contourner les règles de sécurité.","variante":"Partagez en équipe un ajustement utile que la procédure ne décrit pas, sans contourner les règles de sécurité.","source":"Q08","conf":"à vérifier","lien":null,"sujet":"Différence entre travail prescrit et travail réel"},{"code":"qvct-aut26-mouvement-01","serie":"mouvement","n":1,"rar":"commune","titre":"La pause des yeux","accroche":"Le regard aussi aime changer d’horizon.","fait":"Quitter brièvement l’écran des yeux pour regarder au loin aide à prévenir la fatigue visuelle.","conseil":"À la prochaine pause autorisée, regarde au loin en quittant ton écran des yeux.","variante":"À la prochaine pause autorisée, regardez au loin en quittant votre écran des yeux.","source":"Q03","conf":"élevé","lien":null,"sujet":"Pauses visuelles pendant le travail sur écran"},{"code":"qvct-aut26-mouvement-02","serie":"mouvement","n":2,"rar":"commune","titre":"La posture qui change","accroche":"Une position confortable n’est pas une position figée.","fait":"Varier les postures fait partie des recommandations de prévention du travail sur écran.","conseil":"Pendant une pause, change de position selon tes possibilités, sans forcer.","variante":"Pendant une pause, changez de position selon vos possibilités, sans forcer.","source":"Q03","conf":"élevé","lien":null,"sujet":"Varier les positions lors du travail sur écran"},{"code":"qvct-aut26-mouvement-03","serie":"mouvement","n":3,"rar":"commune","titre":"L’écran sans reflet","accroche":"Un détail de lumière peut changer le confort.","fait":"Les reflets sur l’écran contribuent à la fatigue visuelle.","conseil":"Repère un reflet gênant et ajuste l’orientation de l’écran si ton poste le permet.","variante":"Repérez un reflet gênant et ajustez l’orientation de l’écran si votre poste le permet.","source":"Q03","conf":"élevé","lien":null,"sujet":"Limiter les reflets au poste de travail"},{"code":"qvct-aut26-mouvement-04","serie":"mouvement","n":4,"rar":"commune","titre":"Le passage dégagé","accroche":"Un trajet familier mérite aussi un coup d’œil.","fait":"L’encombrement des passages fait partie des risques de chute au travail.","conseil":"Signale un passage encombré et fais organiser son dégagement selon les consignes du site.","variante":"Signalez un passage encombré et faites organiser son dégagement selon les consignes du site.","source":"Q10","conf":"élevé","lien":null,"sujet":"Prévenir les chutes par l’aménagement des circulations"},{"code":"qvct-aut26-mouvement-05","serie":"mouvement","n":5,"rar":"commune","titre":"Les gestes qui reviennent","accroche":"La répétition compte autant que le geste.","fait":"La fréquence d’une tâche compte dans l’analyse des contraintes physiques au travail.","conseil":"Repère une tâche répétée et propose d’en discuter avec le responsable de prévention.","variante":"Repérez une tâche répétée et proposez d’en discuter avec le responsable de prévention.","source":"Q09","conf":"élevé","lien":null,"sujet":"Repérer la répétition dans la charge physique"},{"code":"qvct-aut26-mouvement-06","serie":"mouvement","n":6,"rar":"commune","titre":"Le bruit en partage","accroche":"Le confort sonore concerne toute l’équipe.","fait":"Le bruit au travail peut provoquer de la fatigue, même sans lésion de l’audition.","conseil":"Signale une source de bruit gênante à ton responsable pour rechercher une solution collective.","variante":"Signalez une source de bruit gênante à votre responsable pour rechercher une solution collective.","source":"Q11","conf":"élevé","lien":null,"sujet":"Agir sur les nuisances sonores au travail"},{"code":"qvct-aut26-mouvement-07","serie":"mouvement","n":7,"rar":"peu_commune","titre":"Le réglage retrouvé","accroche":"Un poste partagé peut s’ajuster à chacun.","fait":"Les réglages du poste sur écran doivent pouvoir s’adapter aux différents utilisateurs.","conseil":"À ta prise de poste, vérifie les réglages disponibles du siège sans changer les dispositifs de sécurité.","variante":"À votre prise de poste, vérifiez les réglages disponibles du siège sans changer les dispositifs de sécurité.","source":"Q03","conf":"élevé","lien":null,"sujet":"Réglages d’un poste sur écran partagé"},{"code":"qvct-aut26-mouvement-08","serie":"mouvement","n":8,"rar":"peu_commune","titre":"Le temps de récupérer","accroche":"Le rythme du travail compte pour le corps.","fait":"Les périodes de récupération font partie de l’analyse de la charge physique de travail.","conseil":"Propose un échange sur les temps de récupération après une tâche physique exigeante.","variante":"Proposez un échange sur les temps de récupération après une tâche physique exigeante.","source":"Q09","conf":"élevé","lien":null,"sujet":"Organisation des temps de récupération physique"},{"code":"qvct-aut26-mouvement-09","serie":"mouvement","n":9,"rar":"peu_commune","titre":"Le sol sous les roues","accroche":"Les vibrations commencent aussi sur le trajet.","fait":"Réduire les irrégularités des surfaces de roulement aide à limiter les vibrations au travail.","conseil":"Signale une zone de circulation dégradée selon la procédure du site, sans intervenir sur la chaussée.","variante":"Signalez une zone de circulation dégradée selon la procédure du site, sans intervenir sur la chaussée.","source":"Q10","conf":"élevé","lien":null,"sujet":"Prévention des vibrations par l’entretien des circulations"},{"code":"qvct-aut26-mouvement-10","serie":"mouvement","n":10,"rar":"rare","titre":"Les paroles qui accrochent","accroche":"Même une conversation voisine mobilise l’attention.","fait":"Des paroles compréhensibles en bruit de fond peuvent gêner une tâche qui demande de l’attention.","conseil":"Propose un échange sur les zones de conversation et les zones de concentration dans ton lieu de travail.","variante":"Proposez un échange sur les zones de conversation et les zones de concentration dans votre lieu de travail.","source":"Q15","conf":"élevé","lien":null,"sujet":"Effet des conversations voisines sur la concentration"},{"code":"qvct-aut26-rythmes-01","serie":"rythmes","n":1,"rar":"commune","titre":"Le repère du réveil","accroche":"La régularité donne un rythme à la journée.","fait":"Des heures de lever régulières favorisent un bon rythme de sommeil.","conseil":"Si tes horaires sont stables, choisis un horaire de lever régulier cette semaine.","variante":"Si vos horaires sont stables, choisissez un horaire de lever régulier cette semaine.","source":"Q12","conf":"élevé","lien":null,"sujet":"Régularité du lever en horaires stables"},{"code":"qvct-aut26-rythmes-02","serie":"rythmes","n":2,"rar":"commune","titre":"La tasse et le repos","accroche":"Le café a parfois un effet qui dure.","fait":"La caféine peut gêner l’endormissement.","conseil":"Repère l’heure de ta dernière boisson caféinée et essaie de l’avancer cette semaine.","variante":"Repérez l’heure de votre dernière boisson caféinée et essayez de l’avancer cette semaine.","source":"Q12","conf":"élevé","lien":null,"sujet":"Caféine et préparation du sommeil"},{"code":"qvct-aut26-rythmes-03","serie":"rythmes","n":3,"rar":"commune","titre":"La lumière du jour","accroche":"Le jour donne un signal à l’horloge intérieure.","fait":"La lumière du jour aide à synchroniser le rythme veille-sommeil.","conseil":"Si tu travailles de jour, profite d’une pause autorisée pour retrouver la lumière naturelle.","variante":"Si vous travaillez de jour, profitez d’une pause autorisée pour retrouver la lumière naturelle.","source":"Q12","conf":"élevé","lien":null,"sujet":"Rôle de la lumière naturelle en horaires de jour"},{"code":"qvct-aut26-rythmes-04","serie":"rythmes","n":4,"rar":"commune","titre":"Le sas avant le sommeil","accroche":"Un moment plus calme peut préparer le repos.","fait":"Réduire les stimulations avant le coucher fait partie des conseils pour mieux dormir.","conseil":"Choisis ce soir une activité calme déjà à ta portée avant de te coucher.","variante":"Choisissez ce soir une activité calme déjà à votre portée avant de vous coucher.","source":"Q12","conf":"élevé","lien":null,"sujet":"Rituel calme avant le coucher"},{"code":"qvct-aut26-rythmes-05","serie":"rythmes","n":5,"rar":"commune","titre":"Le repos en plein jour","accroche":"Après la nuit de travail, place au calme.","fait":"L’obscurité et le silence favorisent le sommeil de jour après un travail de nuit.","conseil":"Avec les moyens déjà disponibles, prépare un espace calme et sombre avant ton prochain repos de jour.","variante":"Avec les moyens déjà disponibles, préparez un espace calme et sombre avant votre prochain repos de jour.","source":"Q04","conf":"élevé","lien":null,"sujet":"Préparer le sommeil diurne après un poste de nuit"},{"code":"qvct-aut26-rythmes-06","serie":"rythmes","n":6,"rar":"commune","titre":"Le rendez-vous de novembre","accroche":"Un mois pour découvrir des appuis accessibles.","fait":"Mois sans tabac 2026 propose un accompagnement gratuit et personnalisé.","conseil":"Découvre cette semaine les ressources de Mois sans tabac, pour toi ou pour mieux informer un proche.","variante":"Découvrez cette semaine les ressources de Mois sans tabac, pour vous ou pour mieux informer un proche.","source":"Q13","conf":"élevé","lien":null,"sujet":"Découverte des ressources officielles de Mois sans tabac"},{"code":"qvct-aut26-rythmes-07","serie":"rythmes","n":7,"rar":"peu_commune","titre":"La courte parenthèse","accroche":"La vigilance peut aussi profiter d’un petit repos.","fait":"Une sieste courte peut améliorer la vigilance lors du travail de nuit ou du poste du matin.","conseil":"Renseigne-toi sur les possibilités de repos court prévues sur ton site, sans interrompre une tâche à risque.","variante":"Renseignez-vous sur les possibilités de repos court prévues sur votre site, sans interrompre une tâche à risque.","source":"Q04","conf":"élevé","lien":null,"sujet":"Organisation d’une sieste courte en horaires décalés"},{"code":"qvct-aut26-rythmes-08","serie":"rythmes","n":8,"rar":"peu_commune","titre":"La fatigue qui persiste","accroche":"Une observation utile pour un prochain échange.","fait":"Une fatigue durable malgré le repos mérite un avis médical.","conseil":"Note depuis quand la fatigue dure pour préparer un échange avec un professionnel de santé.","variante":"Notez depuis quand la fatigue dure pour préparer un échange avec un professionnel de santé.","source":"Q14","conf":"élevé","lien":null,"sujet":"Préparer un échange médical sur une fatigue persistante"},{"code":"qvct-aut26-rythmes-09","serie":"rythmes","n":9,"rar":"peu_commune","titre":"Le bilan du sommeil","accroche":"Quelques repères valent mieux qu’une impression isolée.","fait":"Un agenda du sommeil aide à observer les horaires et la qualité des nuits.","conseil":"Note tes heures de coucher et de lever pendant quelques jours, pour toi uniquement.","variante":"Notez vos heures de coucher et de lever pendant quelques jours, pour vous uniquement.","source":"Q12","conf":"élevé","lien":null,"sujet":"Observer son sommeil sans score ni diagnostic"},{"code":"qvct-aut26-rythmes-10","serie":"rythmes","n":10,"rar":"rare","titre":"Les horloges différentes","accroche":"Tout le monde n’a pas les mêmes heures d’élan.","fait":"Les préférences naturelles d’horaires de sommeil varient selon les personnes : c’est le chronotype.","conseil":"Repère les moments où tu te sens le plus éveillé, sans te coller une étiquette.","variante":"Repérez les moments où vous vous sentez le plus éveillé, sans vous coller une étiquette.","source":"Q04","conf":"élevé","lien":null,"sujet":"Diversité des chronotypes et horaires de travail"}]};
+const LXC_SERIES = {
+  parcours:{name:'Les chemins du suivi',short:'Suivi',emb:'path'}, devis:{name:'Des devis plus lisibles',short:'Devis',emb:'doc'},
+  reperes:{name:'Les repères du remboursement',short:'Repères',emb:'compass'}, prevention:{name:'La prévention en repères',short:'Prévention',emb:'shield'},
+  collectif:{name:'Le collectif au quotidien',short:'Collectif',emb:'people'}, organisation:{name:'Le travail qui s\u2019organise',short:'Organisation',emb:'grid'},
+  mouvement:{name:'Des postes qui ménagent',short:'Mouvement',emb:'move'}, rythmes:{name:'Les rythmes de l\u2019automne',short:'Rythmes',emb:'wave'}
+};
+const LXC_EMB = {
+  path:'<path d="M4 20c6 0 4-8 10-8s4 8 10 8M4 6h4M16 6h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  doc:'<rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9 9h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  compass:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  people:'<circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="17" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 15c3 0 6 1.5 6 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="13" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="4" y="13" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 16.5h7M16.5 13v7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  move:'<circle cx="12" cy="5" r="2" fill="currentColor"/><path d="M12 8v6l-3 6M12 14l3 6M8 11l4-3 4 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  wave:'<path d="M3 12c3-5 6-5 9 0s6 5 9 0M3 18c3-5 6-5 9 0s6 5 9 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'
+};
+const LXC_RAR = {commune:{label:'Commune',dots:1,w:0},peu_commune:{label:'Peu commune',dots:2,w:1},rare:{label:'Rare',dots:3,w:2}};
+const LXC_LIENS = {'garantie:optique':'Voir mes garanties optique','garantie:dentaire':'Voir mes garanties dentaires','garantie:audiologie':'Voir mes garanties audiologie','garantie:hospitalisation':'Voir mes garanties hospitalisation','service:prevention':'Voir les services de prévention'};
+const LXC_SEASON = {label:'Automne 2026', end:'2026-12-31'};
+
+const LXC = (() => {
+  const KEY = 'lixia_cartes_v1';
+  let state = load();
+  let view = null, lastView = null, turnsSinceOffer = 99;
+  const cfg = { pack: 3, every: 2 };
+  const brand = { extranet:{brand:'#143C5A',accent:'#C4A871',name:'Mutuelle Démo'}, qvct:{brand:'#7F64D6',accent:'#E2529E',name:'Entreprise Démo'} };
+
+  function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.extranet&&s.qvct) return s; }catch(e){} return {extranet:fresh(), qvct:fresh()}; }
+  function fresh(){ return {owned:{}, seen:{}, boosters:1}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  const P = () => currentProfile;                                  // profil courant du POC
+  const S = () => state[P()];
+  const pool = () => (LXC_DATA[P()]||[]).filter(c => c.conf !== 'à vérifier' || document.getElementById('lxc-incl')?.checked !== false);
+  const enabled = () => document.getElementById(P()==='qvct'?'q-cartes':'f-cartes')?.checked;
+  const esc = t => String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const emb = (serie,cls='') => `<svg class="lxc-emb ${cls}" viewBox="0 0 24 24" aria-hidden="true">${LXC_EMB[LXC_SERIES[serie].emb]}</svg>`;
+  const sc = serie => `--sc:var(--s-${serie});--scl:var(--s-${serie}-l)`;
+  const rarHtml = r => `<span class="lxc-rar ${r}" aria-label="${LXC_RAR[r].label}">${'<i></i>'.repeat(LXC_RAR[r].dots)} ${LXC_RAR[r].label}</span>`;
+  const conseil = c => (document.getElementById('lxc-variant')?.checked && c.variante) ? c.variante : c.conseil;
+  const total = () => (LXC_DATA[P()]||[]).length;
+  const ownedCount = () => Object.keys(S().owned).filter(code => (LXC_DATA[P()]||[]).some(c=>c.code===code)).length;
+
+  // ── rendu ──
+  function recto(c){
+    const sr = LXC_SERIES[c.serie];
+    return `<div class="lxc-card ${c.rar}" style="${sc(c.serie)}" role="img" aria-label="${esc(c.titre)}, ${LXC_RAR[c.rar].label}, ${S().owned[c.code]?'possédée':'à trouver'}">
+      <div class="lxc-band">${emb(c.serie)}<span>${sr.short}</span><span class="num">${String(c.n).padStart(2,'0')} / 10</span></div>
+      ${c.rar==='rare'?'<div class="lxc-ribbon">★ RARE</div>':''}
+      <div class="lxc-illus" style="color:var(--sc)">${emb(c.serie)}</div>
+      <div class="lxc-title">${esc(c.titre)}</div><div class="lxc-hook">${esc(c.accroche)}</div>
+      <div class="lxc-foot">${rarHtml(c.rar)}<span class="sp">${esc(brand[P()].name)} · ${LXC_SEASON.label}</span></div></div>`;
+  }
+  function verso(c){
+    const sr = LXC_SERIES[c.serie];
+    return `<div class="lxc-card verso ${c.rar}" style="${sc(c.serie)}">
+      <div class="lxc-band">${emb(c.serie)}<span>${sr.short}</span><span class="num">${String(c.n).padStart(2,'0')} / 10</span></div>
+      <div class="lxc-title" style="padding-top:12px;font-size:19px">${esc(c.titre)}</div>
+      <div class="lxc-sec"><h4>Le fait</h4><p>${esc(c.fait)}</p></div>
+      <div class="lxc-sec"><h4>Le conseil</h4><p>${esc(conseil(c))}</p></div>
+      <div class="lxc-src">Source ${esc(c.source)}${c.conf==='à vérifier'?' · <span class="warn">⚠ à vérifier</span>':''}</div>
+      <div class="lxc-btns"><button class="lxc-btn p" onclick="LXC.talk('${c.code}')">💬 En parler avec LIXIA</button>
+      ${c.lien && LXC_LIENS[c.lien] ? `<button class="lxc-btn s" onclick="LXC.route('${c.lien}')">${LXC_LIENS[c.lien]} →</button>` : ''}</div></div>`;
+  }
+  function mini(c, status, small){
+    const n = S().owned[c.code]||0;
+    const st = status==='new' ? '<span class="st new">Nouvelle</span>' : (n>1 ? `<span class="st dup">×${n}</span>` : '');
+    return `<button class="lxc-mini ${c.rar} ${small?'small':''}" style="${sc(c.serie)}" onclick="LXC.openCard('${c.code}')" aria-label="${esc(c.titre)}, ${LXC_RAR[c.rar].label}, ${status==='new'?'nouvelle':(n>1?'double ×'+n:'possédée')}" title="${esc(c.titre)}">
+      <div class="b"><span>${String(c.n).padStart(2,'0')}</span>${emb(c.serie)}</div><div class="z" style="color:var(--sc)">${emb(c.serie)}</div><div class="r" aria-hidden="true">${'<i></i>'.repeat(LXC_RAR[c.rar].dots)}</div>${st}</button>`;
+  }
+  const missing = c => `<div class="lxc-mini missing" role="listitem" aria-label="Carte ${c.n} à trouver"><span class="n">${String(c.n).padStart(2,'0')}</span>À trouver</div>`;
+
+  // ── vues ──
+  function show(kind, html, back){
+    const v = document.getElementById('lxc-view');
+    v.innerHTML = `<div class="lxc-back"><button onclick="LXC.${back.fn}()">← ${back.label}</button><span class="t">${LXC_SEASON.label} · ${ownedCount()} / ${total()}</span></div><div class="lxc-body">${html}</div>`;
+    v.classList.add('open'); view = kind;
+    ['messages','suggestions','checkin-panel','frag-panel'].forEach(id => { const e=document.getElementById(id); if(e) e.style.display='none'; });
+    document.querySelector('.chat-input-area').style.display='none';
+    v.scrollTop = 0;
+  }
+  function close(){
+    const v = document.getElementById('lxc-view'); v.classList.remove('open'); v.innerHTML=''; view=null;
+    ['messages','suggestions'].forEach(id => { const e=document.getElementById(id); if(e) e.style.display=''; });
+    document.querySelector('.chat-input-area').style.display='';
+    if (P()==='qvct') document.getElementById('checkin-panel').style.display='';
+    if (P()==='extranet' && document.getElementById('frag-panel').classList.contains('visible')) document.getElementById('frag-panel').style.display='';
+    scrollToBottom();
+  }
+  function openCollection(){
+    if (!enabled()) return;
+    const series = [...new Set((LXC_DATA[P()]||[]).map(c=>c.serie))];
+    let html = S().boosters>0 ? `<button class="lxc-btn p" style="width:100%;max-width:300px" onclick="LXC.openPioche()">🎁 Ouvrir ma pioche (${S().boosters} disponible${S().boosters>1?'s':''})</button>` : `<div class="lxc-hint">Continuez à échanger avec LIXIA pour gagner une nouvelle pioche.</div>`;
+    series.forEach(sr => {
+      const cards = LXC_DATA[P()].filter(c=>c.serie===sr).sort((a,b)=>a.n-b.n);
+      const have = cards.filter(c=>S().owned[c.code]).length;
+      html += `<div class="lxc-serie" style="${sc(sr)}"><h3>${emb(sr)} ${LXC_SERIES[sr].name} <small>${have}/${cards.length}</small><span class="bar"><i style="width:${have/cards.length*100}%"></i></span></h3>
+        <div class="lxc-grid" role="list">${cards.map(c => S().owned[c.code] ? mini(c, S().seen[c.code]?null:'new') : missing(c)).join('')}</div></div>`;
+    });
+    show('collection', html, {fn:'close', label:'Conversation'});
+    Object.keys(S().owned).forEach(k=>S().seen[k]=true); save(); refreshPill();
+  }
+  function openCard(code, face){
+    const c = LXC_DATA[P()].find(x=>x.code===code); if(!c) return;
+    lastView = view==='collection' ? 'collection' : (view==='revele' ? 'revele' : 'collection');
+    const isV = face==='verso';
+    show('card', `${isV?verso(c):recto(c)}<div class="lxc-row"><button class="lxc-btn g" onclick="LXC.openCard('${code}','${isV?'recto':'verso'}')">${isV?'Voir le recto':'Retourner la carte'}</button><button class="lxc-btn g" onclick="LXC.openCollection()">Voir ma collection</button></div>`,
+      {fn:'back', label: lastView==='revele'?'Révélation':'Ma collection'});
+  }
+  function back(){ lastView==='revele' ? reveal(lastDraw, true) : openCollection(); }
+  function openPioche(){
+    if (!enabled() || S().boosters<1) { openCollection(); return; }
+    show('pioche', `<div class="lxc-hint">Une pioche de ${cfg.pack} carte${cfg.pack>1?'s':''} vous attend. Ouvrez-la !</div>
+      <button class="lxc-pack idle" id="lxc-pack" role="button" aria-label="Ouvrir la pioche" onclick="LXC.draw()"><div class="ico">🃏</div><div class="big">${LXC_SEASON.label}</div><div class="ct">${cfg.pack} carte${cfg.pack>1?'s':''}</div><div class="lg">${esc(brand[P()].name)}</div></button>`,
+      {fn:'close', label:'Conversation'});
+  }
+  // ── tirage : rareté d'abord (70/25/5), puis carte dans cette rareté ──
+  let lastDraw = [];
+  function probs(){ return [+document.getElementById('lxc-p1').value||0, +document.getElementById('lxc-p2').value||0, +document.getElementById('lxc-p3').value||0]; }
+  function pickRarity(){ const [a,b,c]=probs(); const r=Math.random()*(a+b+c||1); return r<a?'commune':(r<a+b?'peu_commune':'rare'); }
+  function pick(){ const p = pool(); const r = pickRarity(); const inR = p.filter(c=>c.rar===r); const src = inR.length?inR:p; return src[Math.floor(Math.random()*src.length)]; }
+  function draw(){
+    const pack = document.getElementById('lxc-pack'); if(!pack) return;
+    S().boosters--; save();
+    let cards = Array.from({length:cfg.pack}, pick);
+    if (document.getElementById('lxc-new')?.checked && !cards.some(c=>!S().owned[c.code])) {
+      const unowned = pool().filter(c=>!S().owned[c.code]); if (unowned.length) cards[cards.length-1] = unowned[Math.floor(Math.random()*unowned.length)];
+    }
+    cards.sort((a,b)=>LXC_RAR[a.rar].w-LXC_RAR[b.rar].w);
+    const newFlags = cards.map(c=>!S().owned[c.code]);
+    cards.forEach(c => { S().owned[c.code]=(S().owned[c.code]||0)+1; });
+    lastDraw = cards.map((c,i)=>({c, isNew:newFlags[i]})); save(); refreshPill();
+    pack.classList.remove('idle'); pack.classList.add('open'); pack.disabled = true;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(()=>reveal(lastDraw,false), reduced?0:480);
+  }
+  function reveal(items, instant){
+    const last = items[items.length-1];
+    const reduced = instant || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    show('revele', `<div class="lxc-hint" id="lxc-live" aria-live="polite"></div><div id="lxc-big"></div><div class="lxc-row" id="lxc-minis"></div>
+      <div class="lxc-row"><button class="lxc-btn g" onclick="LXC.openCard('${last.c.code}','verso')">Retourner la carte</button><button class="lxc-btn p" onclick="LXC.openCollection()">Voir ma collection</button></div>`,
+      {fn:'close', label:'Conversation'});
+    const minis = document.getElementById('lxc-minis'), live = document.getElementById('lxc-live'), big = document.getElementById('lxc-big');
+    items.forEach((it,i) => setTimeout(() => {
+      minis.insertAdjacentHTML('beforeend', `<div class="${reduced?'':'lxc-reveal-in'}">${mini(it.c, it.isNew?'new':null)}</div>`);
+      if (i===items.length-1){ big.innerHTML = `<div class="${reduced?'':'lxc-reveal-in'}">${recto(it.c)}</div>`; }
+      live.textContent = `Vous avez obtenu : ${items.slice(0,i+1).map(x=>x.c.titre+' ('+LXC_RAR[x.c.rar].label+(x.isNew?', nouvelle':', double')+')').join(', ')}.`;
+    }, reduced?0:i*500));
+    items.forEach(it => S().seen[it.c.code]=true); save();
+  }
+  function talk(code){ const c = LXC_DATA[P()].find(x=>x.code===code); close(); setTimeout(()=>sendSuggestion('Parlons de : ' + c.sujet), 80); }
+  function route(lien){ const t=document.getElementById('toast'); t.textContent = `↗ Routage extranet → ${lien} (configurable par mutuelle)`; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+  // ── blocs dans la conversation ──
+  const fold = t => String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  function linked(text){
+    const words = new Set(fold(text).split(/[^a-z0-9]+/).filter(w=>w.length>4));
+    let best=null, bs=1;
+    pool().forEach(c => { const k = fold(c.sujet+' '+c.titre+' '+c.accroche).split(/[^a-z0-9]+/).filter(w=>w.length>4); const sc_ = k.filter(w=>words.has(w)).length; if (sc_>bs){bs=sc_;best=c;} });
+    return best;
+  }
+  function afterAgentReply(userText, agentText, bubble){
+    if (!enabled() || !bubble) return;
+    const c = linked(userText+' '+agentText);
+    if (c){
+      const n = S().owned[c.code]||0;
+      bubble.insertAdjacentHTML('beforeend', `<div class="lxc-linked" onclick="LXC.${n?`openCard('${c.code}')`:'openCollection()'}" style="${sc(c.serie)}">${n?mini(c,null,true):missing(c)}<div class="tx"><small>Carte liée</small><b>${esc(c.titre)}</b><small>${n?`Déjà dans votre collection${n>1?' · ×'+n:''}`:'À trouver'}</small></div></div>`);
+    }
+    turnsSinceOffer++;
+    if (turnsSinceOffer >= cfg.every && S().boosters < 3){
+      S().boosters++; save(); refreshPill(); turnsSinceOffer = 0;
+      const msg = (P()==='extranet' && new Date().getMonth()===9) ? 'Campagne d\u2019automne : une pioche vous est offerte.' : 'Merci pour cet échange : une pioche vous attend.';
+      bubble.insertAdjacentHTML('beforeend', `<div class="lxc-offer"><div class="mp">🃏</div><div class="tx"><b>${msg}</b><br>${cfg.pack} carte${cfg.pack>1?'s':''} à découvrir dans votre collection ${LXC_SEASON.label}.</div><div class="ac"><button class="p" onclick="LXC.openPioche()">Ouvrir ma pioche</button><button onclick="this.closest('.lxc-offer').remove()">Plus tard</button></div></div>`);
+    }
+    scrollToBottom();
+  }
+
+  // ── pilule, admin, marque ──
+  function refreshPill(){
+    const pill = document.getElementById('lxc-pill'); if(!pill) return;
+    pill.style.display = enabled() ? '' : 'none';
+    document.getElementById('lxc-count').textContent = `${ownedCount()} / ${total()}`;
+    pill.classList.toggle('waiting', S().boosters>0);
+  }
+  function lum(hex){ const [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)); return .2126*r+.7152*g+.0722*b; }
+  function onBrand(){
+    const b = brand[P()]; b.brand = document.getElementById('lxc-brand').value; b.accent = document.getElementById('lxc-accent').value; b.name = document.getElementById('lxc-brandname').value || b.name;
+    document.body.style.setProperty('--brand', b.brand); document.body.style.setProperty('--brand-accent', b.accent);
+    const ratio = (1.05)/(lum(b.brand)+.05), el = document.getElementById('lxc-contrast');
+    el.textContent = `Contraste texte blanc sur --brand : ${ratio.toFixed(2)}:1 ${ratio>=4.5?'✓ AA':'✗ insuffisant (4,5:1 requis)'}`; el.classList.toggle('bad', ratio<4.5);
+    if (view) { if (view==='collection') openCollection(); }
+  }
+  function onConfigChange(){
+    const [pa,pb,pc]=probs(), sum=pa+pb+pc, ps=document.getElementById('lxc-psum'); ps.textContent='= '+sum; ps.classList.toggle('bad', sum!==100);
+    const all = LXC_DATA[P()]||[], tv = all.filter(x=>x.conf==='à vérifier').length;
+    document.getElementById('lxc-admin-season').textContent = P()==='qvct' ? 'QVCT' : 'Santé / extranet';
+    document.getElementById('lxc-kpis').innerHTML = [[all.length,'cartes'],[all.filter(x=>x.rar==='commune').length+' / '+all.filter(x=>x.rar==='peu_commune').length+' / '+all.filter(x=>x.rar==='rare').length,'● / ◆ / ★'],[tv,'à vérifier']].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join('');
+    const incl = document.getElementById('lxc-incl').checked;
+    document.getElementById('lxc-season-status').textContent = incl && tv ? `En relecture · ${tv} source${tv>1?'s':''} à vérifier` : 'Prête à publier';
+    const pub = document.getElementById('lxc-pub'); pub.disabled = incl && tv>0; pub.style.cursor = pub.disabled?'not-allowed':'pointer'; pub.style.opacity = pub.disabled?.45:1;
+    document.getElementById('lxc-var-desc').textContent = P()==='qvct' ? 'Vouvoiement (défaut : tutoiement)' : 'Tutoiement (défaut : vouvoiement)';
+    const b = brand[P()]; document.getElementById('lxc-brand').value=b.brand; document.getElementById('lxc-accent').value=b.accent; document.getElementById('lxc-brandname').value=b.name;
+    onBrand(); refreshPill();
+  }
+  function setPack(btn,n){ btn.closest('.tone-btns').querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); cfg.pack=n; }
+  function setEvery(btn,n){ btn.closest('.tone-btns').querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); cfg.every=n; }
+  function onProfileChange(){ if (view) close(); turnsSinceOffer = 99; onConfigChange(); }
+  function resetState(){ state = {extranet:fresh(), qvct:fresh()}; save(); if(view) close(); refreshPill(); const t=document.getElementById('toast'); t.textContent='↺ Collection de démo réinitialisée'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+  function init(){ onConfigChange(); }
+
+  return { init, onProfileChange, onConfigChange, onBrand, afterAgentReply, openCollection, openCard, openPioche, draw, talk, route, back, close, setPack, setEvery, resetState };
+})();
+
 window.addEventListener('load', () => {
   // Identité hôte par défaut (extranet)
   document.body.classList.add('profile-extranet');
+  LXC.init();
 
   // Initialiser le profil extranet (s'assure que tout l'état est cohérent)
   // Sans réinitialiser la conversation (déjà dans le HTML)
